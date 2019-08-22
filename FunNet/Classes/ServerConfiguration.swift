@@ -43,10 +43,27 @@ public extension ServerConfigurationProtocol {
     }
     
     func urlString(for endpoint: EndpointProtocol) -> String {
-        return urlString(for: endpoint.path)
+        return urlString(for: endpoint.path, getParams: endpoint.getParams)
     }
     
-    func urlString(for endpointString: String) -> String {
+    func urlString(for endpointString: String, getParams: [String: Any]) -> String {
+        if getParams.keys.count > 0 {
+            return toBaseUrlString() + endpointString + "?\(dictionaryToUrlParams(dict: getParams))"
+        }
         return toBaseUrlString() + endpointString
     }
+}
+
+public func dictionaryToUrlParams(dict: [String: Any]) -> String {
+    var params = [String]()
+    for key in dict.keys {
+        let value = dict[key]
+        var valueString = "\(String(describing: value))"
+        if let valueArray = value as? [AnyObject] {
+            valueString = valueArray.map { "\($0)" }.joined(separator: ",")
+        }
+        let param = "\(key))=\(valueString)"
+        params.append(param)
+    }
+    return params.joined(separator: "&")
 }

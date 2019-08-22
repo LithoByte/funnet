@@ -11,12 +11,14 @@ public protocol EndpointProtocol {
     var httpMethod: String { get }
     var httpHeaders: [String: String] { get }
     var path: String { get }
+    var getParams: [String: Any] { get }
     var postData: Data? { get }
 }
 
 public class Endpoint: EndpointProtocol {
     public var httpMethod: String = "GET"
     public var httpHeaders: [String: String] = [:]
+    public var getParams: [String: Any] = [:]
     public var path: String = ""
     public var postData: Data? = nil
     

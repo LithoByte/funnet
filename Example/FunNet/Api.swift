@@ -85,20 +85,6 @@ public func dataEndpoint(from dataSetter: @escaping (Endpoint) -> Void) -> Endpo
     return endpoint
 }
 
-public func dictionaryToUrlParams(dict: [String: Any]) -> String {
-    var params = [String]()
-    for key in dict.keys {
-        let value = dict[key]
-        var valueString = "\(String(describing: value))"
-        if let valueArray = value as? [AnyObject] {
-            valueString = valueArray.map { "\($0)" }.joined(separator: ",")
-        }
-        let param = "\(key))=\(valueString)"
-        params.append(param)
-    }
-    return params.joined(separator: "&")
-}
-
 public func parsingNetworkResponder<T>(_ modelHandler: @escaping (T?) -> Void) -> NetworkResponder where T: Decodable {
     var responder = NetworkResponder()
     responder.dataHandler = dataParser(from: modelHandler)
