@@ -9,16 +9,18 @@ import Foundation
 import Prelude
 
 public struct FunNetCall: Fireable, Stubbable {
+    public typealias ResponderType = NetworkResponder
+    
     public var configuration: ServerConfigurationProtocol
     public var endpoint: EndpointProtocol
-    public var responder: NetworkResponderProtocol? = nil
+    public var responder: NetworkResponder? = nil
     public var stubHolder: StubHolderProtocol? = nil
     public lazy var stubCondition: (URLRequest) -> Bool
         = defaultStubCondition(configuration: self.configuration, endpoint: self.endpoint)
     
     public var firingFunc: (FunNetCall) -> Void = fireStubbable(_:)
     
-    public init(configuration: ServerConfigurationProtocol, _ endpoint: EndpointProtocol, responder: NetworkResponderProtocol? = nil){
+    public init(configuration: ServerConfigurationProtocol, _ endpoint: EndpointProtocol, responder: NetworkResponder? = nil){
         self.configuration = configuration
         self.endpoint = endpoint
         self.responder = responder

@@ -9,12 +9,14 @@ import Prelude
 import OHHTTPStubs
 
 public protocol Fireable {
+    associatedtype ResponderType: NetworkResponderProtocol
+    
     var configuration: ServerConfigurationProtocol { get }
     var endpoint: EndpointProtocol { get }
-    var responder: NetworkResponderProtocol? { get }
+    var responder: ResponderType? { get }
 }
 
-public func fire(_ call: Fireable) {
+public func fire<T>(_ call: T) where T: Fireable {
     fire(call, with: call.responder)
 }
 
@@ -38,7 +40,7 @@ public func fireStubbable<T>(_ call: T) where T: Fireable & Stubbable {
     fire(call, with: networkResponder)
 }
 
-public func fire(_ call: Fireable, with responder: NetworkResponderProtocol?) {
+public func fire<T>(_ call: T, with responder: NetworkResponderProtocol?) where T: Fireable {
     let request = generateRequest(from: call.configuration, endpoint: call.endpoint)
     
     let dataTask: URLSessionDataTask?
