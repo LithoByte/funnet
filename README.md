@@ -1,6 +1,6 @@
 # FunNet
 
-[![CI Status](https://img.shields.io/travis/Elliot/FunNet.svg?style=flat)](https://travis-ci.org/Elliot/FunNet)
+[![CI Status](https://img.shields.io/travis/schrockblock/FunNet.svg?style=flat)](https://travis-ci.org/schrockblock/FunNet)
 [![Version](https://img.shields.io/cocoapods/v/FunNet.svg?style=flat)](https://cocoapods.org/pods/FunNet)
 [![License](https://img.shields.io/cocoapods/l/FunNet.svg?style=flat)](https://cocoapods.org/pods/FunNet)
 [![Platform](https://img.shields.io/cocoapods/p/FunNet.svg?style=flat)](https://cocoapods.org/pods/FunNet)
@@ -22,7 +22,7 @@ pod 'FunNet'
 
 ## Author
 
-Elliot, elliot.schrock@gmail.com
+Elliot Schrock
 
 ## License
 

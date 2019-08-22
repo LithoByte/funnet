@@ -1,12 +1,15 @@
 use_frameworks!
+platform :ios, '10.0'
 
 target 'FunNet_Example' do
   pod 'FunNet', :path => '../'
+  pod 'Prelude', '~> 3.0'
+  pod 'PlaygroundTesting'
 
   target 'FunNet_Tests' do
     inherit! :search_paths
 
     pod 'Quick', '~> 1.2.0'
-    pod 'Nimble', '~> 7.0.2'
+    pod 'Nimble', '~> 7.3.1'
   end
 end

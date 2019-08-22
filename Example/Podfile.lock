@@ -1,0 +1,48 @@
+PODS:
+  - FunNet (0.0.1):
+    - OHHTTPStubs/Swift
+    - Prelude (~> 3.0)
+  - Nimble (7.3.3)
+  - OHHTTPStubs/Core (6.1.0)
+  - OHHTTPStubs/Default (6.1.0):
+    - OHHTTPStubs/Core
+    - OHHTTPStubs/JSON
+    - OHHTTPStubs/NSURLSession
+    - OHHTTPStubs/OHPathHelpers
+  - OHHTTPStubs/JSON (6.1.0):
+    - OHHTTPStubs/Core
+  - OHHTTPStubs/NSURLSession (6.1.0):
+    - OHHTTPStubs/Core
+  - OHHTTPStubs/OHPathHelpers (6.1.0)
+  - OHHTTPStubs/Swift (6.1.0):
+    - OHHTTPStubs/Default
+  - Prelude (3.0.0)
+  - Quick (1.2.0)
+
+DEPENDENCIES:
+  - FunNet (from `../`)
+  - Nimble (~> 7.3.1)
+  - Prelude (~> 3.0)
+  - Quick (~> 1.2.0)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Nimble
+    - OHHTTPStubs
+    - Prelude
+    - Quick
+
+EXTERNAL SOURCES:
+  FunNet:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  FunNet: 76c1230b228e2ca3cc2a221c201dd9816294de6a
+  Nimble: 3b434b1e7d0a92603a13550a82880b0d952f518e
+  OHHTTPStubs: 1e21c7d2c084b8153fc53d48400d8919d2d432d0
+  Prelude: fe4cc0fd961d34edf48fe6b04d05c863449efb0a
+  Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
+
+PODFILE CHECKSUM: db2f24fbecb4f83294cc7dd222565276a40197af
+
+COCOAPODS: 1.6.0
