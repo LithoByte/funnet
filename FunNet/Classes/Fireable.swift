@@ -11,9 +11,9 @@ import OHHTTPStubs
 public protocol Fireable {
     associatedtype ResponderType: NetworkResponderProtocol
     
-    var configuration: ServerConfigurationProtocol { get }
-    var endpoint: EndpointProtocol { get }
-    var responder: ResponderType? { get }
+    var configuration: ServerConfigurationProtocol { get set }
+    var endpoint: EndpointProtocol { get set }
+    var responder: ResponderType? { get set }
 }
 
 public func fire<T>(_ call: T) where T: Fireable {

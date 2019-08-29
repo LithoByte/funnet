@@ -13,7 +13,7 @@ public func generateRequest(from configuration: ServerConfigurationProtocol, end
         <> (endpoint.postData >|> applyBody)
     
     let mutableRequest = configuration.urlString(for: endpoint) |>
-        (URL.init(string:) <^> NSMutableURLRequest.init(url:))
+        (URL.init(string:) >?> NSMutableURLRequest.init(url:))
     if let request = mutableRequest {
         configure(request)
     }

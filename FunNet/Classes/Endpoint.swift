@@ -8,14 +8,14 @@
 import UIKit
 
 public protocol EndpointProtocol {
-    var httpMethod: String { get }
-    var httpHeaders: [String: String] { get }
-    var path: String { get }
-    var getParams: [String: Any] { get }
-    var postData: Data? { get }
+    var httpMethod: String { get set }
+    var httpHeaders: [String: String] { get set }
+    var path: String { get set }
+    var getParams: [String: Any] { get set }
+    var postData: Data? { get set }
 }
 
-public class Endpoint: EndpointProtocol {
+public struct Endpoint: EndpointProtocol {
     public var httpMethod: String = "GET"
     public var httpHeaders: [String: String] = [:]
     public var getParams: [String: Any] = [:]
@@ -25,36 +25,42 @@ public class Endpoint: EndpointProtocol {
     public init() {}
 }
 
-public extension Endpoint {
-    func addHeaders(headers: [String: String]) {
+public extension EndpointProtocol {
+    mutating func addHeaders(headers: [String: String]) {
         for key in headers.keys {
             httpHeaders[key] = headers[key]
         }
     }
     
-    func addModelData<E: Encodable>(model: E, encoder: JSONEncoder = JSONEncoder()) {
+    mutating func addModelData<E: Encodable>(model: E, encoder: JSONEncoder = JSONEncoder()) {
         self.postData = try? encoder.encode(model)
+    }
+    
+    mutating func addGetParams(params: [String: String]) {
+        for key in params.keys {
+            getParams[key] = params[key]
+        }
     }
 }
 
-public func dataSetter<T>(from model: T) -> (Endpoint) -> Void where T: Encodable {
-    return { endpoint in
+public func dataSetter<M, T>(from model: M) -> (inout T) -> Void where M: Encodable, T: EndpointProtocol {
+    return { (endpoint: inout T) in
         endpoint.addModelData(model: model)
     }
 }
 
-public func addJsonHeaders(_ endpoint: Endpoint) {
+public func addJsonHeaders<T>(_ endpoint: inout T) where T: EndpointProtocol {
     endpoint.addHeaders(headers: ["Content-Type": "application/json", "Accept": "application/json"])
 }
 
-public func setToPost(_ endpoint: Endpoint) {
+public func setToPost<T>(_ endpoint: inout T) where T: EndpointProtocol {
     endpoint.httpMethod = "POST"
 }
 
-public func setToPut(_ endpoint: Endpoint) {
+public func setToPut<T>(_ endpoint: inout T) where T: EndpointProtocol {
     endpoint.httpMethod = "PUT"
 }
 
-public func setToDelete(_ endpoint: Endpoint) {
+public func setToDelete<T>(_ endpoint: inout T) where T: EndpointProtocol {
     endpoint.httpMethod = "DELETE"
 }

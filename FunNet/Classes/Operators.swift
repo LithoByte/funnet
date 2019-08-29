@@ -7,8 +7,8 @@
 
 import Prelude
 
-infix operator <^>: Composition
-public func <^><A, B, C>(f: @escaping (A) -> B?, g: @escaping (B) -> C) -> (A) -> C? {
+infix operator >?>: Composition
+public func >?><A, B, C>(f: @escaping (A) -> B?, g: @escaping (B) -> C) -> (A) -> C? {
     return { a in
         if let b = f(a) {
             return g(b)
@@ -24,6 +24,19 @@ public func <><A>(f: @escaping (A) -> Void, g: @escaping (A) -> Void) -> (A) -> 
         f(a)
         g(a)
     }
+}
+
+infix operator <~>: Composition
+public func <~><A>(f: @escaping (inout A) -> Void, g: @escaping (inout A) -> Void) -> (inout A) -> Void {
+    return { a in
+        f(&a)
+        g(&a)
+    }
+}
+
+infix operator />: ForwardApplication
+public func /><A>(a: inout A, f: @escaping (inout A) -> Void) -> Void {
+    f(&a)
 }
 
 infix operator >|>: Composition
