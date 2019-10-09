@@ -14,7 +14,14 @@ public protocol ErrorMessage {
 }
 
 public protocol NetworkErrorHandler {
-    func handleError(_ error: NSError)
+    func handleError(_ error: NSError) -> UIViewController
+}
+
+public class VerboseLoginErrorHandler: VerboseNetworkErrorHandler {
+    public override init() {
+        super.init()
+        errorMessages.append(DefaultEmailPasswordLoginErrorMessage())
+    }
 }
 
 public class VerboseNetworkErrorHandler: NetworkErrorHandler {
@@ -29,21 +36,27 @@ public class VerboseNetworkErrorHandler: NetworkErrorHandler {
         }
     }
     
-    open func handleError(_ error: NSError) {
-        if let message = errorMessageMap[error.code] {
-            notify(title: message.title, message: message.message)
-        } else {
-            notify(title: "Error \(error.code)", message: "Description: \(error.debugDescription)\nInfo: \(error.userInfo)")
-        }
+    public init() {}
+    
+    open func handleError(_ error: NSError) -> UIViewController {
         print(error)
+        if let message = errorMessageMap[error.code] {
+            return alert(message.title, message.message)
+        } else {
+            return alert("Error \(error.code)", "Description: \(error.debugDescription)\nInfo: \(error.userInfo)")
+        }
     }
     
     open func notify(title: String, message: String) {
+        alert(title, message).show(animated: true)
+    }
+    
+    func alert(_ title: String, _ message: String) -> UIAlertController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
             alert.dismiss(animated: true, completion: nil)
         }))
-        alert.show()
+        return alert
     }
 }
 
