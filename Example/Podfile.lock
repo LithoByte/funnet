@@ -1,8 +1,9 @@
 PODS:
   - FunNet (0.0.1):
+    - LithoOperators
     - OHHTTPStubs/Swift
-    - Prelude (~> 3.0)
-  - Nimble (7.3.3)
+  - LithoOperators (0.0.2):
+    - Prelude
   - OHHTTPStubs/Core (6.1.0)
   - OHHTTPStubs/Default (6.1.0):
     - OHHTTPStubs/Core
@@ -17,32 +18,26 @@ PODS:
   - OHHTTPStubs/Swift (6.1.0):
     - OHHTTPStubs/Default
   - Prelude (3.0.0)
-  - Quick (1.2.0)
 
 DEPENDENCIES:
   - FunNet (from `../`)
-  - Nimble (~> 7.3.1)
-  - Prelude (~> 3.0)
-  - Quick (~> 1.2.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
-    - Nimble
+    - LithoOperators
     - OHHTTPStubs
     - Prelude
-    - Quick
 
 EXTERNAL SOURCES:
   FunNet:
     :path: "../"
 
 SPEC CHECKSUMS:
-  FunNet: 76c1230b228e2ca3cc2a221c201dd9816294de6a
-  Nimble: 3b434b1e7d0a92603a13550a82880b0d952f518e
+  FunNet: 782eb82ce25a8a0499eef8533edbc192817a0b33
+  LithoOperators: 8a4f284d8c10cb02b28af87c18494ba225345419
   OHHTTPStubs: 1e21c7d2c084b8153fc53d48400d8919d2d432d0
   Prelude: fe4cc0fd961d34edf48fe6b04d05c863449efb0a
-  Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
 
-PODFILE CHECKSUM: db2f24fbecb4f83294cc7dd222565276a40197af
+PODFILE CHECKSUM: 7cb893b39fb1b5800d66e86e4732dc00ae9870e4
 
-COCOAPODS: 1.6.0
+COCOAPODS: 1.7.2

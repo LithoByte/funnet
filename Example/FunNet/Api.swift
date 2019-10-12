@@ -8,6 +8,7 @@
 
 import FunNet
 import Prelude
+import LithoOperators
 
 class Api {
     static let serverConfig = ServerConfiguration(host: "fake.com", apiRoute: "api/v1")

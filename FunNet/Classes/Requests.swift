@@ -6,6 +6,7 @@
 //
 
 import Prelude
+import LithoOperators
 
 public func generateRequest(from configuration: ServerConfigurationProtocol, endpoint: EndpointProtocol) -> URLRequest {
     let configure = (endpoint.httpMethod >|> applyHttpMethod)

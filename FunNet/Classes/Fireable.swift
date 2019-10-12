@@ -7,6 +7,7 @@
 
 import Prelude
 import OHHTTPStubs
+import LithoOperators
 
 public protocol Fireable {
     associatedtype ResponderType: NetworkResponderProtocol
