@@ -51,8 +51,10 @@ public func generateDataTask(sessionConfiguration: URLSessionConfiguration,
                 errorDataHandler(data)
             } else if let httpResponse = response as? HTTPURLResponse {
                 httpResponseHandler(httpResponse)
-                if httpResponse.statusCode > 299, let data = data {
-                    errorDataHandler(data)
+                if httpResponse.statusCode > 299 {
+                    if let data = data {
+                        errorDataHandler(data)
+                    }
                     serverErrorHandler(NSError(domain: "Server", code: httpResponse.statusCode, userInfo: ["url" : httpResponse.url?.absoluteString as Any]))
                 } else {
                     dataHandler(data)
