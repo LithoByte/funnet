@@ -8,7 +8,7 @@
 import Foundation
 import Prelude
 
-public struct FunNetCall: Fireable, Stubbable {
+public struct FunNetCall: NetworkCall, Stubbable, Fireable {
     public typealias ResponderType = NetworkResponder
     
     public var configuration: ServerConfigurationProtocol
@@ -29,4 +29,12 @@ public struct FunNetCall: Fireable, Stubbable {
     public func fire() {
         firingFunc(self)
     }
+}
+
+public protocol Fireable {
+    func fire()
+}
+
+public func fireCall(_ call: Fireable) {
+    call.fire()
 }

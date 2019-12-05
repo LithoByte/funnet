@@ -9,7 +9,7 @@ import Prelude
 import OHHTTPStubs
 import LithoOperators
 
-public protocol Fireable {
+public protocol NetworkCall {
     associatedtype ResponderType: NetworkResponderProtocol
     
     var configuration: ServerConfigurationProtocol { get set }
@@ -17,11 +17,11 @@ public protocol Fireable {
     var responder: ResponderType? { get set }
 }
 
-public func fire<T>(_ call: T) where T: Fireable {
+public func fire<T>(_ call: T) where T: NetworkCall {
     fire(call, with: call.responder)
 }
 
-public func fireStubbable<T>(_ call: T) where T: Fireable & Stubbable {
+public func fireStubbable<T>(_ call: T) where T: NetworkCall & Stubbable {
     var removeStub: (URLResponse?) -> Void = { _ in }
     if let stubHolder = call.stubHolder, call.configuration.shouldStub {
         var stubbable = call
@@ -41,7 +41,7 @@ public func fireStubbable<T>(_ call: T) where T: Fireable & Stubbable {
     fire(call, with: networkResponder)
 }
 
-public func fire<T>(_ call: T, with responder: NetworkResponderProtocol?) where T: Fireable {
+public func fire<T>(_ call: T, with responder: NetworkResponderProtocol?) where T: NetworkCall {
     let request = generateRequest(from: call.configuration, endpoint: call.endpoint)
     
     let dataTask: URLSessionDataTask?
