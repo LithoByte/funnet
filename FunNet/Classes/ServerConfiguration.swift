@@ -58,7 +58,7 @@ public func dictionaryToUrlParams(dict: [String: Any]) -> String {
     var params = [String]()
     for key in dict.keys {
         if let value: Any = dict[key] {
-            var valueString = "\(String(describing: value))"
+            var valueString = "\(String(describing: value))".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
             if let valueArray = value as? [AnyObject] {
                 valueString = valueArray.map { "\($0)" }.joined(separator: ",")
             }

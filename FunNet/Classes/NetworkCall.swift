@@ -17,6 +17,10 @@ public protocol NetworkCall {
     var responder: ResponderType? { get set }
 }
 
+public protocol Fireable {
+    func fire()
+}
+
 public func fire<T>(_ call: T) where T: NetworkCall {
     fire(call, with: call.responder)
 }

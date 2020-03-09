@@ -31,10 +31,6 @@ public struct FunNetCall: NetworkCall, Stubbable, Fireable {
     }
 }
 
-public protocol Fireable {
-    func fire()
-}
-
 public func fireCall(_ call: Fireable) {
     call.fire()
 }
