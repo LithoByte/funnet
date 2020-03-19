@@ -321,14 +321,12 @@
 				"${PODS_ROOT}/Target Support Files/Pods-FunNet_Example/Pods-FunNet_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/FunNet/FunNet.framework",
 				"${BUILT_PRODUCTS_DIR}/LithoOperators/LithoOperators.framework",
-				"${BUILT_PRODUCTS_DIR}/OHHTTPStubs/OHHTTPStubs.framework",
 				"${BUILT_PRODUCTS_DIR}/Prelude/Prelude.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FunNet.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LithoOperators.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OHHTTPStubs.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Prelude.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;

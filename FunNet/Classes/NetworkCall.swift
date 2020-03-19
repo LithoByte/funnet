@@ -6,7 +6,6 @@
 //
 
 import Prelude
-import OHHTTPStubs
 import LithoOperators
 
 public protocol NetworkCall {
@@ -25,25 +24,25 @@ public func fire<T>(_ call: T) where T: NetworkCall {
     fire(call, with: call.responder)
 }
 
-public func fireStubbable<T>(_ call: T) where T: NetworkCall & Stubbable {
-    var removeStub: (URLResponse?) -> Void = { _ in }
-    if let stubHolder = call.stubHolder, call.configuration.shouldStub {
-        var stubbable = call
-        let stubDesc = stub(condition: stubbable.stubCondition, response: stubHolder.stubResponseBlock())
-        removeStub = { _ in OHHTTPStubs.removeStub(stubDesc) }
-    }
-    
-    var networkResponder: NetworkResponderProtocol
-    if var responder = call.responder {
-        responder.responseHandler = (removeStub <> responder.responseHandler)
-        networkResponder = responder
-    } else {
-        networkResponder = NetworkResponder()
-        networkResponder.responseHandler = removeStub
-    }
-    
-    fire(call, with: networkResponder)
-}
+//public func fireStubbable<T>(_ call: T) where T: NetworkCall & Stubbable {
+//    var removeStub: (URLResponse?) -> Void = { _ in }
+//    if let stubHolder = call.stubHolder, call.configuration.shouldStub {
+//        var stubbable = call
+//        let stubDesc = stub(condition: stubbable.stubCondition, response: stubHolder.stubResponseBlock())
+//        removeStub = { _ in OHHTTPStubs.removeStub(stubDesc) }
+//    }
+//    
+//    var networkResponder: NetworkResponderProtocol
+//    if var responder = call.responder {
+//        responder.responseHandler = (removeStub <> responder.responseHandler)
+//        networkResponder = responder
+//    } else {
+//        networkResponder = NetworkResponder()
+//        networkResponder.responseHandler = removeStub
+//    }
+//    
+//    fire(call, with: networkResponder)
+//}
 
 public func fire<T>(_ call: T, with responder: NetworkResponderProtocol?) where T: NetworkCall {
     let request = generateRequest(from: call.configuration, endpoint: call.endpoint)

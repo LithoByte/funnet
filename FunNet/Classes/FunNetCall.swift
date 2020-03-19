@@ -18,7 +18,7 @@ public struct FunNetCall: NetworkCall, Stubbable, Fireable {
     public lazy var stubCondition: (URLRequest) -> Bool
         = defaultStubCondition(configuration: self.configuration, endpoint: self.endpoint)
     
-    public var firingFunc: (FunNetCall) -> Void = fireStubbable(_:)
+    public var firingFunc: (FunNetCall) -> Void = fire(_:)
     
     public init(configuration: ServerConfigurationProtocol, _ endpoint: EndpointProtocol, responder: NetworkResponder? = nil){
         self.configuration = configuration
