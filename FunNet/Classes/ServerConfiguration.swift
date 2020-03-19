@@ -35,7 +35,13 @@ open class ServerConfiguration: ServerConfigurationProtocol {
 public extension ServerConfigurationProtocol {
     func toBaseUrlString() -> String {
         let baseUrlString = "\(scheme)://\(host)"
-        if let apiRoute = apiBaseRoute {
+        if var apiRoute = apiBaseRoute {
+            if apiRoute.starts(with: "/") {
+                apiRoute = String(apiRoute.suffix(from: apiRoute.firstIndex(where: { $0 != "/" })!))
+            }
+            if apiRoute.suffix(1) == "/" {
+                apiRoute = String(apiRoute.prefix(apiRoute.count - 1))
+            }
             return "\(baseUrlString)/\(apiRoute)/"
         } else {
             return "\(baseUrlString)/"
@@ -47,6 +53,10 @@ public extension ServerConfigurationProtocol {
     }
     
     func urlString(for endpointString: String, getParams: [String: Any]) -> String {
+        var endpointString = endpointString
+        if endpointString.starts(with: "/") {
+            endpointString = String(endpointString.suffix(from: endpointString.firstIndex(where: { $0 != "/" })!))
+        }
         if getParams.keys.count > 0 {
             return toBaseUrlString() + endpointString + "?\(dictionaryToUrlParams(dict: getParams))"
         }

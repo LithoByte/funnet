@@ -25,6 +25,6 @@ TODO: Add long description of the pod here.
 
   s.source_files = 'FunNet/Classes/**/*'
   
-  s.dependency 'OHHTTPStubs/Swift'
+#  s.dependency 'OHHTTPStubs/Swift'
   s.dependency 'LithoOperators'
 end
