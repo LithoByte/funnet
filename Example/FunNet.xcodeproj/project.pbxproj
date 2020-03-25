@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		493008C2242B9F8300241C1A /* RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493008C1242B9F8300241C1A /* RequestTests.swift */; };
+		493008C4242BA7C300241C1A /* ResponderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493008C3242BA7C300241C1A /* ResponderTests.swift */; };
 		4964636F220E65010060D199 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4964636E220E65010060D199 /* Api.swift */; };
 		49646371220F5D350060D199 /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49646370220F5D350060D199 /* SignIn.swift */; };
 		49CEE0A6242390AA00F5E124 /* ServerConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CEE0A5242390AA00F5E124 /* ServerConfigurationTests.swift */; };
@@ -31,6 +33,8 @@
 
 /* Begin PBXFileReference section */
 		3FBA774A6951E3E68E49E63A /* Pods_FunNet_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FunNet_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		493008C1242B9F8300241C1A /* RequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestTests.swift; sourceTree = "<group>"; };
+		493008C3242BA7C300241C1A /* ResponderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponderTests.swift; sourceTree = "<group>"; };
 		4964636E220E65010060D199 /* Api.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		49646370220F5D350060D199 /* SignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
 		49CEE0A5242390AA00F5E124 /* ServerConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfigurationTests.swift; sourceTree = "<group>"; };
@@ -133,6 +137,8 @@
 			isa = PBXGroup;
 			children = (
 				49CEE0A5242390AA00F5E124 /* ServerConfigurationTests.swift */,
+				493008C1242B9F8300241C1A /* RequestTests.swift */,
+				493008C3242BA7C300241C1A /* ResponderTests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
 			);
 			path = Tests;
@@ -353,6 +359,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				49CEE0A6242390AA00F5E124 /* ServerConfigurationTests.swift in Sources */,
+				493008C2242B9F8300241C1A /* RequestTests.swift in Sources */,
+				493008C4242BA7C300241C1A /* ResponderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
