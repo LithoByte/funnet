@@ -24,7 +24,24 @@ TODO: Add long description of the pod here.
   s.ios.deployment_target = '8.0'
 
   s.source_files = 'FunNet/Classes/**/*'
-  
-#  s.dependency 'OHHTTPStubs/Swift'
   s.dependency 'LithoOperators'
+  
+  s.subspec 'Core' do |sp|
+    sp.source_files = 'FunNet/Classes/Core/**/*.swift'
+    
+    sp.dependency 'LithoOperators'
+  end
+  
+  s.subspec 'Combine' do |sp|
+    sp.source_files = 'FunNet/Classes/Combine/**/*.swift'
+    
+    sp.dependency 'FunNet/Core'
+  end
+  
+  s.subspec 'ReactiveSwift' do |sp|
+    sp.source_files = 'FunNet/Classes/ReactiveSwift/**/*'
+    
+    sp.dependency 'FunNet/Core'
+    sp.dependency 'ReactiveSwift'
+  end
 end

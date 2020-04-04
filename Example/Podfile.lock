@@ -1,9 +1,22 @@
 PODS:
   - FunNet (0.0.1):
+    - FunNet/Combine (= 0.0.1)
+    - FunNet/Core (= 0.0.1)
+    - FunNet/ReactiveSwift (= 0.0.1)
     - LithoOperators
+  - FunNet/Combine (0.0.1):
+    - FunNet/Core
+    - LithoOperators
+  - FunNet/Core (0.0.1):
+    - LithoOperators
+  - FunNet/ReactiveSwift (0.0.1):
+    - FunNet/Core
+    - LithoOperators
+    - ReactiveSwift
   - LithoOperators (0.0.2):
     - Prelude
   - Prelude (3.0.0)
+  - ReactiveSwift (6.2.1)
 
 DEPENDENCIES:
   - FunNet (from `../`)
@@ -12,15 +25,18 @@ SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - LithoOperators
     - Prelude
+  trunk:
+    - ReactiveSwift
 
 EXTERNAL SOURCES:
   FunNet:
     :path: "../"
 
 SPEC CHECKSUMS:
-  FunNet: 71661dfaa1cbb6eb3c06da63f52bb1b23456e71d
+  FunNet: 7ff876fcd10ab9ff3f10c74ca4c3575d22feed93
   LithoOperators: 8a4f284d8c10cb02b28af87c18494ba225345419
   Prelude: fe4cc0fd961d34edf48fe6b04d05c863449efb0a
+  ReactiveSwift: 07ddf579f4eb3ee3bd656214f0461aaf2c0fd639
 
 PODFILE CHECKSUM: 7cb893b39fb1b5800d66e86e4732dc00ae9870e4
 
