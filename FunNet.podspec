@@ -36,6 +36,7 @@ TODO: Add long description of the pod here.
     sp.source_files = 'FunNet/Classes/Combine/**/*.swift'
     
     sp.dependency 'FunNet/Core'
+    sp.framework = 'Combine'
   end
   
   s.subspec 'ReactiveSwift' do |sp|
