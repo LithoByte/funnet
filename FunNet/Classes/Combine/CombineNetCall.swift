@@ -14,12 +14,14 @@ open class CombineNetCall: NetworkCall, Fireable {
     public var configuration: ServerConfigurationProtocol
     public var endpoint: EndpointProtocol
     public var responder: CombineNetworkResponder? = nil
+    public var publisher: CombineNetworkResponder
     
     public var firingFunc: (CombineNetCall) -> Void = fire(_:)
     
     public init(configuration: ServerConfigurationProtocol, _ endpoint: EndpointProtocol, responder: CombineNetworkResponder? = CombineNetworkResponder()) {
         self.configuration = configuration
         self.endpoint = endpoint
+        self.publisher = responder ?? CombineNetworkResponder()
         self.responder = responder
     }
     
