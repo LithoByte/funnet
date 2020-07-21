@@ -14,7 +14,7 @@ public protocol ErrorMessage {
 }
 
 public protocol NetworkErrorHandler {
-    func handleError(_ error: NSError) -> UIViewController
+    func alert(for error: NSError) -> UIViewController
 }
 
 public class VerboseLoginErrorHandler: VerboseNetworkErrorHandler {
@@ -38,7 +38,7 @@ public class VerboseNetworkErrorHandler: NetworkErrorHandler {
     
     public init() {}
     
-    open func handleError(_ error: NSError) -> UIViewController {
+    open func alert(for error: NSError) -> UIViewController {
         print(error)
         if let message = errorMessageMap[error.code] {
             return alert(message.title, message.message)
