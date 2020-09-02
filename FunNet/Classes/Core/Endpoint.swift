@@ -1,6 +1,6 @@
 //
 //  Endpoint.swift
-//  FunkyNetwork
+//  FunNet
 //
 //  Created by Elliot Schrock on 1/24/19.
 //
@@ -13,6 +13,7 @@ public protocol EndpointProtocol {
     var path: String { get set }
     var getParams: [String: Any] { get set }
     var postData: Data? { get set }
+    var dataStream: InputStream? { get set }
 }
 
 public struct Endpoint: EndpointProtocol {
@@ -20,7 +21,8 @@ public struct Endpoint: EndpointProtocol {
     public var httpHeaders: [String: String] = [:]
     public var getParams: [String: Any] = [:]
     public var path: String = ""
-    public var postData: Data? = nil
+    public var postData: Data?
+    public var dataStream: InputStream?
     
     public init() {}
 }
@@ -34,6 +36,10 @@ public extension EndpointProtocol {
     
     mutating func addModelData<E: Encodable>(model: E, encoder: JSONEncoder = JSONEncoder()) {
         self.postData = try? encoder.encode(model)
+    }
+    
+    mutating func addModelStream<E: Encodable>(model: E, encoder: JSONEncoder = JSONEncoder()) {
+//        self.dataStream = try? encoder.encode(model)
     }
     
     mutating func addGetParams(params: [String: String]) {
@@ -51,6 +57,14 @@ public func dataSetter<M, T>(from model: M) -> (inout T) -> Void where M: Encoda
 
 public func addJsonHeaders<T>(_ endpoint: inout T) where T: EndpointProtocol {
     endpoint.addHeaders(headers: ["Content-Type": "application/json", "Accept": "application/json"])
+}
+
+public func addMultipartHeaders<T>(_ endpoint: inout T, from multipartData: MultipartFormData) where T: EndpointProtocol {
+    endpoint.addHeaders(headers: [
+        "Content-Type": "multipart/form-data; charset=utf-8; boundary=\"\(multipartData.boundary)\"",
+        "Content-Length": "\(multipartData.countContentLength())",
+        "Accept": "application/json"
+    ])
 }
 
 public func setToGet<T>(_ endpoint: inout T) where T: EndpointProtocol {
