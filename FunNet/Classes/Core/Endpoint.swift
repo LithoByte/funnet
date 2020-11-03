@@ -54,7 +54,7 @@ public func addJsonHeaders<T>(_ endpoint: inout T) where T: EndpointProtocol {
 }
 
 public func setToGet<T>(_ endpoint: inout T) where T: EndpointProtocol {
-    endpoint.httpMethod = "POST"
+    endpoint.httpMethod = "GET"
 }
 
 public func setToPost<T>(_ endpoint: inout T) where T: EndpointProtocol {

@@ -25,11 +25,22 @@ class RequestTests: XCTestCase {
         
         XCTAssertEqual(request.url?.absoluteString, "http://api.lithobyte.co/api.v2/apps")
     }
-
+    
     func testGet() {
         let serverConfig = ServerConfiguration(shouldStub: true, scheme: "http", host: "api.lithobyte.co", apiRoute: "api/v1", urlConfiguration: URLSessionConfiguration.default)
         var endpoint = Endpoint()
         endpoint.path = "apps"
+        
+        let request = generateRequest(from: serverConfig, endpoint: endpoint)
+        
+        XCTAssertEqual(request.httpMethod, "GET")
+    }
+    
+    func testSetGet() {
+        let serverConfig = ServerConfiguration(shouldStub: true, scheme: "http", host: "api.lithobyte.co", apiRoute: "api/v1", urlConfiguration: URLSessionConfiguration.default)
+        var endpoint = Endpoint()
+        endpoint.path = "apps"
+        endpoint /> setToGET
         
         let request = generateRequest(from: serverConfig, endpoint: endpoint)
         
