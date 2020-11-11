@@ -8,7 +8,7 @@
 import Foundation
 import Prelude
 
-public struct FunNetCall: NetworkCall, Stubbable, Fireable {
+public class FunNetCall: NetworkCall, Stubbable, Fireable {
     public typealias ResponderType = NetworkResponder
     
     public var configuration: ServerConfigurationProtocol

@@ -8,7 +8,7 @@
 import Prelude
 import LithoOperators
 
-public protocol NetworkCall {
+public protocol NetworkCall: class {
     associatedtype ResponderType: NetworkResponderProtocol
     
     var configuration: ServerConfigurationProtocol { get set }
