@@ -29,7 +29,6 @@ TODO: Add long description of the pod here.
   
   s.subspec 'Core' do |sp|
     sp.source_files = 'FunNet/Classes/Core/**/*.swift'
-    
     sp.dependency 'LithoOperators'
   end
   

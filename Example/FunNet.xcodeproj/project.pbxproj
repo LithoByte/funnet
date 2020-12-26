@@ -19,6 +19,7 @@
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		889989B8BCCA05BF1A5931D6 /* Pods_FunNet_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3FBA774A6951E3E68E49E63A /* Pods_FunNet_Tests.framework */; };
+		981B1CA625957EF200563103 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		B5C47F4263F9B7C7AE4E4667 /* Pods_FunNet_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A86C6F6AAFC21B5CAA312BD7 /* Pods_FunNet_Example.framework */; };
 /* End PBXBuildFile section */
 
@@ -271,6 +272,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				981B1CA625957EF200563103 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

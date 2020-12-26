@@ -8,7 +8,7 @@
 
 import Foundation
 
-public class MultipartComponent {
+public final class MultipartComponent {
     public let dataStream: InputStream
     public let name: String
     public let fileName: String?
