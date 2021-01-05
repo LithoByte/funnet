@@ -170,6 +170,20 @@ extension URL: MultipartConvertible {
   
 }
 
+final class MultiPartImage: UIImage { }
+
+extension MultiPartImage: MultipartConvertible, Codable {
+    public var multipart: ((String, String?, String?) -> MultipartComponent) {
+        return { name, fileName, contentType in
+            MultipartComponent(data: self.pngData()!, name: name, fileName: fileName, contentType: "image/png")
+        }
+    }
+    convenience init?(multipart: MultipartComponent) {
+        guard let data = try? Data(reading: multipart.dataStream) else { return nil }
+        self.init(data: data)
+    }
+}
+
 
 
 

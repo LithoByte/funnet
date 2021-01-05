@@ -68,7 +68,7 @@ public final class MultipartComponent {
 public extension MultipartComponent {
     convenience init(fileURL: URL, name: String, fileName: String?, contentType: String) {
         let fileAttributes = try? FileManager.default.attributesOfItem(atPath: fileURL.path)
-        self.init(dataStream: InputStream(url: fileURL)!,
+        self.init(dataStream: InputStream(url: fileURL) ?? InputStream(),
                   name: name,
                   fileName: fileName,
                   contentType: contentType,
