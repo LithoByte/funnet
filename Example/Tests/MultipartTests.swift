@@ -71,22 +71,7 @@ class MultipartTests: XCTestCase {
         let encodedString = String(cString: buffer)
         print(encodedString)
         let parts: [String] = encodedString.components(separatedBy: boundary)
-        XCTAssert(parts.filter({ $0.contains("holders[0[account_info[first_name]]]") || $0.contains("holders[1[account_info[first_name]]]")}).count == 2)
-    }
-    
-    func testURLConvertible() {
-        let encoder = FormDataEncoder()
-        let user = AccountInfo(firstName: "Calvin", lastName: "Collins", phoneNumber: "5037899196", email: "cjc8@williams.edu", password: "password", passwordConfirmation: "password", invitationToken: "token", data: nil, avatar: nil)
-        
-        let boundary = "--boundary-pds-site\(Date().timeIntervalSince1970)file-image-boundary--"
-        guard let multipartForm: MultipartFormData = try? encoder.encode(AccountInfoHolder(accountInfo: user), boundary: boundary) else {
-            return XCTAssert(false)
-        }
-        let stream = multipartForm.makeInputStream()
-        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: multipartForm.countContentLength())
-        stream.read(buffer, maxLength: multipartForm.countContentLength())
-        let encodedString = String(cString: buffer)
-        print(encodedString)
+        XCTAssert(parts.filter({ $0.contains("holders[][account_info][first_name]") }).count == 2)
     }
     
     func testCamelToSnake() {
@@ -135,9 +120,9 @@ class MultipartTests: XCTestCase {
         // General Test
         let names = ["user", "inviter", "firstName"]
         let nestedNames = makeName(strings: names, index: 1, name: names[0])
-        XCTAssert(nestedNames == "user[inviter[firstName]]")
+        XCTAssert(nestedNames == "user[inviter][firstName]")
         let snakeNestedNames = camelToSnake(string: nestedNames)
-        XCTAssert(snakeNestedNames == "user[inviter[first_name]]")
+        XCTAssert(snakeNestedNames == "user[inviter][first_name]")
         
         //Edge case: Single key
         let singleName = ["user"]
