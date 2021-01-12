@@ -65,18 +65,10 @@ private final class FormDataEncoderContext {
     }
     
     let multipart = convertible.multipart
-//    guard var part = convertible.multipart("") else {
-//      throw MultipartError.convertibleType(E.self)
-//    }
     var name: String = ""
     switch codingPath.count {
     case 0: throw MultipartError.invalidFormat
     case 1: name = camelToSnake(string: codingPath[0].stringValue) ?? codingPath[0].stringValue
-//    case 2:
-//      guard codingPath[1].intValue != nil else {
-//        throw MultipartError.nesting
-//      }
-//      name = camelToSnake(string: codingPath[0].stringValue + "[\(codingPath[1].stringValue)]") ?? codingPath[0].stringValue + "[\(codingPath[1].stringValue)]"
     default:
       let nestedName = makeName(codingPath: codingPath, index: 1, name: codingPath[0].stringValue)
       name = camelToSnake(string: nestedName) ?? nestedName

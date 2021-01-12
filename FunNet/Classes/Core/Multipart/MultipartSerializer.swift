@@ -57,16 +57,6 @@ public final class MultipartSerializer {
           
           let tempBuffer = UnsafeRawBufferPointer(start: temp, count: part.streamLength)
           buffer.writeFromPointer(pointer: tempBuffer)
-          
-//            for (key, val) in part.headers {
-//                buffer.writeString(key)
-//                buffer.writeString(": ")
-//                buffer.writeString(val)
-//                buffer.writeString("\r\n")
-//            }
-          
-//            var body = part.body
-//            buffer.writeBuffer(&body)
           buffer.writeString(string: "\r\n")
         }
       buffer.writeString(string: "--")

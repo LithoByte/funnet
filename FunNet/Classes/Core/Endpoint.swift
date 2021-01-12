@@ -39,7 +39,7 @@ public extension EndpointProtocol {
     }
     
     mutating func addModelStream<E: Encodable>(model: E, encoder: JSONEncoder = JSONEncoder()) {
-//        self.dataStream = try? encoder.encode(model)
+        self.dataStream = try? InputStream(data: encoder.encode(model))
     }
     
     mutating func addGetParams(params: [String: String]) {

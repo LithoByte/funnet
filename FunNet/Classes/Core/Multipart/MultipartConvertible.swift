@@ -39,7 +39,7 @@ extension String: MultipartConvertible {
   }
   
   public init?(multipart: MultipartComponent) {
-    var temp = UnsafeMutablePointer<UInt8>.allocate(capacity: multipart.streamLength)
+    let temp = UnsafeMutablePointer<UInt8>.allocate(capacity: multipart.streamLength)
     let byteCount = multipart.dataStream.read(temp, maxLength: multipart.streamLength)
     
     defer {
