@@ -150,7 +150,7 @@ public struct AccountInfo: Codable {
     var passwordConfirmation: String?
     var invitationToken: String?
     var data: Data?
-    var avatar: MultiPartImage?
+    var avatar: JpgImage?
 }
 
 

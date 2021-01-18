@@ -170,20 +170,45 @@ extension URL: MultipartConvertible {
   
 }
 
-final class MultiPartImage: UIImage { }
+public final class PngImage: UIImage { }
 
-extension MultiPartImage: MultipartConvertible, Codable {
+extension PngImage: MultipartConvertible, Codable {
     public var multipart: ((String, String?, String?) -> MultipartComponent) {
         return { name, fileName, contentType in
             MultipartComponent(data: self.pngData()!, name: name, fileName: fileName, contentType: "image/png")
         }
     }
-    convenience init?(multipart: MultipartComponent) {
+    
+    public convenience init?(multipart: MultipartComponent) {
         guard let data = try? Data(reading: multipart.dataStream) else { return nil }
         self.init(data: data)
     }
 }
 
+public final class JpgImage: UIImage {
+    var quality: CGFloat = 1.0
+}
 
+extension JpgImage: MultipartConvertible, Codable {
+    public var multipart: ((String, String?, String?) -> MultipartComponent) {
+        return { [unowned self] name, fileName, contentType in
+            MultipartComponent(data: self.jpegData(compressionQuality: self.quality) ?? Data(), name: name, fileName: fileName ?? "\(name).jpg", contentType: "image/jpeg")
+        }
+    }
+    
+    public convenience init?(multipart: MultipartComponent) {
+        guard let data = try? Data(reading: multipart.dataStream) else { return nil }
+        self.init(data: data)
+    }
+}
 
-
+extension UIImage {
+    public func jpgImage(ofQuality quality: CGFloat) -> JpgImage? {
+        if let cgImage = cgImage {
+            let jpg = JpgImage(cgImage: cgImage)
+            jpg.quality = quality
+            return jpg
+        }
+        return nil
+    }
+}
