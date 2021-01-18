@@ -19,10 +19,9 @@ DEPENDENCIES:
   - FunNet (from `../`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  trunk:
     - LithoOperators
     - Prelude
-  trunk:
     - ReactiveSwift
 
 EXTERNAL SOURCES:
@@ -30,11 +29,11 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  FunNet: d3a58cf3092d9ec4c9ca9338c4f20fcc7e0eebad
+  FunNet: c7da8924cc8ec1f4b7126b2ad1f8c3f35b8a9e7a
   LithoOperators: 8a4f284d8c10cb02b28af87c18494ba225345419
   Prelude: fe4cc0fd961d34edf48fe6b04d05c863449efb0a
   ReactiveSwift: 07ddf579f4eb3ee3bd656214f0461aaf2c0fd639
 
 PODFILE CHECKSUM: 7cb893b39fb1b5800d66e86e4732dc00ae9870e4
 
-COCOAPODS: 1.9.0
+COCOAPODS: 1.10.0
