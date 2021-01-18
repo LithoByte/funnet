@@ -12,6 +12,7 @@ public func generateRequest(from configuration: ServerConfigurationProtocol, end
     let configure = (endpoint.httpMethod >|> applyHttpMethod)
         <> (endpoint.httpHeaders >|> applyHeaders)
         <> (endpoint.postData >|> applyBody)
+        <> (endpoint.dataStream >|> applyStream)
     
     let mutableRequest = configuration.urlString(for: endpoint) |>
         (URL.init(string:) >?> NSMutableURLRequest.init(url:))
@@ -91,4 +92,10 @@ public func applyHeaders(_ httpHeaders: [String: String] = [:], request: NSMutab
 
 public func applyBody(_ postData: Data?, request: NSMutableURLRequest) {
     request.httpBody = postData
+}
+
+public func applyStream(_ stream: InputStream?, request: NSMutableURLRequest) {
+    if let stream = stream {
+        request.httpBodyStream = stream
+    }
 }
