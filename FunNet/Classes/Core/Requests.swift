@@ -95,5 +95,7 @@ public func applyBody(_ postData: Data?, request: NSMutableURLRequest) {
 }
 
 public func applyStream(_ stream: InputStream?, request: NSMutableURLRequest) {
-    request.httpBodyStream = stream
+    if let stream = stream {
+        request.httpBodyStream = stream
+    }
 }

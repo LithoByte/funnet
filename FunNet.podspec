@@ -48,7 +48,8 @@ TODO: Add long description of the pod here.
   end
   
   s.subspec 'Multipart' do |sp|
-      sp.source_files = 'FunNet/Classes/Core/Multipart/**/*.swift'
-      sp.ios.deployment_target = '13.0'
+      sp.source_files = 'FunNet/Classes/Multipart/**/*.swift'
+#      sp.ios.deployment_target = '13.0'
       sp.dependency 'LithoOperators'
+  end
 end

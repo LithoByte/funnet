@@ -34,15 +34,16 @@ public extension EndpointProtocol {
         }
     }
     
-    mutating func addModelData<E: Encodable>(model: E, encoder: FormDataEncoder = FormDataEncoder()) {
-        let boundary = "--boundary-pds-site\(Date().timeIntervalSince1970)file-image-boundary--"
-        guard let formData = try? encoder.encode(model, boundary: boundary) else { return }
-        let stream = formData.makeInputStream()
-        self.postData = try? Data(reading: stream)
+    mutating func addModelData<E: Encodable>(model: E, encoder: JSONEncoder = JSONEncoder()) {
+        if let data = try? encoder.encode(model) {
+            self.postData = data
+        }
     }
     
-    mutating func addModelStream<E: Encodable>(model: E, encoder: JSONEncoder = JSONEncoder()) {
-        self.dataStream = try? InputStream(data: encoder.encode(model))
+    mutating func addModelStream<E: Encodable>(model: E, encoder: FormDataEncoder = FormDataEncoder()) {
+        let boundary = "--boundary-pds-site\(Date().timeIntervalSince1970)file-image-boundary--"
+        guard let formData = try? encoder.encode(model, boundary: boundary) else { return }
+        self.dataStream = formData.makeInputStream()
     }
     
     mutating func addGetParams(params: [String: String]) {
