@@ -99,6 +99,23 @@ extension Float: MultipartConvertible {
   }
 }
 
+extension Double: MultipartConvertible {
+    public var multipart: ((String, String?, String?) -> MultipartComponent) {
+      get {
+        return { name, fileName, _ in
+          MultipartComponent(data: self.description.data(using: .utf8)!, name: name, fileName: nil, contentType: "text/plain")
+        }
+      }
+    }
+    
+    public init?(multipart: MultipartComponent) {
+      guard let string = String(multipart: multipart) else {
+        return nil
+      }
+      self.init(string)
+    }
+}
+
 extension Bool: MultipartConvertible {
   public var multipart: ((String, String?, String?) -> MultipartComponent) {
     get {
