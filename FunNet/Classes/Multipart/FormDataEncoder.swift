@@ -44,7 +44,7 @@ public struct FormDataEncoder {
   /// Creates a new `FormDataEncoder`.
   public init() { }
   
-  public func encode(_ encodable: Encodable, boundary: String) throws -> MultipartFormData {
+  public func encode(_ encodable: Encodable, boundary: String = "--boundary-\(Date().timeIntervalSince1970)-boundary--") throws -> MultipartFormData {
     let multipart = FormDataEncoderContext()
     let encoder = _FormDataEncoder(multipart: multipart, codingPath: [])
     try encodable.encode(to: encoder)

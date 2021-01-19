@@ -203,7 +203,7 @@ extension JpgImage: MultipartConvertible, Codable {
 }
 
 extension UIImage {
-    public func jpgImage(ofQuality quality: CGFloat) -> JpgImage? {
+    public func jpgImage(ofQuality quality: CGFloat = 1.0) -> JpgImage? {
         if let cgImage = cgImage {
             let jpg = JpgImage(cgImage: cgImage)
             jpg.quality = quality

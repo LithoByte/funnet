@@ -99,3 +99,7 @@ public func applyStream(_ stream: InputStream?, request: NSMutableURLRequest) {
         request.httpBodyStream = stream
     }
 }
+
+public func applyTimeout(interval: TimeInterval, request: NSMutableURLRequest) {
+    request.timeoutInterval = interval
+}

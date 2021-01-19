@@ -12,6 +12,7 @@ public protocol EndpointProtocol {
     var httpHeaders: [String: String] { get set }
     var path: String { get set }
     var getParams: [String: Any] { get set }
+    var timeout: TimeInterval { get set }
     var postData: Data? { get set }
     var dataStream: InputStream? { get set }
 }
@@ -19,8 +20,9 @@ public protocol EndpointProtocol {
 public struct Endpoint: EndpointProtocol {
     public var httpMethod: String = "GET"
     public var httpHeaders: [String: String] = [:]
-    public var getParams: [String: Any] = [:]
     public var path: String = ""
+    public var getParams: [String: Any] = [:]
+    public var timeout: TimeInterval = 60
     public var postData: Data?
     public var dataStream: InputStream?
     
@@ -41,8 +43,7 @@ public extension EndpointProtocol {
     }
     
     mutating func addModelStream<E: Encodable>(model: E, encoder: FormDataEncoder = FormDataEncoder()) {
-        let boundary = "--boundary-pds-site\(Date().timeIntervalSince1970)file-image-boundary--"
-        guard let formData = try? encoder.encode(model, boundary: boundary) else { return }
+        guard let formData = try? encoder.encode(model) else { return }
         self.dataStream = formData.makeInputStream()
     }
     
