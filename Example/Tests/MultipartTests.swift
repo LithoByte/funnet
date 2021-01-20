@@ -70,11 +70,26 @@ class MultipartTests: XCTestCase {
         XCTAssert(parts.filter({ $0.contains("holders[][account_info][first_name]") }).count == 2)
     }
     
+    func testArrayLiteralMultipartEncoder() {
+        let encoder = FormDataEncoder()
+        let boundary = "--boundary-\(Date().timeIntervalSince1970)file-image-boundary--"
+        guard let multipartForm: MultipartFormData = try? encoder.encode(StringsContainer(strings: ["Elliot", "Calvin"]), boundary: boundary) else {
+            return XCTAssert(false)
+        }
+        let stream = multipartForm.makeInputStream()
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: multipartForm.countContentLength())
+        stream.read(buffer, maxLength: multipartForm.countContentLength())
+        let encodedString = String(cString: buffer)
+        let parts: [String] = encodedString.components(separatedBy: boundary)
+        XCTAssert(parts.filter({ $0.contains("strings[]") }).count == 2)
+    }
+    
     func testArrayConvertibleEncoder() {
         let encoder = FormDataEncoder()
-        let image = UIImage(named: "0.jpg")?.jpgImage()
+        let image = UIImage(named: "0.jpg")!.jpgImage()!
+        let image2 = UIImage(named: "IMG_0597sq")!.jpgImage()!
         let boundary = "--boundary-\(Date().timeIntervalSince1970)file-image-boundary--"
-        guard let multipartForm: MultipartFormData = try? encoder.encode([image], boundary: boundary) else {
+        guard let multipartForm: MultipartFormData = try? encoder.encode(Container(doc: HasAttachments(attachments: [image, image2])), boundary: boundary) else {
             return XCTAssert(false)
         }
         let stream = multipartForm.makeInputStream()
@@ -83,19 +98,19 @@ class MultipartTests: XCTestCase {
         let encodedString = String(cString: buffer)
         print(encodedString)
         let parts: [String] = encodedString.components(separatedBy: boundary)
-        XCTAssert(parts.filter({ $0.contains("name=\"0\"") }).count == 1)
+        XCTAssertEqual(parts.filter({ $0.contains("name=\"doc[attachments][]\"") }).count, 2)
     }
 }
 
-public struct AccountInfoHolderHolder: Codable {
-    var holders: [AccountInfoHolder]
+struct StringsContainer: Codable {
+    var strings: [String]
 }
 
+public struct Container: Codable { var doc: HasAttachments }
+public struct HasAttachments: Codable { var attachments: [JpgImage] }
 
-public struct AccountInfoHolder: Codable {
-    var accountInfo: AccountInfo?
-}
-
+public struct AccountInfoHolderHolder: Codable { var holders: [AccountInfoHolder] }
+public struct AccountInfoHolder: Codable { var accountInfo: AccountInfo? }
 public struct AccountInfo: Codable {
     var firstName: String?
     var lastName: String?

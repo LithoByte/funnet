@@ -179,8 +179,12 @@ private struct _FormDataUnkeyedEncoder: UnkeyedEncodingContainer {
   }
   
   mutating func encode<T>(_ value: T) throws where T : Encodable {
-    let encoder = _FormDataEncoder(multipart: multipart, codingPath: codingPath + [index])
-    try value.encode(to: encoder)
+    if value is MultipartConvertible {
+        try multipart.encode(value, at: codingPath + [index])
+    } else {
+        let encoder = _FormDataEncoder(multipart: multipart, codingPath: codingPath + [index])
+        try value.encode(to: encoder)
+    }
     self.count += 1
   }
   
