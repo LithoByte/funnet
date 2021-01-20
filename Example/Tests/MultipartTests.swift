@@ -26,9 +26,7 @@ class MultipartTests: XCTestCase {
     }
     
     func testMultipartComponent() throws {
-        let string = "Hello"
-        //let multiPart = string.multipart("Greeting", nil, nil)
-        let formData = try FormDataEncoder().encode(["greeting": "hello"], boundary: "--boundary-pds-site\(Date().timeIntervalSince1970)file-image-boundary--")
+        let formData = try FormDataEncoder().encode(["greeting": "hello"], boundary: "--boundary-\(Date().timeIntervalSince1970)file-image-boundary--")
         let stream = formData.makeInputStream()
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: formData.countContentLength())
         stream.read(buffer, maxLength: formData.countContentLength())
@@ -40,7 +38,7 @@ class MultipartTests: XCTestCase {
         let encoder = FormDataEncoder()
         let userInfo = AccountInfo(firstName: "Calvin", lastName: "Collins", phoneNumber: "1234", email: "cjc8@williams.edu", password: "password", passwordConfirmation: "password", invitationToken: "token", data: Data(base64Encoded: "abcd"))
         let holder = AccountInfoHolder(accountInfo: userInfo)
-        let boundary = "--boundary-pds-site\(Date().timeIntervalSince1970)file-image-boundary--"
+        let boundary = "--boundary-\(Date().timeIntervalSince1970)file-image-boundary--"
         guard let multipartForm: MultipartFormData = try? encoder.encode(holder, boundary: boundary) else {
             return XCTAssert(false)
         }
@@ -48,7 +46,6 @@ class MultipartTests: XCTestCase {
         let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: multipartForm.countContentLength())
         stream.read(buffer, maxLength: multipartForm.countContentLength())
         let encodedString = String(cString: buffer)
-        print(encodedString)
         let parts: [String] = encodedString.components(separatedBy: boundary)
         XCTAssert(parts.filter({ $0.contains("account_info[first_name]") }).count != 0)
         XCTAssert(parts.filter({ $0.contains("account_info[last_name]") }).count != 0)
@@ -61,8 +58,23 @@ class MultipartTests: XCTestCase {
         let holder1 = AccountInfoHolder(accountInfo: userInfo1)
         let holder2 = AccountInfoHolder(accountInfo: userInfo2)
         let holderHolder = AccountInfoHolderHolder(holders: [holder1, holder2])
-        let boundary = "--boundary-pds-site\(Date().timeIntervalSince1970)file-image-boundary--"
+        let boundary = "--boundary-\(Date().timeIntervalSince1970)file-image-boundary--"
         guard let multipartForm: MultipartFormData = try? encoder.encode(holderHolder, boundary: boundary) else {
+            return XCTAssert(false)
+        }
+        let stream = multipartForm.makeInputStream()
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: multipartForm.countContentLength())
+        stream.read(buffer, maxLength: multipartForm.countContentLength())
+        let encodedString = String(cString: buffer)
+        let parts: [String] = encodedString.components(separatedBy: boundary)
+        XCTAssert(parts.filter({ $0.contains("holders[][account_info][first_name]") }).count == 2)
+    }
+    
+    func testArrayConvertibleEncoder() {
+        let encoder = FormDataEncoder()
+        let image = UIImage(named: "0.jpg")?.jpgImage()
+        let boundary = "--boundary-\(Date().timeIntervalSince1970)file-image-boundary--"
+        guard let multipartForm: MultipartFormData = try? encoder.encode([image], boundary: boundary) else {
             return XCTAssert(false)
         }
         let stream = multipartForm.makeInputStream()
@@ -71,64 +83,7 @@ class MultipartTests: XCTestCase {
         let encodedString = String(cString: buffer)
         print(encodedString)
         let parts: [String] = encodedString.components(separatedBy: boundary)
-        XCTAssert(parts.filter({ $0.contains("holders[][account_info][first_name]") }).count == 2)
-    }
-    
-    func testCamelToSnake() {
-        let string: String = "userName"
-        let converted = camelToSnake(string: string)
-        print(converted ?? "nil")
-        XCTAssert(converted != nil)
-        XCTAssert(converted! == "user_name")
-        
-        let allLower: String = "name"
-        let convertedLower = camelToSnake(string: allLower)
-        print(convertedLower ?? "nil")
-        XCTAssert(convertedLower != nil)
-        XCTAssert(convertedLower! == "name")
-        
-        let multCaps: String = "QRCode"
-        let convertedMultCaps: String? = camelToSnake(string: multCaps)
-        print(convertedMultCaps ?? "nil")
-        XCTAssert(convertedMultCaps != nil)
-        XCTAssert(convertedMultCaps! == "qr_code")
-    }
-    
-    
-    
-    func testCamelFromSnake() {
-        let string: String = "user_name"
-        let converted = camelFromSnake(string: string)
-        print(converted ?? "nil")
-        XCTAssert(converted != nil)
-        XCTAssert(converted! == "userName")
-        
-        let allLower: String = "name"
-        let convertedLower = camelFromSnake(string: allLower)
-        print(convertedLower ?? "nil")
-        XCTAssert(convertedLower != nil)
-        XCTAssert(convertedLower! == "name")
-        
-        let multCaps: String = "qr_code"
-        let convertedMultCaps: String? = camelFromSnake(string: multCaps)
-        print(convertedMultCaps ?? "nil")
-        XCTAssert(convertedMultCaps != nil)
-        XCTAssert(convertedMultCaps! == "qrCode")
-    }
-    
-    func testNameNesting() {
-        // General Test
-        let names = ["user", "inviter", "firstName"]
-        let nestedNames = makeName(strings: names, index: 1, name: names[0])
-        XCTAssert(nestedNames == "user[inviter][firstName]")
-        let snakeNestedNames = camelToSnake(string: nestedNames)
-        XCTAssert(snakeNestedNames == "user[inviter][first_name]")
-        
-        //Edge case: Single key
-        let singleName = ["user"]
-        let nestedSingleName = makeName(strings: singleName, index: 1, name: singleName[0])
-        XCTAssert(nestedSingleName == "user")
-        XCTAssert(camelToSnake(string: nestedSingleName) == "user")
+        XCTAssert(parts.filter({ $0.contains("name=\"0\"") }).count == 1)
     }
 }
 
@@ -152,8 +107,3 @@ public struct AccountInfo: Codable {
     var data: Data?
     var avatar: JpgImage?
 }
-
-
-
-
-

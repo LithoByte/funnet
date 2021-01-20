@@ -183,12 +183,9 @@ extension URL: MultipartConvertible {
   public init?(multipart: MultipartComponent) {
     return nil
   }
-  
-  
 }
 
 public final class PngImage: UIImage { }
-
 extension PngImage: MultipartConvertible, Codable {
     public var multipart: ((String, String?, String?) -> MultipartComponent) {
         return { name, fileName, contentType in
@@ -202,10 +199,7 @@ extension PngImage: MultipartConvertible, Codable {
     }
 }
 
-public final class JpgImage: UIImage {
-    var quality: CGFloat = 1.0
-}
-
+public final class JpgImage: UIImage { var quality: CGFloat = 1.0 }
 extension JpgImage: MultipartConvertible, Codable {
     public var multipart: ((String, String?, String?) -> MultipartComponent) {
         return { [unowned self] name, fileName, contentType in
