@@ -42,11 +42,6 @@ public extension EndpointProtocol {
         }
     }
     
-    mutating func addModelStream<E: Encodable>(model: E, encoder: FormDataEncoder = FormDataEncoder()) {
-        guard let formData = try? encoder.encode(model) else { return }
-        self.dataStream = formData.makeInputStream()
-    }
-    
     mutating func addGetParams(params: [String: String]) {
         for key in params.keys {
             getParams[key] = params[key]
@@ -62,14 +57,6 @@ public func dataSetter<M, T>(from model: M) -> (inout T) -> Void where M: Encoda
 
 public func addJsonHeaders<T>(_ endpoint: inout T) where T: EndpointProtocol {
     endpoint.addHeaders(headers: ["Content-Type": "application/json", "Accept": "application/json"])
-}
-
-public func addMultipartHeaders<T>(_ endpoint: inout T, from multipartData: MultipartFormData) where T: EndpointProtocol {
-    endpoint.addHeaders(headers: [
-        "Content-Type": "multipart/form-data; charset=utf-8; boundary=\"\(multipartData.boundary)\"",
-        "Content-Length": "\(multipartData.countContentLength())",
-        "Accept": "application/json"
-    ])
 }
 
 public func setToGet<T>(_ endpoint: inout T) where T: EndpointProtocol {

@@ -20,6 +20,10 @@ public protocol Fireable {
     func fire()
 }
 
+public func callFirer(_ call: Fireable) {
+    call.fire()
+}
+
 public func fire<T>(_ call: T) where T: NetworkCall {
     fire(call, with: call.responder)
 }
