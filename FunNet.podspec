@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'FunNet'
-  s.version          = '0.0.1'
+  s.version          = '0.1.0'
   s.summary          = 'FunNet provides a foundation for reusable functional networking in Swift.'
   s.swift_versions   = ['4.2', '5.0', '5.1', '5.2', '5.3']
 
@@ -22,7 +22,7 @@ TODO: Add long description of the pod here.
   s.source           = { :git => 'https://github.com/schrockblock/funnet.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/elliot_schrock'
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '9.0'
 
   s.source_files = 'FunNet/Classes/**/*'
   s.dependency 'LithoOperators'
@@ -48,7 +48,7 @@ TODO: Add long description of the pod here.
   end
   
   s.subspec 'Multipart' do |sp|
-      sp.source_files = 'FunNet/Classes/Multipart/**/*.swift'
-      sp.dependency 'LithoOperators'
+    sp.source_files = 'FunNet/Classes/Multipart/**/*.swift'
+    sp.dependency 'LithoOperators'
   end
 end

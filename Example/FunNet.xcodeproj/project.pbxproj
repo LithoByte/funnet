@@ -41,6 +41,7 @@
 		496378A225B895B50020E60B /* MultipartNamingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipartNamingTests.swift; sourceTree = "<group>"; };
 		4964636E220E65010060D199 /* Api.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		49646370220F5D350060D199 /* SignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
+		49BB05D3261772E200224111 /* config.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; name = config.yml; path = ../.circleci/config.yml; sourceTree = "<group>"; };
 		49CEE0A5242390AA00F5E124 /* ServerConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfigurationTests.swift; sourceTree = "<group>"; };
 		49DFCD782565810A000AD926 /* MultipartTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipartTests.swift; sourceTree = "<group>"; };
 		49F148E7C9CD39D05B7952FA /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
@@ -96,6 +97,7 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
+				49BB05D3261772E200224111 /* config.yml */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example for FunNet */,
 				607FACE81AFB9204008FA782 /* Tests */,

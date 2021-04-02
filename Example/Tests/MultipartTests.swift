@@ -89,16 +89,14 @@ class MultipartTests: XCTestCase {
         let image = UIImage(named: "0.jpg")!.jpgImage()!
         let image2 = UIImage(named: "IMG_0597sq")!.jpgImage()!
         let boundary = "--boundary-\(Date().timeIntervalSince1970)file-image-boundary--"
+        
         guard let multipartForm: MultipartFormData = try? encoder.encode(Container(doc: HasAttachments(attachments: [image, image2])), boundary: boundary) else {
             return XCTAssert(false)
         }
-        let stream = multipartForm.makeInputStream()
-        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: multipartForm.countContentLength())
-        stream.read(buffer, maxLength: multipartForm.countContentLength())
-        let encodedString = String(cString: buffer)
-        print(encodedString)
-        let parts: [String] = encodedString.components(separatedBy: boundary)
-        XCTAssertEqual(parts.filter({ $0.contains("name=\"doc[attachments][]\"") }).count, 2)
+        
+        XCTAssertEqual(multipartForm.parts.count, 2)
+        XCTAssertEqual(multipartForm.parts.first?.name, "doc[attachments][]")
+        XCTAssertEqual(multipartForm.parts[1].name, "doc[attachments][]")
     }
 }
 
