@@ -13,6 +13,7 @@ public func generateRequest(from configuration: ServerConfigurationProtocol, end
         <> (endpoint.httpHeaders >|> applyHeaders)
         <> (endpoint.postData >|> applyBody)
         <> (endpoint.dataStream >|> applyStream)
+        <> (endpoint.timeout >|> applyTimeout)
     
     let mutableRequest = configuration.urlString(for: endpoint) |>
         (URL.init(string:) >?> NSMutableURLRequest.init(url:))
