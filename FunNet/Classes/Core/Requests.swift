@@ -70,10 +70,14 @@ public func handlersToCompletion(responseHandler: @escaping (URLResponse?) -> Vo
         } else if let httpResponse = response as? HTTPURLResponse {
             httpResponseHandler(httpResponse)
             if httpResponse.statusCode > 299 {
+                var info: [String: Any] = ["url" : httpResponse.url?.absoluteString as Any]
                 if let data = data {
                     errorDataHandler(data)
+                    if let stringData = String(data: data, encoding: .utf8) {
+                        info["data"] = stringData
+                    }
                 }
-                serverErrorHandler(NSError(domain: "Server", code: httpResponse.statusCode, userInfo: ["url" : httpResponse.url?.absoluteString as Any]))
+                serverErrorHandler(NSError(domain: "Server", code: httpResponse.statusCode, userInfo: info))
             } else {
                 dataHandler(data)
             }

@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'FunNet'
-  s.version          = '0.1.0'
+  s.version          = '0.1.1'
   s.summary          = 'FunNet provides a foundation for reusable functional networking in Swift.'
   s.swift_versions   = ['4.2', '5.0', '5.1', '5.2', '5.3']
 

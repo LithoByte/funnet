@@ -39,11 +39,16 @@ class ServerConfigurationTests: XCTestCase {
         let url = config.toBaseUrlString()
         XCTAssertEqual(url, "https://test.lithobyte.co/api/v1/")
     }
-
+    
     func testEncodedGetParameters() {
         let config = ServerConfiguration(host: "test.lithobyte.co", apiRoute: "api/v1")
         
         let url = config.urlString(for: "search", getParams: ["query": "true love", "page": 1])
         XCTAssert(url == "https://test.lithobyte.co/api/v1/search?query=true%20love&page=1" || url == "https://test.lithobyte.co/api/v1/search?page=1&query=true%20love")
+    }
+    
+    func testPreviouslyEncodedGetParameters() {
+        let url = dictionaryToUrlUnencodedParams(dict: ["page": 1, "key": "api%20key"])
+        XCTAssert(url == "key=api%20key&page=1" || url == "page=1&key=api%20key")
     }
 }

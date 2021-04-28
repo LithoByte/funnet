@@ -78,3 +78,18 @@ public func dictionaryToUrlParams(dict: [String: Any]) -> String {
     }
     return params.joined(separator: "&")
 }
+
+public func dictionaryToUrlUnencodedParams(dict: [String: Any]) -> String {
+    var params = [String]()
+    for key in dict.keys {
+        if let value: Any = dict[key] {
+            var valueString = "\(String(describing: value))"
+            if let valueArray = value as? [AnyObject] {
+                valueString = valueArray.map { "\($0)" }.joined(separator: ",")
+            }
+            let param = "\(key)=\(valueString)"
+            params.append(param)
+        }
+    }
+    return params.joined(separator: "&")
+}
