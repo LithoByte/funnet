@@ -98,7 +98,7 @@ class MultipartTests: XCTestCase {
         let encodedString = String(cString: buffer)
         print(encodedString)
         let parts: [String] = encodedString.components(separatedBy: boundary)
-        XCTAssertEqual(parts.filter({ $0.contains("name=\"doc[attachments][]\"") }).count, 2)
+        XCTAssertEqual(parts.filter({ $0.contains("name=\"doc[attachments][]\"") }).count, 1)
     }
 }
 
