@@ -24,7 +24,7 @@ let urlLoadingErrorCodesDict: [Int: String] = [
     -1014: "Server indicated data was forthcoming, but terminated connection before sending any.",
     -1015: "Cannot decode raw data (encoding known, but data is invalid).",
     -1016: "Cannot decode content data (unknown encoding).",
-    -1016: "Cannot parse response.",
+    -1017: "Cannot parse response.",
     -1018: "Roaming is disabled.",
     -1019: "Phone call in progress and cell service does not support simultaneous phone and data communication.",
     -1020: "Data not allowed (cell network disallowed the connection).",
