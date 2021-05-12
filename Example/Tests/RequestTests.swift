@@ -117,4 +117,15 @@ class RequestTests: XCTestCase {
         
         XCTAssertEqual(request.allHTTPHeaderFields, headers)
     }
+    
+    func testTimeout() {
+        let serverConfig = ServerConfiguration(shouldStub: true, scheme: "http", host: "api.lithobyte.co", apiRoute: "api/v1", urlConfiguration: URLSessionConfiguration.default)
+        var endpoint = Endpoint()
+        endpoint.path = "apps"
+        endpoint.timeout = 500.0
+        
+        let request = generateRequest(from: serverConfig, endpoint: endpoint)
+        
+        XCTAssertEqual(request.timeoutInterval, endpoint.timeout)
+    }
 }

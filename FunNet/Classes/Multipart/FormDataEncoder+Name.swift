@@ -10,7 +10,7 @@ import Foundation
 /**
  Takes an ordered array of CodingKeys and converts them into nested format:
  Pre: codingPath.count >= 1
- [user, invitation, from] => "user[invitation[from]]"
+ [user, invitation, from] => "user[invitation][from]"
  */
 
 public func makeName(codingPath: [CodingKey], index: Int, name: String) -> String {
@@ -25,7 +25,6 @@ public func makeName(codingPath: [CodingKey], index: Int, name: String) -> Strin
       return makeName(codingPath: codingPath, index: index+1, name: name + "[\(string)]")
     }
   }
-  
 }
 
 

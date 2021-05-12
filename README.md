@@ -1,5 +1,10 @@
 # FunNet
 
+[![CI Status](https://circleci.com/gh/schrockblock/FunNet.svg?style=svg)](https://circleci.com/gh/schrockblock/funnet)
+[![Version](https://img.shields.io/cocoapods/v/FunNet.svg?style=flat)](https://cocoapods.org/pods/FunNet)
+[![License](https://img.shields.io/cocoapods/l/FunNet.svg?style=flat)](https://cocoapods.org/pods/FunNet)
+[![Platform](https://img.shields.io/cocoapods/p/FunNet.svg?style=flat)](https://cocoapods.org/pods/FunNet)
+
 ## Example
 
 FunNet lets you build network calls using three main parts: a server configuration, an endpoint, and a responder. You can customize each of those as you need, but it also provides ready made solutions for you. These three elements can be combined into a `NetworkCall`, which you can then call `fire()` on to fire your network call.

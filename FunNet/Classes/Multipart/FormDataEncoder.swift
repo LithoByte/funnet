@@ -59,13 +59,14 @@ private final class FormDataEncoderContext {
     self.parts = []
   }
   
-  func encode<E>(_ encodable: E, at codingPath: [CodingKey]) throws where E: Encodable {
+  func encode<E>(_ encodable: E, at codingPath: [CodingKey], arrayIndex i: Int? = nil) throws where E: Encodable {
     guard let convertible = encodable as? MultipartConvertible else {
       throw MultipartError.convertibleType(E.self)
     }
     
     let multipart = convertible.multipart
     var name: String = ""
+    var fileName: String? = nil
     switch codingPath.count {
     case 0: throw MultipartError.invalidFormat
     case 1: name = camelToSnake(string: codingPath[0].stringValue) ?? codingPath[0].stringValue
@@ -73,7 +74,10 @@ private final class FormDataEncoderContext {
       let nestedName = makeName(codingPath: codingPath, index: 1, name: codingPath[0].stringValue)
       name = camelToSnake(string: nestedName) ?? nestedName
     }
-    let part = multipart(name, nil, nil)
+    if let i = i {
+        fileName = "\(name)[\(i)]"
+    }
+    let part = multipart(name, fileName, nil)
     self.parts.append(part)
   }
 }
@@ -171,7 +175,7 @@ private struct _FormDataUnkeyedEncoder: UnkeyedEncodingContainer {
   init(multipart: FormDataEncoderContext, codingPath: [CodingKey]) {
     self.multipart = multipart
     self.codingPath = codingPath
-    self.count = 0
+    count = 0
   }
   
   mutating func encodeNil() throws {
@@ -180,12 +184,12 @@ private struct _FormDataUnkeyedEncoder: UnkeyedEncodingContainer {
   
   mutating func encode<T>(_ value: T) throws where T : Encodable {
     if value is MultipartConvertible {
-        try multipart.encode(value, at: codingPath + [index])
+        try multipart.encode(value, at: codingPath + [index], arrayIndex: count)
     } else {
         let encoder = _FormDataEncoder(multipart: multipart, codingPath: codingPath + [index])
         try value.encode(to: encoder)
     }
-    self.count += 1
+    count += 1
   }
   
   mutating func nestedContainer<NestedKey>(keyedBy keyType: NestedKey.Type) -> KeyedEncodingContainer<NestedKey> where NestedKey : CodingKey {

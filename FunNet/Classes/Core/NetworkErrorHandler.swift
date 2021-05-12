@@ -14,6 +14,12 @@ public protocol ErrorMessage {
     var forCode: Int { get }
 }
 
+public struct SimpleErrorMessage: ErrorMessage {
+    public var title: String
+    public var message: String
+    public var forCode: Int
+}
+
 public protocol NetworkErrorHandler {
     func alert(for error: NSError) -> UIViewController
 }
@@ -42,23 +48,23 @@ public class VerboseNetworkErrorHandler: NetworkErrorHandler {
     open func alert(for error: NSError) -> UIViewController {
         print(error)
         if let message = errorMessageMap[error.code] {
-            return alert(message.title, message.message)
+            return FunNet.alert(message.title, message.message)
         } else {
-            return alert("Error \(error.code)", "Description: \(error.debugDescription)\nInfo: \(error.userInfo)")
+            return FunNet.alert("Error \(error.code)", "Description: \(error.debugDescription)\nInfo: \(error.userInfo)")
         }
     }
     
     open func notify(title: String, message: String) {
-        alert(title, message).show(animated: true)
+        FunNet.alert(title, message).show(animated: true)
     }
-    
-    func alert(_ title: String, _ message: String) -> UIAlertController {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
-            alert.dismiss(animated: true, completion: nil)
-        }))
-        return alert
-    }
+}
+
+public func alert(_ title: String, _ message: String) -> UIAlertController {
+    let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
+    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
+        alert.dismiss(animated: true, completion: nil)
+    }))
+    return alert
 }
 
 public struct DefaultServerUnavailableErrorMessage: ErrorMessage {
@@ -214,7 +220,7 @@ public class DebugNetworkErrorHandler: VNetworkErrorHandler {
         503 : "Server currently unavailable",
         505 : "HTTP version not supported",
         511 : "Network authentication required"
-    ]
+    ].merging(urlLoadingErrorCodesDict, uniquingKeysWith: { _, key in return key })
     
     func errorFunction() -> (NSError?) -> Void {
         return { err in
@@ -232,7 +238,7 @@ public class DebugNetworkErrorHandler: VNetworkErrorHandler {
 
 public class AlertNetworkErrorHandler: VNetworkErrorHandler {
     
-    open var errorMessageMap: [Int:String] = [:]
+    open var errorMessageMap: [Int:String] = urlLoadingErrorCodesDict
     var defaultMessage: String?
     
     public init(handledErrors: [Int:String], defaultMessage: String?) {
