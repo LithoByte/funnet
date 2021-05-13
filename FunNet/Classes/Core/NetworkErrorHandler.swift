@@ -122,37 +122,23 @@ extension UIAlertController {
     }
 }
 
-public struct NetworkErrorMessage: ErrorMessage {
-    public let response: HTTPURLResponse?
-    public let title: String
-    public let message: String
-    public let forCode: Int
-    
-    public init(title: String, message: String, forCode: Int, response: HTTPURLResponse?) {
-        self.title = title
-        self.message = message
-        self.forCode = forCode
-        self.response = response
-    }
-}
-
 public enum ErrorHandlingConfig {
     case print, debug, alert, printAndAlert
 }
 
-protocol NetworkErrorFunctionProvider {
+public protocol NetworkErrorFunctionProvider {
     func errorFunction() -> (NSError?) -> Void
     func dataFunction() -> (Data?) -> Void
 }
 
 public class PrintingNetworkErrorHandler: NetworkErrorFunctionProvider {
-    func dataFunction() -> (Data?) -> Void {
+    public func dataFunction() -> (Data?) -> Void {
         return { data in
             print("Payload: \(String(data: data ?? Data([]), encoding: .utf8) ?? "None")")
         }
     }
     
-    func errorFunction() -> (NSError?) -> Void {
+    public func errorFunction() -> (NSError?) -> Void {
         return { err in
             print("Server Error: \(err?.domain ?? "No title")")
             print("URL: \(err?.userInfo["url"] ?? "none")")
@@ -222,13 +208,13 @@ public class DebugNetworkErrorHandler: VNetworkErrorHandler {
         511 : "Network authentication required"
     ].merging(urlLoadingErrorCodesDict, uniquingKeysWith: { _, key in return key })
     
-    func errorFunction() -> (NSError?) -> Void {
+    public func errorFunction() -> (NSError?) -> Void {
         return { err in
             self.alert(for: err).show()
         }
     }
     
-    func dataFunction() -> (Data?) -> Void {
+    public func dataFunction() -> (Data?) -> Void {
         return { data in
             let payload = String(data: data ?? Data([]), encoding: .utf8)
             self.alert("Error", payload ?? "").show()
@@ -248,13 +234,13 @@ public class AlertNetworkErrorHandler: VNetworkErrorHandler {
         self.defaultMessage = defaultMessage
     }
     
-    func errorFunction() -> (NSError?) -> Void {
+    public func errorFunction() -> (NSError?) -> Void {
         return { err in
             self.alert(for: err).show()
         }
     }
     
-    func dataFunction() -> (Data?) -> Void {
+    public func dataFunction() -> (Data?) -> Void {
         return { data in
             let payload = String(data: data ?? Data([]), encoding: .utf8)
             self.alert("Error", payload ?? "").show()
@@ -284,7 +270,7 @@ public class ServerCodeNetworkErrorHandler: VNetworkErrorHandler {
         self.errorConfig = errorConfig
     }
     
-    func errorFunction() -> (NSError?) -> Void {
+    public func errorFunction() -> (NSError?) -> Void {
         switch errorConfig {
         case .print:
             return PrintingNetworkErrorHandler().errorFunction()
@@ -297,7 +283,7 @@ public class ServerCodeNetworkErrorHandler: VNetworkErrorHandler {
         }
     }
     
-    func dataFunction() -> (Data?) -> Void {
+    public func dataFunction() -> (Data?) -> Void {
         switch dataConfig {
         case .print:
             return PrintingNetworkErrorHandler().dataFunction()
