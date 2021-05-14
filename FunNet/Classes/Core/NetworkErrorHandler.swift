@@ -158,7 +158,7 @@ public protocol VNetworkErrorHandler: NetworkErrorFunctionProvider {
 }
 
 extension VNetworkErrorHandler {
-    func alert(for error: NSError?) -> UIAlertController {
+    public func alert(for error: NSError?) -> UIAlertController {
         if let message = errorMessageMap[error?.code ?? -1] {
             return alert("\(error?.code ?? -1)", message)
         } else {
@@ -166,7 +166,7 @@ extension VNetworkErrorHandler {
         }
     }
     
-    func alert(_ title: String, _ message: String) -> UIAlertController {
+    public func alert(_ title: String, _ message: String) -> UIAlertController {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
             alert.dismiss(animated: true, completion: nil)
@@ -250,7 +250,7 @@ public class AlertNetworkErrorHandler: VNetworkErrorHandler {
         }
     }
     
-    func alert(for error: NSError?) -> UIAlertController {
+    public func alert(for error: NSError?) -> UIAlertController {
         if let message = errorMessageMap[error?.code ?? -1] {
             return alert("Oops!", message)
         } else {

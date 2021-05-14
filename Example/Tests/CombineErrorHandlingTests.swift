@@ -10,6 +10,7 @@ import Foundation
 import XCTest
 import Combine
 import LithoOperators
+import Prelude
 @testable import FunNet
 
 @available(iOS 13.0, *)
@@ -19,7 +20,7 @@ class CombineErrorHandlingTests: XCTestCase {
     func testPrintingHandlerError() {
         let errorSub = PassthroughSubject<NSError?, Never>()
         var wasCalled = false
-        errorSub.sink(receiveValue: PrintingNetworkErrorHandler().errorFunction() <> { _ in wasCalled = true }).store(in: &cancelBag)
+        errorSub.sink(receiveValue: (PrintingNetworkErrorHandler().errorFunction() >>> ignoreArg({ })) <> { _ in wasCalled = true }).store(in: &cancelBag)
         errorSub.send(NSError(domain: "Domain", code: 300, userInfo: nil))
         XCTAssertTrue(wasCalled)
     }
@@ -27,7 +28,7 @@ class CombineErrorHandlingTests: XCTestCase {
     func testPrintingHandlerData() {
         let dataSub = PassthroughSubject<Data?, Never>()
         var wasCalled = false
-        dataSub.sink(receiveValue: PrintingNetworkErrorHandler().dataFunction() <> { _ in wasCalled = true }).store(in: &cancelBag)
+        dataSub.sink(receiveValue: (PrintingNetworkErrorHandler().dataFunction() >>> ignoreArg({ })) <> { _ in wasCalled = true }).store(in: &cancelBag)
         dataSub.send(try! JSONEncoder().encode(ErrorData(title: "Error", message: "Message")))
         XCTAssertTrue(wasCalled)
     }
@@ -37,7 +38,7 @@ class CombineErrorHandlingTests: XCTestCase {
         call.firingFunc = { call in
             call.publisher.error = NSError(domain: "Domain", code: 300, userInfo: nil)
         }
-        bindError(from: call, to: PrintingNetworkErrorHandler(), storingIn: &cancelBag)
+        combindErrorPrinting(responder: call.publisher, to: PrintingNetworkErrorHandler(), storingIn: &cancelBag)
         var wasCalled = false
         call.publisher.$error.sink(receiveValue: { _ in wasCalled = true }).store(in: &cancelBag)
         call.fire()
@@ -49,7 +50,7 @@ class CombineErrorHandlingTests: XCTestCase {
         call.firingFunc = { call in
             call.publisher.errorData = try! JSONEncoder().encode(ErrorData(title: "Error", message: "Message"))
         }
-        bindErrorData(from: call, to: PrintingNetworkErrorHandler(), storingIn: &cancelBag)
+        combindDataPrinting(responder: call.publisher, to: PrintingNetworkErrorHandler(), storingIn: &cancelBag)
         var wasCalled = false
         call.publisher.$errorData.sink(receiveValue: { _ in wasCalled = true }).store(in: &cancelBag)
         call.fire()

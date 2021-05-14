@@ -54,6 +54,18 @@ public func alertErrors(displayedIn vc: UIViewController, errorMsgs: [Int:String
 public func verboseErrors(displayedIn vc: UIViewController) -> (ServerCodeNetworkErrorHandler) -> (inout NetworkResponder) -> Void {
     return vc >|> bindErrorAlert
 }
+
+@available(iOS 13.0, *)
+public func combindErrorPrinting<T: PrintingNetworkErrorHandler>(responder: CombineNetworkResponder, to handler: T, storingIn cancelBag: inout Set<AnyCancellable>) {
+        responder.$error.sink(receiveValue: handler.errorFunction() >>> ignoreArg({ })).store(in: &cancelBag)
+        responder.$serverError.sink(receiveValue: handler.errorFunction() >>> ignoreArg({ })).store(in: &cancelBag)
+}
+
+@available(iOS 13.0, *)
+public func combindDataPrinting<T: PrintingNetworkErrorHandler>(responder: CombineNetworkResponder, to handler: T, storingIn cancelBag: inout Set<AnyCancellable>) {
+    responder.$errorData.sink(receiveValue: handler.dataFunction() >>> ignoreArg({ })).store(in: &cancelBag)
+}
+
 //public func bindError(from call: CombineNetCall, to handler: NetworkErrorFunctionProvider, storingIn cancelBag: inout Set<AnyCancellable>) {
 //    call.publisher.$error.compactMap(id).sink(receiveValue: handler.errorFunction()).store(in: &cancelBag)
 //}
