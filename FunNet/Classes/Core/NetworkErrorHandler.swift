@@ -7,6 +7,7 @@
 
 import UIKit
 import LithoOperators
+import Prelude
 
 public protocol ErrorMessage {
     var title: String { get }
@@ -127,27 +128,29 @@ public enum ErrorHandlingConfig {
 }
 
 public protocol NetworkErrorFunctionProvider {
-    func errorFunction() -> (NSError?) -> Void
-    func dataFunction() -> (Data?) -> Void
+    func errorFunction() -> (NSError?) -> UIViewController?
+    func dataFunction() -> (Data?) -> UIViewController?
 }
 
 public class PrintingNetworkErrorHandler: NetworkErrorFunctionProvider {
-    public func dataFunction() -> (Data?) -> Void {
+    public func dataFunction() -> (Data?) -> UIViewController? {
         return { data in
             print("Payload: \(String(data: data ?? Data([]), encoding: .utf8) ?? "None")")
+            return nil
         }
     }
     
-    public func errorFunction() -> (NSError?) -> Void {
+    public func errorFunction() -> (NSError?) -> UIViewController? {
         return { err in
             print("Server Error: \(err?.domain ?? "No title")")
             print("URL: \(err?.userInfo["url"] ?? "none")")
             print("Status Code: \(err?.code ?? -1)")
+            return nil
         }
     }
 }
 
-protocol VNetworkErrorHandler: NetworkErrorFunctionProvider {
+public protocol VNetworkErrorHandler: NetworkErrorFunctionProvider {
     var errorMessageMap: [Int:String] { get set }
     
     func alert(for error: NSError?) -> UIAlertController
@@ -208,16 +211,16 @@ public class DebugNetworkErrorHandler: VNetworkErrorHandler {
         511 : "Network authentication required"
     ].merging(urlLoadingErrorCodesDict, uniquingKeysWith: { _, key in return key })
     
-    public func errorFunction() -> (NSError?) -> Void {
+    public func errorFunction() -> (NSError?) -> UIViewController? {
         return { err in
-            self.alert(for: err).show()
+            return self.alert(for: err)
         }
     }
     
-    public func dataFunction() -> (Data?) -> Void {
+    public func dataFunction() -> (Data?) -> UIViewController? {
         return { data in
             let payload = String(data: data ?? Data([]), encoding: .utf8)
-            self.alert("Error", payload ?? "").show()
+            return self.alert("Error", payload ?? "")
         }
     }
 }
@@ -234,16 +237,16 @@ public class AlertNetworkErrorHandler: VNetworkErrorHandler {
         self.defaultMessage = defaultMessage
     }
     
-    public func errorFunction() -> (NSError?) -> Void {
+    public func errorFunction() -> (NSError?) -> UIViewController? {
         return { err in
-            self.alert(for: err).show()
+            return self.alert(for: err)
         }
     }
     
-    public func dataFunction() -> (Data?) -> Void {
+    public func dataFunction() -> (Data?) -> UIViewController? {
         return { data in
             let payload = String(data: data ?? Data([]), encoding: .utf8)
-            self.alert("Error", payload ?? "").show()
+            return self.alert("Error", payload ?? "")
         }
     }
     
@@ -270,7 +273,7 @@ public class ServerCodeNetworkErrorHandler: VNetworkErrorHandler {
         self.errorConfig = errorConfig
     }
     
-    public func errorFunction() -> (NSError?) -> Void {
+    public func errorFunction() -> (NSError?) -> UIViewController? {
         switch errorConfig {
         case .print:
             return PrintingNetworkErrorHandler().errorFunction()
@@ -279,11 +282,11 @@ public class ServerCodeNetworkErrorHandler: VNetworkErrorHandler {
         case .alert:
             return AlertNetworkErrorHandler(handledErrors: errorMessageMap, defaultMessage: defaultMessage).errorFunction()
         case .printAndAlert:
-            return AlertNetworkErrorHandler(handledErrors: errorMessageMap, defaultMessage: defaultMessage).errorFunction() <> PrintingNetworkErrorHandler().errorFunction()
+            return fzip(AlertNetworkErrorHandler(handledErrors: errorMessageMap, defaultMessage: defaultMessage).errorFunction(), PrintingNetworkErrorHandler().errorFunction()) >>> first
         }
     }
     
-    public func dataFunction() -> (Data?) -> Void {
+    public func dataFunction() -> (Data?) -> UIViewController? {
         switch dataConfig {
         case .print:
             return PrintingNetworkErrorHandler().dataFunction()
@@ -292,7 +295,7 @@ public class ServerCodeNetworkErrorHandler: VNetworkErrorHandler {
         case .alert:
             return AlertNetworkErrorHandler(handledErrors: errorMessageMap, defaultMessage: defaultMessage).dataFunction()
         case .printAndAlert:
-            return AlertNetworkErrorHandler(handledErrors: errorMessageMap, defaultMessage: defaultMessage).dataFunction() <> PrintingNetworkErrorHandler().dataFunction()
+            return fzip(AlertNetworkErrorHandler(handledErrors: errorMessageMap, defaultMessage: defaultMessage).dataFunction(), PrintingNetworkErrorHandler().dataFunction()) >>> first
         }
     }
 }

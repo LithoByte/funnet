@@ -3,6 +3,7 @@ platform :ios, '10.0'
 
 target 'FunNet_Example' do
   pod 'FunNet', :path => '../'
+  pod 'LithoOperators', git: 'https://github.com/ThryvInc/LithoOperators'
 
   target 'FunNet_Tests' do
     inherit! :search_paths
