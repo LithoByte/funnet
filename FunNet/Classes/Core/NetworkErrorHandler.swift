@@ -132,7 +132,7 @@ public enum ErrorHandlingConfig: UInt8 {
     case none = 0b0
     case print = 0b1
     case debug = 0b10
-    case userFacing = 0b100
+    case production = 0b100
 }
 
 public protocol NetworkErrorFunctionProvider {
@@ -170,12 +170,12 @@ public func fzip<T, U, V, W, X, Y>(_ f: @escaping (T) -> W, _ g: @escaping (U) -
 public class NetworkErrHandler: NetworkErrorFunctionProvider {
     public var errorMessageMap: [Int : String] = urlRequestErrorCodesDict
     public var serverErrorMessageMap = urlLoadingErrorCodesDict
-    public var config: ErrorHandlingConfig
+    public var config: UInt8
     public let errorDataToString: (Data) -> String = .utf8 >||> String.init(data:encoding:) >>> coalesceNil(with: "Could not decode data.")
     public let presenter: (UIViewController) -> Void
     
     public init(configs: ErrorHandlingConfig..., errorMessageMap: [Int:String] = [:], serverErrorMessageMap: [Int:String] = [:], presenter: @escaping (UIViewController) -> Void) {
-        self.config = configs.reduce(.none, { ErrorHandlingConfig(rawValue: $0.rawValue | $1.rawValue)! })
+        self.config = configs.map(\.rawValue).reduce(0, { $0 | $1 })
         self.presenter = presenter
         for (code, message) in errorMessageMap {
             self.errorMessageMap[code] = message
@@ -192,7 +192,7 @@ public class NetworkErrHandler: NetworkErrorFunctionProvider {
             if should(.print) {
                 print(arr)
             }
-            if should(.debug) || should(.userFacing) {
+            if should(.debug) || should(.production) {
                 let errorString = arr.reduce("", { $0 + "\n\($1)"})
                 errorString |> (("Errors" >|> alert) >>> presenter)
             }
@@ -205,7 +205,7 @@ public class NetworkErrHandler: NetworkErrorFunctionProvider {
         if should(.print) {
             error ?> errorToString >>> { print($0) }
         }
-        if should(.debug) || should(.userFacing) {
+        if should(.debug) || should(.production) {
             error ?> (errorToString >>> ("Error" >|> alert) >>> presenter)
         }
     }
@@ -214,7 +214,7 @@ public class NetworkErrHandler: NetworkErrorFunctionProvider {
         if should(.print) {
             errorData ?> errorDataToString >>> { print($0) }
         }
-        if should(.debug) || should(.userFacing) {
+        if should(.debug) || should(.production) {
             errorData ?> (errorDataToString >>> ("Error" >|> alert(_:_:)) >>> presenter)
         }
     }
@@ -223,21 +223,21 @@ public class NetworkErrHandler: NetworkErrorFunctionProvider {
         if should(.print) {
             serverError ?> serverErrorToString >>> { print($0) }
         }
-        if should(.debug) || should(.userFacing) {
+        if should(.debug) || should(.production) {
             serverError ?> (serverErrorToString >>> ("Server Error" >|> alert) >>> presenter)
         }
     }
     
     public func errorToString(_ error: NSError) -> String {
-        return should(.userFacing) ? errorMessageMap[error.code] ?? "Response Error: Status code was not handled" : "Response Error:\n Domain: \(error.domain), Description: \(error.localizedDescription), Code: \(error.code)"
+        return should(.debug) ? "Response Error:\n Domain: \(error.domain), Description: \(error.localizedDescription), Code: \(error.code)" : errorMessageMap[error.code] ?? "Response Error: Status code was not handled"
     }
     
     public func serverErrorToString(_ serverError: NSError) -> String {
-        return should(.userFacing) ? serverErrorMessageMap[serverError.code] ?? "Server Error: Status code was not handled." : "Server Error:\n Domain: \(serverError.domain), Description: \(serverError.localizedDescription), Code: \(serverError.code)"
+        return should(.debug) ?  "Server Error:\n Domain: \(serverError.domain), Description: \(serverError.localizedDescription), Code: \(serverError.code)" : serverErrorMessageMap[serverError.code] ?? "Server Error: Status code was not handled."
     }
     
     public func should(_ op: ErrorHandlingConfig) -> Bool {
-        return (op.rawValue & config.rawValue) != 0
+        return (op.rawValue & config) != 0
     }
 }
 
