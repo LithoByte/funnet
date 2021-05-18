@@ -160,13 +160,7 @@ extension NetworkErrorFunctionProvider {
     }
 }
 
-public func fzip<T, U>(f: @escaping (T?) -> Void, g: @escaping (U?) -> Void) -> (T?, U?) -> Void {
-    return { t, u in
-        f(t)
-        g(u)
-    }
-}
-
+//SHOULD GO INTO LITHOOPERATORS, AND BE RENAMED (?)
 public func fzip<T, U, V, W, X, Y>(_ f: @escaping (T) -> W, _ g: @escaping (U) -> X, _ h: @escaping (V) -> Y) -> (T, U, V) -> (W, X, Y) {
     return { t, u, v in
         (f(t), g(u), h(v))
@@ -199,7 +193,8 @@ public class NetworkErrHandler: NetworkErrorFunctionProvider {
                 print(arr)
             }
             if should(.debug) || should(.userFacing) {
-                
+                let errorString = arr.reduce("", { $0 + "\n\($1)"})
+                errorString |> (("Errors" >|> alert) >>> presenter)
             }
         case .none:
             break
