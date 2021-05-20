@@ -142,24 +142,6 @@ public protocol NetworkErrorFunctionProvider {
     func serverErrorHandler(_ serverError: NSError?) -> Void
 }
 
-extension NetworkErrorFunctionProvider {
-    public func alert(for error: NSError?) -> UIAlertController {
-        if let message = errorMessageMap[error?.code ?? -1] {
-            return alert("\(error?.code ?? -1)", message)
-        } else {
-            return alert("Error \(error?.code ?? -1)", "Description: \(error?.debugDescription ?? "None")\nInfo: \(String(describing: error?.userInfo))")
-        }
-    }
-
-    public func alert(_ title: String, _ message: String) -> UIAlertController {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
-            alert.dismiss(animated: true, completion: nil)
-        }))
-        return alert
-    }
-}
-
 //SHOULD GO INTO LITHOOPERATORS, AND BE RENAMED (?)
 public func fzip<T, U, V, W, X, Y>(_ f: @escaping (T) -> W, _ g: @escaping (U) -> X, _ h: @escaping (V) -> Y) -> (T, U, V) -> (W, X, Y) {
     return { t, u, v in
@@ -186,7 +168,7 @@ public class NetworkErrHandler: NetworkErrorFunctionProvider {
     }
     
     public func generalErrorHandler(_ error: NSError?, serverError: NSError?, errorData: Data?) {
-        let combiner = fzip(someOrNil(with: errorToString), someOrNil(with: serverErrorToString), someOrNil(with: errorDataToString)) >>> { [$0.0, $0.1, $0.2] }
+        let combiner = fzip(optionalize(with: errorToString), optionalize(with: serverErrorToString), optionalize(with: errorDataToString)) >>> { [$0.0, $0.1, $0.2] }
         switch reduce(arr: combiner((error, serverError, errorData))) {
         case .some(let arr):
             if should(.print) {
@@ -206,7 +188,7 @@ public class NetworkErrHandler: NetworkErrorFunctionProvider {
             error ?> errorToString >>> { print($0) }
         }
         if should(.debug) || should(.production) {
-            error ?> (errorToString >>> ("Error" >|> alert) >>> presenter)
+            error ?> (errorToString >>> ("Error \(errorCode(for: error))" >|> alert) >>> presenter)
         }
     }
     
@@ -224,7 +206,7 @@ public class NetworkErrHandler: NetworkErrorFunctionProvider {
             serverError ?> serverErrorToString >>> { print($0) }
         }
         if should(.debug) || should(.production) {
-            serverError ?> (serverErrorToString >>> ("Server Error" >|> alert) >>> presenter)
+            serverError ?> (serverErrorToString >>> ("Server Error \(errorCode(for: serverError))" >|> alert) >>> presenter)
         }
     }
     
@@ -241,12 +223,12 @@ public class NetworkErrHandler: NetworkErrorFunctionProvider {
     }
 }
 
-public enum SomeOrNil<T> {
-    case none
-    case some([T])
+public func errorCode(for error: NSError?) -> String {
+    guard let err = error else { return ""}
+    return "\(err.code)"
 }
 
-public func someOrNil<T, U>(with f: @escaping (T) -> U) -> (T?) -> SomeOrNil<U> {
+public func optionalize<T, U>(with f: @escaping (T) -> U) -> (T?) -> Optional<[U]> {
     return { t in
         if t != nil {
             return .some([f(t!)])
@@ -256,10 +238,10 @@ public func someOrNil<T, U>(with f: @escaping (T) -> U) -> (T?) -> SomeOrNil<U> 
     }
 }
 
-public func combine<T>(a: SomeOrNil<T>, b: SomeOrNil<T>) -> SomeOrNil<T> {
+public func combine<T>(a: Optional<[T]>, b: Optional<[T]>) -> Optional<[T]> {
     switch (a, b) {
-    case (.some(let t1), .some(let t2)):
-        return .some(t1 + t2)
+    case (.some(let arr1), .some(let arr2)):
+        return .some(arr1 + arr2)
     case (.some, .none):
         return a
     case (.none, .some):
@@ -269,7 +251,7 @@ public func combine<T>(a: SomeOrNil<T>, b: SomeOrNil<T>) -> SomeOrNil<T> {
     }
 }
 
-public func reduce<T>(arr: [SomeOrNil<T>]) -> SomeOrNil<T> {
+public func reduce<T>(arr: [Optional<[T]>]) -> Optional<[T]> {
     return arr.reduce(.none, combine)
 }
 

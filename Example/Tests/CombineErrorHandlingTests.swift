@@ -31,10 +31,10 @@ class NetworkErrHandlerTests: XCTestCase {
     }
 }
 
-class SomeOrNilTests: XCTestCase {
+class OptionalTests: XCTestCase {
     func testConstructor() {
         let stringCount: (String) -> Int = { $0.count }
-        let toSomeOrNil = someOrNil(with: stringCount)
+        let toSomeOrNil = optionalize(with: stringCount)
         switch toSomeOrNil(nil) {
         case .none:
             break
@@ -53,7 +53,7 @@ class SomeOrNilTests: XCTestCase {
     
     func testCombine() {
         let stringCount: (String) -> Int = { $0.count }
-        let toSomeOrNil = someOrNil(with: stringCount)
+        let toSomeOrNil = optionalize(with: stringCount)
         let none = toSomeOrNil(nil)
         let some1 = toSomeOrNil("Hello")
         let some2 = toSomeOrNil("Goodbye")
@@ -89,7 +89,7 @@ class SomeOrNilTests: XCTestCase {
     
     func testReduce() {
         let stringCount: (String) -> Int = { $0.count }
-        let toSomeOrNil = someOrNil(with: stringCount)
+        let toSomeOrNil = optionalize(with: stringCount)
         let arr1 = ["Hello", "Goodbye", "What's up", "Not much"].map(toSomeOrNil)
         let arr2 = ["Hello", "Goodbye", nil, nil].map(toSomeOrNil)
         let arr3 = [nil, nil, nil, nil].map(toSomeOrNil)
