@@ -8,6 +8,7 @@
 import UIKit
 import LithoOperators
 import Prelude
+import LithoUtils
 
 public protocol ErrorMessage {
     var title: String { get }
@@ -49,23 +50,15 @@ public class VerboseNetworkErrorHandler: NetworkErrorHandler {
     open func alert(for error: NSError) -> UIViewController {
         print(error)
         if let message = errorMessageMap[error.code] {
-            return FunNet.alert(message.title, message.message)
+            return alertController(title: message.title, message: message.message)
         } else {
-            return FunNet.alert("Error \(error.code)", "Description: \(error.debugDescription)\nInfo: \(error.userInfo)")
+            return alertController(title: "Error \(error.code)", message: "Description: \(error.debugDescription)\nInfo: \(error.userInfo)")
         }
     }
     
     open func notify(title: String, message: String) {
-        FunNet.alert(title, message).show(animated: true)
+        alertController(title: title, message: message).show(animated: true)
     }
-}
-
-public func alert(_ title: String, _ message: String) -> UIAlertController {
-    let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
-    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
-        alert.dismiss(animated: true, completion: nil)
-    }))
-    return alert
 }
 
 public struct DefaultServerUnavailableErrorMessage: ErrorMessage {
@@ -142,13 +135,6 @@ public protocol NetworkErrorFunctionProvider {
     func serverErrorHandler(_ serverError: NSError?) -> Void
 }
 
-//SHOULD GO INTO LITHOOPERATORS, AND BE RENAMED (?)
-public func fzip<T, U, V, W, X, Y>(_ f: @escaping (T) -> W, _ g: @escaping (U) -> X, _ h: @escaping (V) -> Y) -> (T, U, V) -> (W, X, Y) {
-    return { t, u, v in
-        (f(t), g(u), h(v))
-    }
-}
-
 public class NetworkErrHandler: NetworkErrorFunctionProvider {
     public var errorMessageMap: [Int : String] = urlRequestErrorCodesDict
     public var serverErrorMessageMap = urlLoadingErrorCodesDict
@@ -168,7 +154,7 @@ public class NetworkErrHandler: NetworkErrorFunctionProvider {
     }
     
     public func generalErrorHandler(_ error: NSError?, serverError: NSError?, errorData: Data?) {
-        let combiner = fzip(optionalize(with: errorToString), optionalize(with: serverErrorToString), optionalize(with: errorDataToString)) >>> { [$0.0, $0.1, $0.2] }
+        let combiner = tupleMap(optionalize(with: errorToString), optionalize(with: serverErrorToString), optionalize(with: errorDataToString)) >>> { [$0.0, $0.1, $0.2] }
         switch reduce(arr: combiner((error, serverError, errorData))) {
         case .some(let arr):
             if should(.print) {
@@ -176,7 +162,7 @@ public class NetworkErrHandler: NetworkErrorFunctionProvider {
             }
             if should(.debug) || should(.production) {
                 let errorString = arr.reduce("", { $0 + "\n\($1)"})
-                errorString |> (("Errors" >|> alert) >>> presenter)
+                errorString |> (("Errors" >|> alertController) >>> presenter)
             }
         case .none:
             break
@@ -188,7 +174,7 @@ public class NetworkErrHandler: NetworkErrorFunctionProvider {
             error ?> errorToString >>> { print($0) }
         }
         if should(.debug) || should(.production) {
-            error ?> (errorToString >>> ("Error \(errorCode(for: error))" >|> alert) >>> presenter)
+            error ?> (errorToString >>> ("Error \(errorCode(for: error))" >|> alertController) >>> presenter)
         }
     }
     
@@ -197,7 +183,7 @@ public class NetworkErrHandler: NetworkErrorFunctionProvider {
             errorData ?> errorDataToString >>> { print($0) }
         }
         if should(.debug) || should(.production) {
-            errorData ?> (errorDataToString >>> ("Error" >|> alert(_:_:)) >>> presenter)
+            errorData ?> (errorDataToString >>> ("Error" >|> alertController) >>> presenter)
         }
     }
     
@@ -206,7 +192,7 @@ public class NetworkErrHandler: NetworkErrorFunctionProvider {
             serverError ?> serverErrorToString >>> { print($0) }
         }
         if should(.debug) || should(.production) {
-            serverError ?> (serverErrorToString >>> ("Server Error \(errorCode(for: serverError))" >|> alert) >>> presenter)
+            serverError ?> (serverErrorToString >>> ("Server Error \(errorCode(for: serverError))" >|> alertController) >>> presenter)
         }
     }
     
