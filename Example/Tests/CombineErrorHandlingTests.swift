@@ -25,9 +25,14 @@ class NetworkErrHandlerTests: XCTestCase {
         let data = "This is an error".data(using: .utf8)!
         let handler = NetworkErrHandler(configs: .print, .debug, presenter: { _ in })
         XCTAssertEqual(handler.errorDataToString(data), "This is an error")
-        let error = NSError(domain: "http://lithobyte.co", code: 300, userInfo: nil)
-        XCTAssertEqual(handler.errorToString(error), "Response Error:\n Domain: \(error.domain), Description: \(error.localizedDescription), Code: \(error.code)")
-        XCTAssertEqual(handler.serverErrorToString(error), "Server Error:\n Domain: \(error.domain), Description: \(error.localizedDescription), Code: \(error.code)")
+        let error1 = NSError(domain: "http://lithobyte.co", code: 300, userInfo: nil)
+        let error2 = NSError(domain: "http://lithobyte.co", code: 100, userInfo: nil)
+        XCTAssertEqual(handler.errorToString(error1), "Response Error:\n Domain: \(error1.domain), Description: \(error1.localizedDescription), Code: \(error1.code)")
+        XCTAssertEqual(handler.serverErrorToString(error1), "Server Error:\n Domain: \(error1.domain), Description: \(error1.localizedDescription), Code: \(error1.code)")
+        let allErrors = tupleMap(optionalize(with: handler.errorDataToString), optionalize(with: handler.errorToString), optionalize(with: handler.serverErrorToString)) >>> { [$0.0, $0.1, $0.2] }
+        let reduced = reduce(arr: allErrors((data, error1, error2)))
+        XCTAssertNotNil(reduced)
+        XCTAssertEqual(reduced!.count, 3)
     }
 }
 

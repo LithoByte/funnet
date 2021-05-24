@@ -60,7 +60,7 @@ SPEC CHECKSUMS:
   fuikit: 976080e1c04037e01d14541135a104cb208d8c0d
   FunNet: 039c0efaa7b69766ba5873e7fda11cbc41e4810b
   LithoOperators: 8fc0c6a49e34a8d1ca01b777844f58e36c062d9f
-  LithoUtils: c3f1cf2bf851cc0374ad21c7b437b1cbdd42aa45
+  LithoUtils: 3d89146680c1a7449334069cc75a092c32dde585
   Prelude: fe4cc0fd961d34edf48fe6b04d05c863449efb0a
   ReactiveSwift: be9407e2aaf8a11e53a5229255693cffd9a63ccf
 
