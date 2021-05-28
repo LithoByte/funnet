@@ -22,7 +22,7 @@ TODO: Add long description of the pod here.
   s.source           = { :git => 'https://github.com/schrockblock/funnet.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/elliot_schrock'
 
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '11.0'
 
   s.source_files = 'FunNet/Classes/**/*'
   s.dependency 'LithoOperators'
@@ -30,6 +30,7 @@ TODO: Add long description of the pod here.
   s.subspec 'Core' do |sp|
     sp.source_files = 'FunNet/Classes/Core/**/*.swift'
     sp.dependency 'LithoOperators'
+    sp.dependency 'LithoUtils/Core'
   end
   
   s.subspec 'Combine' do |sp|

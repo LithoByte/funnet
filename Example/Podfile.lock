@@ -1,42 +1,69 @@
 PODS:
-  - FunNet (0.0.1):
-    - FunNet/Combine (= 0.0.1)
-    - FunNet/Core (= 0.0.1)
-    - FunNet/Multipart (= 0.0.1)
-    - FunNet/ReactiveSwift (= 0.0.1)
+  - fuikit (0.1.5):
+    - fuikit/Core (= 0.1.5)
+    - fuikit/CoreBluetooth (= 0.1.5)
+    - fuikit/CoreLocation (= 0.1.5)
+  - fuikit/Core (0.1.5)
+  - fuikit/CoreBluetooth (0.1.5)
+  - fuikit/CoreLocation (0.1.5)
+  - FunNet (0.1.1):
+    - FunNet/Combine (= 0.1.1)
+    - FunNet/Core (= 0.1.1)
+    - FunNet/Multipart (= 0.1.1)
+    - FunNet/ReactiveSwift (= 0.1.1)
     - LithoOperators
-  - FunNet/Core (0.0.1):
+  - FunNet/Core (0.1.1):
     - LithoOperators
-  - FunNet/Multipart (0.0.1):
+    - LithoUtils/Core
+  - FunNet/Multipart (0.1.1):
     - LithoOperators
-  - FunNet/ReactiveSwift (0.0.1):
+  - FunNet/ReactiveSwift (0.1.1):
     - FunNet/Core
     - LithoOperators
     - ReactiveSwift
-  - LithoOperators (0.0.2):
+  - LithoOperators (0.1.4):
     - Prelude
+  - LithoUtils/Core (0.1.0):
+    - fuikit
+    - LithoOperators
   - Prelude (3.0.0)
-  - ReactiveSwift (6.2.1)
+  - ReactiveSwift (6.6.0)
 
 DEPENDENCIES:
   - FunNet (from `../`)
+  - LithoOperators (from `https://github.com/ThryvInc/LithoOperators`)
+  - LithoUtils/Core (from `https://github.com/ThryvInc/litho-utils`)
 
 SPEC REPOS:
   trunk:
-    - LithoOperators
+    - fuikit
     - Prelude
     - ReactiveSwift
 
 EXTERNAL SOURCES:
   FunNet:
     :path: "../"
+  LithoOperators:
+    :git: https://github.com/ThryvInc/LithoOperators
+  LithoUtils:
+    :git: https://github.com/ThryvInc/litho-utils
+
+CHECKOUT OPTIONS:
+  LithoOperators:
+    :commit: a39bdd37f06f50e8284d94dbcd13caf116883cde
+    :git: https://github.com/ThryvInc/LithoOperators
+  LithoUtils:
+    :commit: 3948a64e5c27163c16a7d82f05071e52f5bbdd09
+    :git: https://github.com/ThryvInc/litho-utils
 
 SPEC CHECKSUMS:
-  FunNet: e01c3f3e4258f64657bdb2476236e064db2cd9b9
-  LithoOperators: 8a4f284d8c10cb02b28af87c18494ba225345419
+  fuikit: 976080e1c04037e01d14541135a104cb208d8c0d
+  FunNet: 039c0efaa7b69766ba5873e7fda11cbc41e4810b
+  LithoOperators: 8fc0c6a49e34a8d1ca01b777844f58e36c062d9f
+  LithoUtils: 3d89146680c1a7449334069cc75a092c32dde585
   Prelude: fe4cc0fd961d34edf48fe6b04d05c863449efb0a
-  ReactiveSwift: 07ddf579f4eb3ee3bd656214f0461aaf2c0fd639
+  ReactiveSwift: be9407e2aaf8a11e53a5229255693cffd9a63ccf
 
-PODFILE CHECKSUM: 7cb893b39fb1b5800d66e86e4732dc00ae9870e4
+PODFILE CHECKSUM: b07e2c6eeabf547c5be0e85562f614c6ef55972f
 
 COCOAPODS: 1.10.0

@@ -1,9 +1,11 @@
 use_frameworks!
-platform :ios, '10.0'
+platform :ios, '11.0'
 
 target 'FunNet_Example' do
   pod 'FunNet', :path => '../'
-
+  pod 'LithoOperators', git: 'https://github.com/ThryvInc/LithoOperators'
+  pod 'LithoUtils/Core', git: 'https://github.com/ThryvInc/litho-utils'
+  
   target 'FunNet_Tests' do
     inherit! :search_paths
   end
