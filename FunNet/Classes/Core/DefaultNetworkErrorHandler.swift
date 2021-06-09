@@ -35,22 +35,22 @@ public struct ErrorHandlingContext {
 public protocol NetworkErrorFunctionProvider {
     var errorMessageMap: [Int:String] { get set }
     var serverErrorMessageMap: [Int:String] { get set }
-    func errorHandler(_ presenter: ((UIViewController) -> Void)?) -> (NSError?) -> Void
-    func errorDataHandler(_ presenter: ((UIViewController) -> Void)?) -> (Data?) -> Void
-    func serverErrorHandler(_ presenter: ((UIViewController) -> Void)?) -> (NSError?) -> Void
+    func errorHandler(_ presenter: UIViewController?) -> (NSError?) -> Void
+    func errorDataHandler(_ presenter: UIViewController?) -> (Data?) -> Void
+    func serverErrorHandler(_ presenter: UIViewController?) -> (NSError?) -> Void
 }
 
 extension NetworkErrorFunctionProvider {
-    func errorHandler(_ presenter: ((UIViewController) -> Void)? = nil) -> (NSError?) -> Void {
-        return errorHandler(presenter)
+    func errorHandler(_ vc: UIViewController? = nil) -> (NSError?) -> Void {
+        return errorHandler(vc)
     }
     
-    func errorDataHandler(_ presenter: ((UIViewController) -> Void)? = nil) -> (Data?) -> Void {
-        return errorDataHandler(presenter)
+    func errorDataHandler(_ vc: UIViewController? = nil) -> (Data?) -> Void {
+        return errorDataHandler(vc)
     }
     
-    func serverErrorHandler(_ presenter: ((UIViewController) -> Void)? = nil) -> (NSError?) -> Void {
-        return serverErrorHandler(presenter)
+    func serverErrorHandler(_ vc: UIViewController? = nil) -> (NSError?) -> Void {
+        return serverErrorHandler(vc)
     }
 }
 
@@ -95,19 +95,19 @@ open class NetworkErrHandler<T: Comparable>: NetworkErrorFunctionProvider {
         }
     }
     
-    public func errorHandler(_ presenter: ((UIViewController) -> Void)? = nil) -> (NSError?) -> Void {
+    public func errorHandler(_ vc: UIViewController? = nil) -> (NSError?) -> Void {
         return { err in
             guard let err = err, let handler = self.handler(for: err.code) else { return }
             if handler.should(.print) {
                 print(self.errorToMessage(err: err).description)
             }
             if handler.should(.debug) || handler.should(.production) {
-                presenter?(handler.alert(for: handler.errorToMessage(err: err)))
+                vc?.presentAnimated(handler.alert(for: handler.errorToMessage(err: err)))
             }
         }
     }
     
-    public func errorDataHandler(_ presenter: ((UIViewController) -> Void)? = nil) -> (Data?) -> Void {
+    public func errorDataHandler(_ vc: UIViewController? = nil) -> (Data?) -> Void {
         return { data in
             guard let data = data else { return }
             let error = self.serverError(statusCode: nil, with: data)
@@ -115,19 +115,19 @@ open class NetworkErrHandler<T: Comparable>: NetworkErrorFunctionProvider {
                 print(self.errorToMessage(err: error).description)
             }
             if self.should(.debug) || self.should(.production) {
-                presenter?(self.alert(for: self.errorToMessage(err: error)))
+                vc?.presentAnimated(self.alert(for: self.errorToMessage(err: error)))
             }
         }
     }
     
-    public func serverErrorHandler(_ presenter: ((UIViewController) -> Void)? = nil) -> (NSError?) -> Void {
+    public func serverErrorHandler(_ vc: UIViewController? = nil) -> (NSError?) -> Void {
         return { err in
             guard let err = err, let handler = self.handler(for: err.code) else { return }
             if handler.should(.print) {
                 print(self.serverErrorToMessage(err: err).description)
             }
             if self.should(.debug) || self.should(.production) {
-                presenter?(self.alert(for: self.serverErrorToMessage(err: err)))
+                vc?.presentAnimated(self.alert(for: self.serverErrorToMessage(err: err)))
             }
         }
     }
@@ -154,9 +154,9 @@ open class NetworkErrHandler<T: Comparable>: NetworkErrorFunctionProvider {
     
     public func message(for status: Int) -> String? {
         if let handler = handler(for: status) {
-            return status < 500 ? handler.errorMessageMap[status] : handler.serverErrorMessageMap[status]
+            return status < 400 ? handler.errorMessageMap[status] : handler.serverErrorMessageMap[status]
         } else {
-            return status < 500 ? errorMessageMap[status] : serverErrorMessageMap[status]
+            return status < 400 ? errorMessageMap[status] : serverErrorMessageMap[status]
         }
     }
     
