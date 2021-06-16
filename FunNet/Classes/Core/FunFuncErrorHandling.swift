@@ -29,12 +29,7 @@ public func printingServerErrorHandler(errorMap: [Int:String] = urlResponseError
 }
 
 public func printingErrorDataHandler<T: FunNetworkError>(type: T.Type) -> (Data?) -> Void {
-    return { data in
-        guard let data = data else { return }
-        if let error = try? JSONDecoder().decode(T.self, from: data), let message = error.message {
-            print("Error: \(message)")
-        }
-    }
+    return (type >|> JsonProvider.decode) >||> ifExecute >?> ^\.message >?> printStr
 }
 
 public let printingErrorDataHandler: (Data?) -> Void = (.utf8 >||> String.init(data:encoding:)) >||> ifExecute >?> printStr
