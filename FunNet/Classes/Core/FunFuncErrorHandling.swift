@@ -119,7 +119,7 @@ public let debugResponseAlert: (HTTPURLResponse, [Int:String]) -> UIAlertControl
 public let prodResponseAlert: (HTTPURLResponse, [Int:String]) -> UIAlertController = (^\.statusCode) >*> prodAlert
 
 public func statusAndFunNetworkErrorToString(code: Int?, error: FunNetworkError?) -> String {
-    return "Error: \(code == nil ? "\(code!)" : ""), \(error?.message ?? "")"
+    return "Error: \(code != nil ? "\(code!)" : "") \(error?.message ?? "")"
 }
 public func responseAndFunNetworkErrorToString(response: HTTPURLResponse?, error: FunNetworkError?) -> String {
     return "Error: \(response == nil ? "\(response!.statusCode)" : ""), \(error?.message ?? "")"

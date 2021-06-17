@@ -54,6 +54,7 @@
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		607FACE51AFB9204008FA782 /* FunNet_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FunNet_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		649BDB77267AC5130087BCC7 /* ErrorHandlingPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = ErrorHandlingPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		6B9F70714EC46F1B21F821FD /* Pods-FunNet_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FunNet_Example.debug.xcconfig"; path = "Target Support Files/Pods-FunNet_Example/Pods-FunNet_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		8AA50C881868927D56BD7771 /* Pods-FunNet_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FunNet_Example.release.xcconfig"; path = "Target Support Files/Pods-FunNet_Example/Pods-FunNet_Example.release.xcconfig"; sourceTree = "<group>"; };
 		96D6CBE6F79C3B5146ACB9A2 /* Pods-FunNet_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-FunNet_Tests.release.xcconfig"; path = "Target Support Files/Pods-FunNet_Tests/Pods-FunNet_Tests.release.xcconfig"; sourceTree = "<group>"; };
@@ -119,6 +120,7 @@
 		607FACD21AFB9204008FA782 /* Example for FunNet */ = {
 			isa = PBXGroup;
 			children = (
+				649BDB77267AC5130087BCC7 /* ErrorHandlingPlayground.playground */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				4964636E220E65010060D199 /* Api.swift */,
 				49646370220F5D350060D199 /* SignIn.swift */,
