@@ -31,8 +31,8 @@ PODS:
 DEPENDENCIES:
   - FunNet (from `../`)
   - LithoOperators (from `https://github.com/LithoByte/LithoOperators`)
-  - LithoUtils/Core (from `https://github.com/ThryvInc/litho-utils`)
-  - Slippers (from `https://github.com/ThryvInc/slippers`)
+  - LithoUtils/Core (from `https://github.com/LithoByte/litho-utils`)
+  - Slippers (from `https://github.com/LithoByte/slippers`)
 
 SPEC REPOS:
   trunk:
@@ -46,20 +46,20 @@ EXTERNAL SOURCES:
   LithoOperators:
     :git: https://github.com/LithoByte/LithoOperators
   LithoUtils:
-    :git: https://github.com/ThryvInc/litho-utils
+    :git: https://github.com/LithoByte/litho-utils
   Slippers:
-    :git: https://github.com/ThryvInc/slippers
+    :git: https://github.com/LithoByte/slippers
 
 CHECKOUT OPTIONS:
   LithoOperators:
     :commit: 180a93436cc4d22e7e4a83ea1509ee67a08d761b
     :git: https://github.com/LithoByte/LithoOperators
   LithoUtils:
-    :commit: 450a9a84fb7be098152584495afc587d6c85a138
-    :git: https://github.com/ThryvInc/litho-utils
+    :commit: 4d9864b0f99b27f9216d9fa80287f2a16b95ea0a
+    :git: https://github.com/LithoByte/litho-utils
   Slippers:
     :commit: c73ac0ab4d39bf981dda7caa23d959a5f22f2bb9
-    :git: https://github.com/ThryvInc/slippers
+    :git: https://github.com/LithoByte/slippers
 
 SPEC CHECKSUMS:
   fuikit: 976080e1c04037e01d14541135a104cb208d8c0d
@@ -70,6 +70,6 @@ SPEC CHECKSUMS:
   ReactiveSwift: fab34244ad908808dc822bae352a058c8837c4ca
   Slippers: 3814c93fd93305f918a984e724d5db4d9569a660
 
-PODFILE CHECKSUM: d13028cd0861015be6b33506dfcc1267ac081c13
+PODFILE CHECKSUM: a399c4837520220feeb58eece2397eae0188c9f7
 
 COCOAPODS: 1.10.0
