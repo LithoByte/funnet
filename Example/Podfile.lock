@@ -24,6 +24,7 @@ PODS:
   - LithoUtils/Core (0.1.0):
     - fuikit/Core
     - LithoOperators
+  - PlaygroundVCHelpers (0.0.2)
   - Prelude (3.0.0)
   - ReactiveSwift (6.6.1)
   - Slippers (0.1.1)
@@ -32,6 +33,7 @@ DEPENDENCIES:
   - FunNet (from `../`)
   - LithoOperators (from `https://github.com/LithoByte/LithoOperators`)
   - LithoUtils/Core (from `https://github.com/LithoByte/litho-utils`)
+  - PlaygroundVCHelpers (from `https://github.com/ThryvInc/playground-vc-helpers`)
   - Slippers (from `https://github.com/LithoByte/slippers`)
 
 SPEC REPOS:
@@ -47,6 +49,8 @@ EXTERNAL SOURCES:
     :git: https://github.com/LithoByte/LithoOperators
   LithoUtils:
     :git: https://github.com/LithoByte/litho-utils
+  PlaygroundVCHelpers:
+    :git: https://github.com/ThryvInc/playground-vc-helpers
   Slippers:
     :git: https://github.com/LithoByte/slippers
 
@@ -57,6 +61,9 @@ CHECKOUT OPTIONS:
   LithoUtils:
     :commit: 4d9864b0f99b27f9216d9fa80287f2a16b95ea0a
     :git: https://github.com/LithoByte/litho-utils
+  PlaygroundVCHelpers:
+    :commit: 1b1f5ed572a1965e1d52bbc1b21f3796a6f144e2
+    :git: https://github.com/ThryvInc/playground-vc-helpers
   Slippers:
     :commit: c73ac0ab4d39bf981dda7caa23d959a5f22f2bb9
     :git: https://github.com/LithoByte/slippers
@@ -66,10 +73,11 @@ SPEC CHECKSUMS:
   FunNet: f8bb223e1ec7d5e286ec6f3f9d59d8b7b685df1d
   LithoOperators: 8fc0c6a49e34a8d1ca01b777844f58e36c062d9f
   LithoUtils: 672d313a7fede3968e22f082b293cbc01ebcb7f0
+  PlaygroundVCHelpers: c7cc8994d2851ebd1590217101b4c6888d1c9cc8
   Prelude: fe4cc0fd961d34edf48fe6b04d05c863449efb0a
   ReactiveSwift: fab34244ad908808dc822bae352a058c8837c4ca
   Slippers: 3814c93fd93305f918a984e724d5db4d9569a660
 
-PODFILE CHECKSUM: a399c4837520220feeb58eece2397eae0188c9f7
+PODFILE CHECKSUM: 5153ccd904dbc78f9b455c0a32046218c55b9110
 
 COCOAPODS: 1.10.0

@@ -6,6 +6,7 @@ target 'FunNet_Example' do
   pod 'LithoOperators', :git => 'https://github.com/LithoByte/LithoOperators'
   pod 'Slippers', git: 'https://github.com/LithoByte/slippers'
   pod 'LithoUtils/Core', git: 'https://github.com/LithoByte/litho-utils'
+  pod 'PlaygroundVCHelpers', git: 'https://github.com/ThryvInc/playground-vc-helpers'
   target 'FunNet_Tests' do
     inherit! :search_paths
   end

@@ -3,14 +3,22 @@ import FunNet
 import Combine
 import Slippers
 import LithoOperators
+import fuikit
+import PlaygroundSupport
+import PlaygroundVCHelpers
 import Prelude
 
 var cancelBag: Set<AnyCancellable> = []
 let call = CombineNetCall(configuration: ServerConfiguration(host: "https://lithobyte.co", apiRoute: "api/v1"), Endpoint())
+class RubyError: FunNetErrorData {
+    public var message: String?
+    
+    public init(_ message: String?) {
+        self.message = message
+    }
+}
 
-struct RubyError: FunNetErrorData { var message: String? }
-
-let rubyError = RubyError(message: "User is unauthorized.")
+let rubyError = RubyError("User is unauthorized.")
 let rubyErrorData = JsonProvider.encode(rubyError)!
 
 let handledHTTPResponse = HTTPURLResponse(url: URL(string: call.configuration.toBaseUrlString())!, statusCode: 401, httpVersion: nil, headerFields: nil)!
