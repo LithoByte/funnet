@@ -9,11 +9,11 @@ import Prelude
 import LithoOperators
 
 public func generateRequest(from configuration: ServerConfigurationProtocol, endpoint: EndpointProtocol) -> URLRequest {
-    let configure = (endpoint.httpMethod >|> applyHttpMethod)
-        <> (endpoint.httpHeaders >|> applyHeaders)
-        <> (endpoint.postData >|> applyBody)
-        <> (endpoint.dataStream >|> applyStream)
-        <> (endpoint.timeout >|> applyTimeout)
+    let configure = (endpoint.httpMethod *-> applyHttpMethod)
+        <> (endpoint.httpHeaders *-> applyHeaders)
+        <> (endpoint.postData *-> applyBody)
+        <> (endpoint.dataStream *-> applyStream)
+        <> (endpoint.timeout *-> applyTimeout)
     
     let mutableRequest = configuration.urlString(for: endpoint) |>
         (URL.init(string:) >?> NSMutableURLRequest.init(url:))
