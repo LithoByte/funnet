@@ -1,42 +1,50 @@
 PODS:
-  - FunNet (0.0.1):
-    - FunNet/Combine (= 0.0.1)
-    - FunNet/Core (= 0.0.1)
-    - FunNet/Multipart (= 0.0.1)
-    - FunNet/ReactiveSwift (= 0.0.1)
+  - FunNet (0.1.1):
+    - FunNet/Combine (= 0.1.1)
+    - FunNet/Core (= 0.1.1)
+    - FunNet/Multipart (= 0.1.1)
+    - FunNet/ReactiveSwift (= 0.1.1)
     - LithoOperators
-  - FunNet/Core (0.0.1):
+  - FunNet/Core (0.1.1):
     - LithoOperators
-  - FunNet/Multipart (0.0.1):
+  - FunNet/Multipart (0.1.1):
     - LithoOperators
-  - FunNet/ReactiveSwift (0.0.1):
+  - FunNet/ReactiveSwift (0.1.1):
     - FunNet/Core
     - LithoOperators
     - ReactiveSwift
-  - LithoOperators (0.0.2):
+  - LithoOperators (0.1.4):
     - Prelude
   - Prelude (3.0.0)
-  - ReactiveSwift (6.2.1)
+  - ReactiveSwift (6.6.1)
 
 DEPENDENCIES:
   - FunNet (from `../`)
+  - LithoOperators (from `https://github.com/LithoByte/LithoOperators`, branch `feature/cjc8/file-split`)
 
 SPEC REPOS:
   trunk:
-    - LithoOperators
     - Prelude
     - ReactiveSwift
 
 EXTERNAL SOURCES:
   FunNet:
     :path: "../"
+  LithoOperators:
+    :branch: feature/cjc8/file-split
+    :git: https://github.com/LithoByte/LithoOperators
+
+CHECKOUT OPTIONS:
+  LithoOperators:
+    :commit: f687861a54a95e91cedc996d659019c9c86586ec
+    :git: https://github.com/LithoByte/LithoOperators
 
 SPEC CHECKSUMS:
-  FunNet: e01c3f3e4258f64657bdb2476236e064db2cd9b9
-  LithoOperators: 8a4f284d8c10cb02b28af87c18494ba225345419
+  FunNet: e66d2df77a5663556970a1914c5911ecde2842ef
+  LithoOperators: 8fc0c6a49e34a8d1ca01b777844f58e36c062d9f
   Prelude: fe4cc0fd961d34edf48fe6b04d05c863449efb0a
-  ReactiveSwift: 07ddf579f4eb3ee3bd656214f0461aaf2c0fd639
+  ReactiveSwift: fab34244ad908808dc822bae352a058c8837c4ca
 
-PODFILE CHECKSUM: 7cb893b39fb1b5800d66e86e4732dc00ae9870e4
+PODFILE CHECKSUM: e67c71cac4b1ca05ea6992092f9fb78466188fc5
 
 COCOAPODS: 1.10.0
