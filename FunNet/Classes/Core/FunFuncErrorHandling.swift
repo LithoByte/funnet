@@ -11,6 +11,7 @@ import LithoUtils
 import fuikit
 import Prelude
 import Slippers
+import Combine
 
 public protocol FunNetErrorData: Codable {
     var message: String? { get set }
@@ -55,31 +56,31 @@ public func httpResponseToFunNetErrorData<T: FunNetErrorData>(type: T.Type) -> (
 }
 
 public func debugLoadingErrorHandler(vc: UIViewController?, errorMap: [Int:String] = urlLoadingErrorCodesDict) -> (NSError?) -> Void {
-    return (debugErrorAlert -*> ifExecute) >?> vc?.presentClosure()
+    return (errorMap -*> debugErrorAlert -*> ifExecute) >?> vc?.presentClosure()
 }
 
 public func debugLoadingErrorHandler(vc: UIViewController?) -> (NSError?) -> Void {
     return debugLoadingErrorHandler(presenter: vc?.presentClosure())
 }
 
-public func debugLoadingErrorHandler(presenter: ((UIViewController) -> Void)?) -> (NSError?) -> Void {
-    return (debugErrorAlert -*> ifExecute) >?> presenter
+public func debugLoadingErrorHandler(presenter: ((UIViewController) -> Void)?, errorMap: [Int: String] = urlLoadingErrorCodesDict) -> (NSError?) -> Void {
+    return (errorMap -*> debugErrorAlert -*> ifExecute) >?> presenter
 }
 
-public func debugServerErrorHandler(presenter: ((UIViewController) -> Void)?) -> (NSError?) -> Void {
-    return (debugErrorAlert -*> ifExecute) >?> presenter
+public func debugServerErrorHandler(presenter: ((UIViewController) -> Void)?, errorMap: [Int:String] = urlResponseErrorMessages) -> (NSError?) -> Void {
+    return (errorMap -*> debugErrorAlert -*> ifExecute) >?> presenter
 }
 
-public func debugServerErrorHandler(vc: UIViewController?) -> (NSError?) -> Void {
-    return debugServerErrorHandler(presenter: vc?.presentClosure())
+public func debugServerErrorHandler(vc: UIViewController?, errorMap: [Int:String] = urlResponseErrorMessages) -> (NSError?) -> Void {
+    return debugServerErrorHandler(presenter: vc?.presentClosure(), errorMap: errorMap)
 }
 
 public func debugURLResponseHandler(vc: UIViewController?) -> (HTTPURLResponse?) -> Void {
     return debugURLResponseHandler(presenter: vc?.presentClosure())
 }
 
-public func debugURLResponseHandler(presenter: ((UIViewController) -> Void)?) -> (HTTPURLResponse?) -> Void {
-    return (debugResponseAlert -*> ifExecute) >?> presenter
+public func debugURLResponseHandler(presenter: ((UIViewController) -> Void)?, errorMap: [Int:String] = urlResponseErrorMessages) -> (HTTPURLResponse?) -> Void {
+    return (errorMap -*> debugResponseAlert -*> ifExecute) >?> presenter
 }
 
 public func debugFunNetErrorDataResponseHandler<T: FunNetErrorData>(vc: UIViewController?, type: T.Type) -> (HTTPURLResponse?, Data?) -> Void {
@@ -148,8 +149,8 @@ public func prodFunNetErrorDataSessionHandler<T: FunNetErrorData>(_ vc: UIViewCo
 
 //MARK: - Alert Functions
 
-public func debugAlert(code: Int) -> UIAlertController {
-    return alert("Error: \(code)", "")
+public func debugAlert(code: Int, errorMap: [Int: String]) -> UIAlertController {
+    return alert("Error: \(code)", errorMap[code] ?? "")
 }
 public func prodAlert(code: Int, errorMap: [Int:String]) -> UIAlertController {
     return alert("Something went wrong!", errorMap[code] ?? "")
@@ -171,10 +172,10 @@ public func codeStringAlert(code: Int?, description: String?) -> UIAlertControll
     }
 }
 
-public let debugErrorAlert: (NSError) -> UIAlertController = (^\.code) >>> debugAlert
-public let prodErrorAlert: (NSError, [Int:String]) -> UIAlertController = (^\.code) >*-> prodAlert
-public let debugResponseAlert: (HTTPURLResponse) -> UIAlertController = (^\.statusCode) >>> debugAlert
-public let prodResponseAlert: (HTTPURLResponse, [Int:String]) -> UIAlertController = (^\.statusCode) >*-> prodAlert
+public let debugErrorAlert: (NSError, [Int:String]) -> UIAlertController = ^\.code >*-> debugAlert
+public let prodErrorAlert: (NSError, [Int:String]) -> UIAlertController = ^\.code >*-> prodAlert
+public let debugResponseAlert: (HTTPURLResponse, [Int:String]) -> UIAlertController = ^\.statusCode >*-> debugAlert
+public let prodResponseAlert: (HTTPURLResponse, [Int:String]) -> UIAlertController = ^\.statusCode >*-> prodAlert
 
 public func statusAndFunNetErrorDataToString(code: Int?, error: FunNetErrorData?) -> String {
     return "Error: \(code != nil ? "\(code!)" : "") \(error?.message ?? "")"
@@ -195,3 +196,50 @@ public func responseString(messageMap: [Int:String]) -> (HTTPURLResponse) -> Str
 }
 
 public let printStr: (String?) -> Void = { print($0) } -*> ifExecute
+
+func serverErrorHandlerFactory<T: FunNetErrorData>(presenter: UIViewController?, overrideCodes: [Int: String], unwrapper: @escaping (T) -> String? = ^\T.message) -> (NSError?) -> Void {
+    return { e in
+        if let error = e, error.domain == "Server" {
+            if overrideCodes.keys.contains(error.code) {
+                 error |> serverErrorHandlerMapOnlyFactory(presenter: presenter, overrideCodes: overrideCodes)
+            } else {
+                error |> serverErrorHandlerMessageFactory(presenter: presenter, overrideCodes: overrideCodes, unwrapper: unwrapper)
+            }
+        }
+    }
+}
+
+func serverErrorHandlerMapOnlyFactory(presenter: UIViewController?, overrideCodes: [Int: String]) -> (NSError?) -> Void {
+    return debugServerErrorHandler(vc: presenter, errorMap: urlResponseErrorMessages << overrideCodes)
+}
+
+func serverErrorHandlerMessageFactory<T: FunNetErrorData>(presenter: UIViewController?, overrideCodes: [Int: String], unwrapper: @escaping (T) -> String? = ^\T.message) -> (NSError?) -> Void {
+    return { e in
+        if let error = e, error.domain == "Server" {
+            if let vc = presenter, let dataString = error.userInfo["data"] as? String, let data = dataString.data(using: .utf8), let responseError = JsonProvider.decode(T.self, from: data), let message = unwrapper(responseError) {
+                codeStringAlert(code: error.code, description: message) ?> vc.presentClosure()
+            } else {
+                error |> debugServerErrorHandler(vc: presenter, errorMap: urlResponseErrorMessages << overrideCodes)
+            }
+        }
+    }
+}
+
+infix operator <<: AdditionPrecedence
+public func << <Key, Value>(_ lhs: [Key: Value], _ rhs: [Key: Value]) -> [Key: Value] {
+    var result = lhs
+    for key in rhs.keys {
+        result[key] = rhs[key]
+    }
+    return result
+}
+public func < <Key, Value>(_ lhs: [Key: Value], _ rhs: [Key: Value]) -> [Key: Value] {
+    var result = lhs
+    for key in rhs.keys {
+        if lhs[key] == nil {
+            result[key] = rhs[key]
+        }
+    }
+    return result
+}
+
