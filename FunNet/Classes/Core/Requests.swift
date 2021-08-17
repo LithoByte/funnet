@@ -17,6 +17,7 @@ public func generateRequest(from configuration: ServerConfigurationProtocol, end
     
     let mutableRequest = configuration.urlString(for: endpoint) |>
         (URL.init(string:) >?> NSMutableURLRequest.init(url:))
+    configuration.shouldUseCookies |> applyCookiePolicy
     if let request = mutableRequest {
         configure(request)
     }
@@ -92,6 +93,12 @@ public func applyHttpMethod(method: String = "GET", request: NSMutableURLRequest
 public func applyHeaders(_ httpHeaders: [String: String] = [:], request: NSMutableURLRequest) {
     for key in httpHeaders.keys {
         request.addValue(httpHeaders[key]!, forHTTPHeaderField: key)
+    }
+}
+
+public func applyCookiePolicy(_ shouldApplyCookies: Bool) {
+    if !shouldApplyCookies {
+        HTTPCookieStorage.shared.cookies?.forEach(HTTPCookieStorage.shared.deleteCookie)
     }
 }
 

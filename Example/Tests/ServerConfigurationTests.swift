@@ -7,6 +7,8 @@
 //
 
 import XCTest
+import LithoOperators
+import Prelude
 @testable import FunNet
 
 class ServerConfigurationTests: XCTestCase {
@@ -50,5 +52,31 @@ class ServerConfigurationTests: XCTestCase {
     func testPreviouslyEncodedGetParameters() {
         let url = dictionaryToUrlUnencodedParams(dict: ["page": 1, "key": "api%20key"])
         XCTAssert(url == "key=api%20key&page=1" || url == "page=1&key=api%20key")
+    }
+    
+    func testApplyCookiePolicy() {
+        let config = ServerConfiguration(shouldUseCookies: false, host: "lithobyte.co", apiRoute: "api/v1")
+        let cookieStorage = HTTPCookieStorage.shared
+        cookieStorage.removeCookies(since: Calendar.current.date(byAdding: .year, value: -20, to: Date())!)
+        let cookieProps: [HTTPCookiePropertyKey: Any] = [
+            .domain: "https://lithobyte.co",
+            .path: "/",
+            .name: "name",
+            .value: "value",
+            .secure: "TRUE",
+            .expires: NSDate(timeIntervalSinceNow: 10000)
+        ]
+
+        if let cookie = HTTPCookie(properties: cookieProps) {
+            cookieStorage.setCookie(cookie)
+        } else {
+            XCTFail("Could not instantiate cookie")
+        }
+        XCTAssertNotNil(cookieStorage.cookies?.count)
+        XCTAssertEqual(cookieStorage.cookies!.count, 1)
+        
+        config.shouldUseCookies |> applyCookiePolicy
+        
+        XCTAssert(cookieStorage.cookies?.count == nil || cookieStorage.cookies!.count == 0)
     }
 }
