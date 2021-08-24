@@ -14,10 +14,10 @@ public func generateRequest(from configuration: ServerConfigurationProtocol, end
         <> (endpoint.postData >|> applyBody)
         <> (endpoint.dataStream >|> applyStream)
         <> (endpoint.timeout >|> applyTimeout)
+        <> (ignoreArg(configuration.shouldUseCookies *> applyCookiePolicy))
     
     let mutableRequest = configuration.urlString(for: endpoint) |>
         (URL.init(string:) >?> NSMutableURLRequest.init(url:))
-    configuration.shouldUseCookies |> applyCookiePolicy
     if let request = mutableRequest {
         configure(request)
     }

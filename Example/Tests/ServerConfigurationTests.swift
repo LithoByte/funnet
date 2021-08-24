@@ -54,7 +54,7 @@ class ServerConfigurationTests: XCTestCase {
         XCTAssert(url == "key=api%20key&page=1" || url == "page=1&key=api%20key")
     }
     
-    func testApplyCookiePolicy() {
+    func testNoCookiePolicy() {
         let config = ServerConfiguration(shouldUseCookies: false, host: "lithobyte.co", apiRoute: "api/v1")
         let cookieStorage = HTTPCookieStorage.shared
         cookieStorage.removeCookies(since: Calendar.current.date(byAdding: .year, value: -20, to: Date())!)
@@ -78,5 +78,30 @@ class ServerConfigurationTests: XCTestCase {
         config.shouldUseCookies |> applyCookiePolicy
         
         XCTAssert(cookieStorage.cookies?.count == nil || cookieStorage.cookies!.count == 0)
+    }
+    
+    func testCookiePolicy() {
+        let config = ServerConfiguration(shouldUseCookies: true, host: "lithobyte.co", apiRoute: "api/v1")
+        let cookieStorage = HTTPCookieStorage.shared
+        cookieStorage.removeCookies(since: Calendar.current.date(byAdding: .year, value: -20, to: Date())!)
+        let cookieProps: [HTTPCookiePropertyKey: Any] = [
+            .domain: "https://lithobyte.co",
+            .path: "/",
+            .name: "name",
+            .value: "value",
+            .secure: "TRUE",
+            .expires: NSDate(timeIntervalSinceNow: 10000)
+        ]
+
+        if let cookie = HTTPCookie(properties: cookieProps) {
+            cookieStorage.setCookie(cookie)
+        } else {
+            XCTFail("Could not instantiate cookie")
+        }
+        XCTAssertNotNil(cookieStorage.cookies?.count)
+        XCTAssertEqual(cookieStorage.cookies!.count, 1)
+        config.shouldUseCookies |> applyCookiePolicy
+        
+        XCTAssert(cookieStorage.cookies?.count != nil && cookieStorage.cookies!.count != 0)
     }
 }
