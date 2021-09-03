@@ -7,7 +7,7 @@
 
 import Foundation
 
-let urlLoadingErrorCodesDict: [Int: String] = [
+public let urlLoadingErrorCodesDict: [Int: String] = [
     -1000: "Bad URL.",
     -1001: "Request timed out.",
     -1002: "Unsupported URL.",
@@ -38,6 +38,39 @@ let urlLoadingErrorCodesDict: [Int: String] = [
     -1204: "Server certificate not valid yet.",
     -1205: "Client certificate rejected.",
     -1206: "Client certificate required, but not provided."
+]
+
+public var urlResponseErrorMessages: [Int:String] = [
+        400 : "Bad request",
+        401 : "Unauthorized",
+        402 : "Payment required",
+        403 : "Forbidden",
+        404 : "Not found",
+        405 : "HTTP Method not allowed",
+        406 : "Content type in Accept header is unavailable",
+        408 : "Request timed out",
+        409 : "Conflict in requested resource",
+        410 : "Resource is permanently unavailable",
+        411 : "Length required",
+        412 : "Precondition failed",
+        413 : "Payload too large",
+        414 : "URI too long",
+        415 : "Unsupported mediatype",
+        416 : "Range not satisfiable",
+        417 : "Expectation failed",
+        418 : "This server is, in fact, a teapot",
+        420 : "420 error, dank dude",
+        421 : "Unauthorized",
+        422 : "Unable to process payload",
+        429 : "Too many requests",
+        431 : "Headers too large",
+        451 : "Unavailable for legal reasons",
+        500 : "Internal server error",
+        501 : "This functionality is not implemented",
+        502 : "Bad internet gateway",
+        503 : "Server currently unavailable",
+        505 : "HTTP version not supported",
+        511 : "Network authentication required"
 ]
 
 public func urlLoadingErrorMessages() -> [ErrorMessage] {
