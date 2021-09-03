@@ -14,6 +14,7 @@ public func generateRequest(from configuration: ServerConfigurationProtocol, end
         <> (endpoint.postData *-> applyBody)
         <> (endpoint.dataStream *-> applyStream)
         <> (endpoint.timeout *-> applyTimeout)
+        <> (ignoreArg(configuration.shouldUseCookies *> applyCookiePolicy))
     
     let mutableRequest = configuration.urlString(for: endpoint) |>
         (URL.init(string:) >?> NSMutableURLRequest.init(url:))
@@ -138,6 +139,12 @@ public func applyHttpMethod(method: String = "GET", request: NSMutableURLRequest
 public func applyHeaders(_ httpHeaders: [String: String] = [:], request: NSMutableURLRequest) {
     for key in httpHeaders.keys {
         request.addValue(httpHeaders[key]!, forHTTPHeaderField: key)
+    }
+}
+
+public func applyCookiePolicy(_ shouldApplyCookies: Bool) {
+    if !shouldApplyCookies {
+        HTTPCookieStorage.shared.cookies?.forEach(HTTPCookieStorage.shared.deleteCookie)
     }
 }
 

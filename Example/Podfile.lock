@@ -26,7 +26,7 @@ PODS:
     - LithoOperators
   - PlaygroundVCHelpers (0.0.2)
   - Prelude (3.0.0)
-  - ReactiveSwift (6.6.1)
+  - ReactiveSwift (6.7.0)
   - Slippers (0.1.1)
 
 DEPENDENCIES:
@@ -59,7 +59,7 @@ CHECKOUT OPTIONS:
     :commit: 180a93436cc4d22e7e4a83ea1509ee67a08d761b
     :git: https://github.com/LithoByte/LithoOperators
   LithoUtils:
-    :commit: 4d9864b0f99b27f9216d9fa80287f2a16b95ea0a
+    :commit: 8640dd95de3f3cc7359d998f3b084be56dffa419
     :git: https://github.com/LithoByte/litho-utils
   PlaygroundVCHelpers:
     :commit: 1b1f5ed572a1965e1d52bbc1b21f3796a6f144e2
@@ -75,7 +75,7 @@ SPEC CHECKSUMS:
   LithoUtils: 672d313a7fede3968e22f082b293cbc01ebcb7f0
   PlaygroundVCHelpers: c7cc8994d2851ebd1590217101b4c6888d1c9cc8
   Prelude: fe4cc0fd961d34edf48fe6b04d05c863449efb0a
-  ReactiveSwift: fab34244ad908808dc822bae352a058c8837c4ca
+  ReactiveSwift: 208201d6ecc9734196d147aa76bc1f24b1b821fe
   Slippers: 3814c93fd93305f918a984e724d5db4d9569a660
 
 PODFILE CHECKSUM: 5153ccd904dbc78f9b455c0a32046218c55b9110
