@@ -55,12 +55,20 @@ public func responderToCompletion(responder: NetworkResponderProtocol) -> (Data?
                                 errorDataHandler: responder.errorDataHandler)
 }
 
+public func responderToTaskPublisherReceiver(responder: NetworkResponderProtocol) -> (Data?, URLResponse?) -> Void {
+    return handlersToTaskPublisherBlock(responseHandler: responder.responseHandler,
+                                httpResponseHandler: responder.httpResponseHandler,
+                                dataHandler: responder.dataHandler,
+                                serverErrorHandler: responder.serverErrorHandler,
+                                errorDataHandler: responder.errorDataHandler)
+}
+
 public func handlersToCompletion(responseHandler: @escaping (URLResponse?) -> Void = { _ in },
-                                    httpResponseHandler: @escaping (HTTPURLResponse) -> Void = { _ in },
-                                    dataHandler: @escaping (Data?) -> Void = { _ in },
-                                    errorHandler: @escaping (NSError) -> Void = { _ in },
-                                    serverErrorHandler: @escaping (NSError) -> Void = { _ in },
-                                    errorDataHandler: @escaping (Data?) -> Void = { _ in })
+                                 httpResponseHandler: @escaping (HTTPURLResponse) -> Void = { _ in },
+                                 dataHandler: @escaping (Data?) -> Void = { _ in },
+                                 errorHandler: @escaping (NSError) -> Void = { _ in },
+                                 serverErrorHandler: @escaping (NSError) -> Void = { _ in },
+                                 errorDataHandler: @escaping (Data?) -> Void = { _ in })
     -> (Data?, URLResponse?, Error?) -> Void {
     return { (data, response, error) in
         responseHandler(response)
@@ -82,6 +90,44 @@ public func handlersToCompletion(responseHandler: @escaping (URLResponse?) -> Vo
                 dataHandler(data)
             }
         }
+    }
+}
+
+public func handlersToTaskPublisherBlock(responseHandler: @escaping (URLResponse?) -> Void = { _ in },
+                                 httpResponseHandler: @escaping (HTTPURLResponse) -> Void = { _ in },
+                                 dataHandler: @escaping (Data?) -> Void = { _ in },
+                                 serverErrorHandler: @escaping (NSError) -> Void = { _ in },
+                                 errorDataHandler: @escaping (Data?) -> Void = { _ in })
+    -> (Data?, URLResponse?) -> Void {
+    return { (data, response) in
+        responseHandler(response)
+        if let httpResponse = response as? HTTPURLResponse {
+            httpResponseHandler(httpResponse)
+            if httpResponse.statusCode < 300 {
+                dataHandler(data)
+            } else {
+                (data, response) |> (~responseToServerError() >?> serverErrorHandler)
+            }
+        }
+    }
+}
+
+public func responseToServerError() -> (Data?, URLResponse?) -> NSError? {
+    return { (data, response) in
+        var error: NSError? = nil
+        if let httpResponse = response as? HTTPURLResponse {
+            if httpResponse.statusCode > 299 {
+                var info: [String: Any] = ["url" : httpResponse.url?.absoluteString as Any]
+                if let data = data {
+                    info["data"] = data
+                    if let stringData = String(data: data, encoding: .utf8) {
+                        info["data"] = stringData
+                    }
+                }
+                error = NSError(domain: "Server", code: httpResponse.statusCode, userInfo: info)
+            }
+        }
+        return error
     }
 }
 
