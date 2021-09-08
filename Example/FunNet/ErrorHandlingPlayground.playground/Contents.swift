@@ -42,15 +42,6 @@ call.publisher.$httpResponse.combineLatest(call.publisher.$errorData).sink(recei
 
 // --------------------------------------------------------------------
 
-public func dataTaskCompletionError(completion: Subscribers.Completion<URLError>) -> URLError? {
-    switch completion {
-    case .finished:
-        return nil
-    case .failure(let error):
-        return error
-    }
-}
-
 // This is how users of URLSession might set up their request
 let request = URLRequest(url: URL(string: "https://lithobyte.co/api/v1")!)
 let session = URLSession(configuration: .default)
