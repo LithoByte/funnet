@@ -3,6 +3,8 @@ PODS:
   - FunNet (0.1.1):
     - FunNet/Combine (= 0.1.1)
     - FunNet/Core (= 0.1.1)
+    - FunNet/ErrorHandling (= 0.1.1)
+    - FunNet/ErrorHandlingCombine (= 0.1.1)
     - FunNet/Multipart (= 0.1.1)
     - FunNet/ReactiveSwift (= 0.1.1)
     - LithoOperators
@@ -10,6 +12,15 @@ PODS:
     - FunNet/Core
     - LithoOperators
   - FunNet/Core (0.1.1):
+    - LithoOperators
+    - LithoUtils/Core
+    - Slippers
+  - FunNet/ErrorHandling (0.1.1):
+    - LithoOperators
+    - LithoUtils/Core
+    - Slippers
+  - FunNet/ErrorHandlingCombine (0.1.1):
+    - FunNet/ErrorHandling
     - LithoOperators
     - LithoUtils/Core
     - Slippers
@@ -70,7 +81,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   fuikit: 976080e1c04037e01d14541135a104cb208d8c0d
-  FunNet: f8bb223e1ec7d5e286ec6f3f9d59d8b7b685df1d
+  FunNet: 35f31b2ce9525af9f096a6cffb5ae506a1bf5f6f
   LithoOperators: 8fc0c6a49e34a8d1ca01b777844f58e36c062d9f
   LithoUtils: 672d313a7fede3968e22f082b293cbc01ebcb7f0
   PlaygroundVCHelpers: c7cc8994d2851ebd1590217101b4c6888d1c9cc8
@@ -80,4 +91,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 5153ccd904dbc78f9b455c0a32046218c55b9110
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.10.1

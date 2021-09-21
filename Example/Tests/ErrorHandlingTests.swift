@@ -33,7 +33,7 @@ class ErrorHandlingTests: XCTestCase {
         call.publisher.$error.sink(receiveValue: debugLoadingErrorHandler(presenter: { vc in
             guard let alert = vc as? UIAlertController else { return XCTFail("Was not UIAlertController") }
             XCTAssertEqual(alert.title, "Error: -1000")
-            XCTAssertEqual(alert.message, "")
+            XCTAssertEqual(alert.message, urlLoadingErrorCodesDict[-1000])
         })).store(in: &cancelBag)
         call.fire()
     }
@@ -42,7 +42,7 @@ class ErrorHandlingTests: XCTestCase {
         call.publisher.$serverError.sink(receiveValue: debugServerErrorHandler(presenter: { (vc: UIViewController?) in
             guard let alert = vc as? UIAlertController else { return XCTFail("Was not UIAlertController") }
             XCTAssertEqual(alert.title, "Error: 401")
-            XCTAssertEqual(alert.message, "")
+            XCTAssertEqual(alert.message, urlResponseErrorMessages[401])
         })).store(in: &cancelBag)
         call.fire()
     }
@@ -51,7 +51,7 @@ class ErrorHandlingTests: XCTestCase {
         call.publisher.$httpResponse.sink(receiveValue: debugURLResponseHandler(presenter: { (vc: UIViewController?) in
             guard let alert = vc as? UIAlertController else { return XCTFail("Was not UIAlertController") }
             XCTAssertEqual(alert.title, "Error: 401")
-            XCTAssertEqual(alert.message, "")
+            XCTAssertEqual(alert.message, urlResponseErrorMessages[401])
         })).store(in: &cancelBag)
         call.fire()
     }

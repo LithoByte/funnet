@@ -19,7 +19,7 @@ TODO: Add long description of the pod here.
   s.homepage         = 'https://github.com/schrockblock/funnet'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Elliot' => '' }
-  s.source           = { :git => 'https://github.com/schrockblock/funnet.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/LithoByte/funnet.git', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/elliot_schrock'
 
   s.ios.deployment_target = '11.0'
@@ -52,5 +52,23 @@ TODO: Add long description of the pod here.
   s.subspec 'Multipart' do |sp|
     sp.source_files = 'FunNet/Classes/Multipart/**/*.swift'
     sp.dependency 'LithoOperators'
+  end
+  
+  s.subspec 'ErrorHandling' do |sp|
+    sp.source_files = 'FunNet/Classes/ErrorHandling/**/*.swift'
+    sp.dependency 'LithoOperators'
+    sp.dependency 'LithoUtils/Core'
+    sp.dependency 'Slippers'
+  end
+  
+  s.subspec 'ErrorHandlingCombine' do |sp|
+    sp.source_files = 'FunNet/Classes/ErrorHandlingCombine/**/*.swift'
+    
+    sp.dependency 'FunNet/ErrorHandling'
+    sp.dependency 'LithoOperators'
+    sp.dependency 'LithoUtils/Core'
+    sp.dependency 'Slippers'
+    
+    sp.framework = 'Combine'
   end
 end

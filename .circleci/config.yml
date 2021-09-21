@@ -30,7 +30,7 @@ jobs:
       - run:
           name: Build and run tests
           no_output_timeout: 30m
-          command: bundle exec fastlane scan
+          command: cd Example && bundle exec fastlane scan
           environment:
             SCAN_DEVICE: iPhone 8
             SCAN_SCHEME: FunNet-Example
