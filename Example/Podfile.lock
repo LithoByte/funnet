@@ -67,10 +67,10 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   LithoOperators:
-    :commit: 180a93436cc4d22e7e4a83ea1509ee67a08d761b
+    :commit: e1203c96bfd693bc3579b6080439e2580716d9e4
     :git: https://github.com/LithoByte/LithoOperators
   LithoUtils:
-    :commit: 8640dd95de3f3cc7359d998f3b084be56dffa419
+    :commit: fdeed345e1557a4976ae46b47f6d5d0a15f3f718
     :git: https://github.com/LithoByte/litho-utils
   PlaygroundVCHelpers:
     :commit: 1b1f5ed572a1965e1d52bbc1b21f3796a6f144e2
@@ -91,4 +91,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 5153ccd904dbc78f9b455c0a32046218c55b9110
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2
