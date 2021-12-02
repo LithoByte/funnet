@@ -41,22 +41,3 @@ func serverErrorHandlerMessageFactory<T: FunNetErrorData>(presenter: UIViewContr
         }
     }
 }
-
-infix operator <<: AdditionPrecedence
-public func << <Key, Value>(_ lhs: [Key: Value], _ rhs: [Key: Value]) -> [Key: Value] {
-    var result = lhs
-    for key in rhs.keys {
-        result[key] = rhs[key]
-    }
-    return result
-}
-public func < <Key, Value>(_ lhs: [Key: Value], _ rhs: [Key: Value]) -> [Key: Value] {
-    var result = lhs
-    for key in rhs.keys {
-        if lhs[key] == nil {
-            result[key] = rhs[key]
-        }
-    }
-    return result
-}
-
