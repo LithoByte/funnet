@@ -4,7 +4,7 @@ platform :ios, '13.0'
 target 'FunNet_Example' do
   pod 'FunNet', :path => '../'
   pod 'LithoOperators', :git => 'https://github.com/LithoByte/LithoOperators'
-  pod 'Slippers', git: 'https://github.com/LithoByte/slippers'
+  pod 'Slippers/Core', git: 'https://github.com/LithoByte/slippers'
   pod 'LithoUtils/Core', git: 'https://github.com/LithoByte/litho-utils'
   pod 'PlaygroundVCHelpers', git: 'https://github.com/ThryvInc/playground-vc-helpers'
   target 'FunNet_Tests' do

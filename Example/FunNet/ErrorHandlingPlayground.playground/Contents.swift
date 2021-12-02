@@ -8,6 +8,10 @@ import PlaygroundSupport
 import PlaygroundVCHelpers
 import Prelude
 
+NSSetUncaughtExceptionHandler { exception in
+    print("💥 Exception thrown: \(exception)")
+}
+
 var cancelBag: Set<AnyCancellable> = []
 let call = CombineNetCall(configuration: ServerConfiguration(host: "https://lithobyte.co", apiRoute: "api/v1"), Endpoint())
 class RubyError: FunNetErrorData {
@@ -66,7 +70,27 @@ taskPub
 taskPub.sink(receiveCompletion: dataTaskCompletionError >?> ^\URLError.errorCode >>> fzip(errorCodeString, keyToValue(for: urlLoadingErrorCodesDict)) >>> printTwoStrs, receiveValue: responderToTaskPublisherReceiver(responder: call.publisher))
     .store(in: &cancelBag)
 
-// Send a response to test printing
-taskSubject.send((rubyErrorData, handledHTTPResponse))
-taskSubject.send(completion: Subscribers.Completion<URLError>.failure(URLError.init(.badURL, userInfo: [:])))
-//taskSubject.send(completion: Subscribers.Completion<URLError>.finished)
+let presenter: (UIViewController) -> Void = {
+    print("hello")
+    vc.presentAnimated($0)
+}
+
+
+
+let vc = FUIViewController()
+
+vc.onViewDidLoad = {
+    taskPub
+        .sink(receiveCompletion: debugTaskErrorAlerter(vc: $0), receiveValue: debugServerResponseErrorHandler(vc: $0, errorMap: [401: "Unauthorized. How DARE you."]))
+        .store(in: &cancelBag)
+}
+
+vc.onViewDidAppear = { _, _ in
+    // Send a response to test
+    taskSubject.send((rubyErrorData, handledHTTPResponse))
+//    taskSubject.send(completion: Subscribers.Completion<URLError>.failure(URLError.init(.badURL, userInfo: [:])))
+    //taskSubject.send(completion: Subscribers.Completion<URLError>.finished)
+}
+
+PlaygroundPage.current.liveView = vc
+PlaygroundPage.current.needsIndefiniteExecution = true

@@ -31,7 +31,7 @@ TODO: Add long description of the pod here.
     sp.source_files = 'FunNet/Classes/Core/**/*.swift'
     sp.dependency 'LithoOperators'
     sp.dependency 'LithoUtils/Core'
-    sp.dependency 'Slippers'
+    sp.dependency 'Slippers/Core'
   end
   
   s.subspec 'Combine' do |sp|
@@ -58,7 +58,7 @@ TODO: Add long description of the pod here.
     sp.source_files = 'FunNet/Classes/ErrorHandling/**/*.swift'
     sp.dependency 'LithoOperators'
     sp.dependency 'LithoUtils/Core'
-    sp.dependency 'Slippers'
+    sp.dependency 'Slippers/Core'
   end
   
   s.subspec 'ErrorHandlingCombine' do |sp|
@@ -67,7 +67,7 @@ TODO: Add long description of the pod here.
     sp.dependency 'FunNet/ErrorHandling'
     sp.dependency 'LithoOperators'
     sp.dependency 'LithoUtils/Core'
-    sp.dependency 'Slippers'
+    sp.dependency 'Slippers/Core'
     
     sp.framework = 'Combine'
   end
