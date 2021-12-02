@@ -1,6 +1,6 @@
 # FunNet
 
-[![CI Status](https://circleci.com/gh/LithoByte/FunNet.svg?style=svg)](https://circleci.com/gh/LithoByte/funnet)
+[![CI Status](https://circleci.com/gh/LithoByte/funnet/tree/master.svg?style=shield)](https://circleci.com/gh/LithoByte/funnet)
 [![Version](https://img.shields.io/cocoapods/v/FunNet.svg?style=flat)](https://cocoapods.org/pods/FunNet)
 [![License](https://img.shields.io/cocoapods/l/FunNet.svg?style=flat)](https://cocoapods.org/pods/FunNet)
 [![Platform](https://img.shields.io/cocoapods/p/FunNet.svg?style=flat)](https://cocoapods.org/pods/FunNet)
