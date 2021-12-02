@@ -14,16 +14,16 @@ PODS:
   - FunNet/Core (0.1.1):
     - LithoOperators
     - LithoUtils/Core
-    - Slippers
+    - Slippers/Core
   - FunNet/ErrorHandling (0.1.1):
     - LithoOperators
     - LithoUtils/Core
-    - Slippers
+    - Slippers/Core
   - FunNet/ErrorHandlingCombine (0.1.1):
     - FunNet/ErrorHandling
     - LithoOperators
     - LithoUtils/Core
-    - Slippers
+    - Slippers/Core
   - FunNet/Multipart (0.1.1):
     - LithoOperators
   - FunNet/ReactiveSwift (0.1.1):
@@ -37,15 +37,15 @@ PODS:
     - LithoOperators
   - PlaygroundVCHelpers (0.0.2)
   - Prelude (3.0.0)
-  - ReactiveSwift (6.7.0)
-  - Slippers (0.1.1)
+  - ReactiveSwift (7.0.0)
+  - Slippers/Core (0.1.1)
 
 DEPENDENCIES:
   - FunNet (from `../`)
   - LithoOperators (from `https://github.com/LithoByte/LithoOperators`)
   - LithoUtils/Core (from `https://github.com/LithoByte/litho-utils`)
   - PlaygroundVCHelpers (from `https://github.com/ThryvInc/playground-vc-helpers`)
-  - Slippers (from `https://github.com/LithoByte/slippers`)
+  - Slippers/Core (from `https://github.com/LithoByte/slippers`)
 
 SPEC REPOS:
   trunk:
@@ -70,25 +70,25 @@ CHECKOUT OPTIONS:
     :commit: e1203c96bfd693bc3579b6080439e2580716d9e4
     :git: https://github.com/LithoByte/LithoOperators
   LithoUtils:
-    :commit: fdeed345e1557a4976ae46b47f6d5d0a15f3f718
+    :commit: a636308969618cab4fcd50e5ed1c362a0ab1e3e3
     :git: https://github.com/LithoByte/litho-utils
   PlaygroundVCHelpers:
     :commit: 1b1f5ed572a1965e1d52bbc1b21f3796a6f144e2
     :git: https://github.com/ThryvInc/playground-vc-helpers
   Slippers:
-    :commit: c73ac0ab4d39bf981dda7caa23d959a5f22f2bb9
+    :commit: 673221de7fd877d808b83e6415544be4824a746e
     :git: https://github.com/LithoByte/slippers
 
 SPEC CHECKSUMS:
   fuikit: 976080e1c04037e01d14541135a104cb208d8c0d
-  FunNet: 35f31b2ce9525af9f096a6cffb5ae506a1bf5f6f
+  FunNet: 84bc45acb92e38183f5e26be3f36ab2ce14c67be
   LithoOperators: 8fc0c6a49e34a8d1ca01b777844f58e36c062d9f
   LithoUtils: 672d313a7fede3968e22f082b293cbc01ebcb7f0
   PlaygroundVCHelpers: c7cc8994d2851ebd1590217101b4c6888d1c9cc8
   Prelude: fe4cc0fd961d34edf48fe6b04d05c863449efb0a
-  ReactiveSwift: 208201d6ecc9734196d147aa76bc1f24b1b821fe
-  Slippers: 3814c93fd93305f918a984e724d5db4d9569a660
+  ReactiveSwift: 48c4b9d3b497e8dd20b10300bb1a28ff93550f13
+  Slippers: 5a3c6f24a556a59a091e2cb60e588472827be87c
 
-PODFILE CHECKSUM: 5153ccd904dbc78f9b455c0a32046218c55b9110
+PODFILE CHECKSUM: 6437f7f3e785b3ea541afc1ff22ed64e3f344999
 
 COCOAPODS: 1.11.2
