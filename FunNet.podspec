@@ -24,18 +24,18 @@ TODO: Add long description of the pod here.
 
   s.ios.deployment_target = '11.0'
 
-  s.source_files = 'FunNet/Classes/**/*'
+  s.source_files = 'Sources/funnet/**/*'
   s.dependency 'LithoOperators'
   
   s.subspec 'Core' do |sp|
-    sp.source_files = 'FunNet/Classes/Core/**/*.swift'
+    sp.source_files = 'Sources/funnet/Core/**/*.swift'
     sp.dependency 'LithoOperators'
     sp.dependency 'LithoUtils/Core'
     sp.dependency 'Slippers/Core'
   end
   
   s.subspec 'Combine' do |sp|
-    sp.source_files = 'FunNet/Classes/Combine/**/*.swift'
+    sp.source_files = 'Sources/funnet/Combine/**/*.swift'
     sp.ios.deployment_target = '13.0'
     
     sp.dependency 'FunNet/Core'
@@ -43,26 +43,26 @@ TODO: Add long description of the pod here.
   end
   
   s.subspec 'ReactiveSwift' do |sp|
-    sp.source_files = 'FunNet/Classes/ReactiveSwift/**/*'
+    sp.source_files = 'Sources/funnet/ReactiveSwift/**/*'
     
     sp.dependency 'FunNet/Core'
     sp.dependency 'ReactiveSwift'
   end
   
   s.subspec 'Multipart' do |sp|
-    sp.source_files = 'FunNet/Classes/Multipart/**/*.swift'
+    sp.source_files = 'Sources/funnet/Multipart/**/*.swift'
     sp.dependency 'LithoOperators'
   end
   
   s.subspec 'ErrorHandling' do |sp|
-    sp.source_files = 'FunNet/Classes/ErrorHandling/**/*.swift'
+    sp.source_files = 'Sources/funnet/ErrorHandling/**/*.swift'
     sp.dependency 'LithoOperators'
     sp.dependency 'LithoUtils/Core'
     sp.dependency 'Slippers/Core'
   end
   
   s.subspec 'ErrorHandlingCombine' do |sp|
-    sp.source_files = 'FunNet/Classes/ErrorHandlingCombine/**/*.swift'
+    sp.source_files = 'Sources/funnet/ErrorHandlingCombine/**/*.swift'
     
     sp.dependency 'FunNet/ErrorHandling'
     sp.dependency 'LithoOperators'
