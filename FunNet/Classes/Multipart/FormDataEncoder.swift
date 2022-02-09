@@ -41,11 +41,15 @@ public enum MultipartError: Error, CustomStringConvertible {
 //
 // Seealso `MultipartParser` for more information about the `multipart` encoding.
 public struct FormDataEncoder {
+  var shouldConvertToCamelCase: Bool
+  
   /// Creates a new `FormDataEncoder`.
-  public init() { }
+  public init(shouldConvertToCamelCase: Bool = true) {
+    self.shouldConvertToCamelCase = shouldConvertToCamelCase
+  }
   
   public func encode(_ encodable: Encodable, boundary: String = "--boundary-\(Date().timeIntervalSince1970)-boundary--") throws -> MultipartFormData {
-    let multipart = FormDataEncoderContext()
+    let multipart = FormDataEncoderContext(shouldConvertToCamelCase)
     let encoder = _FormDataEncoder(multipart: multipart, codingPath: [])
     try encodable.encode(to: encoder)
     return MultipartFormData(parts: multipart.parts, boundary: boundary)
@@ -54,9 +58,11 @@ public struct FormDataEncoder {
 
 // MARK: Private
 private final class FormDataEncoderContext {
-  var parts: [MultipartComponent]
-  init() {
-    self.parts = []
+  var shouldConvertToCamelCase: Bool
+  var parts = [MultipartComponent]()
+  
+  init(_ shouldConvertToCamelCase: Bool) {
+    self.shouldConvertToCamelCase = shouldConvertToCamelCase
   }
   
   func encode<E>(_ encodable: E, at codingPath: [CodingKey], arrayIndex i: Int? = nil) throws where E: Encodable {
@@ -69,10 +75,19 @@ private final class FormDataEncoderContext {
     var fileName: String? = nil
     switch codingPath.count {
     case 0: throw MultipartError.invalidFormat
-    case 1: name = camelToSnake(string: codingPath[0].stringValue) ?? codingPath[0].stringValue
+    case 1: 
+      if shouldConvertToCamelCase {
+        name = camelToSnake(string: codingPath[0].stringValue) ?? codingPath[0].stringValue
+      } else {
+        name = codingPath[0].stringValue
+      }
     default:
       let nestedName = makeName(codingPath: codingPath, index: 1, name: codingPath[0].stringValue)
-      name = camelToSnake(string: nestedName) ?? nestedName
+      if shouldConvertToCamelCase {
+        name = camelToSnake(string: nestedName) ?? nestedName
+      } else {
+        name = nestedName
+      }
     }
     if let i = i {
         fileName = "\(name)[\(i)]"
