@@ -11,6 +11,14 @@ import Prelude
 import Foundation
 import UIKit
 
+#if canImport(Core)
+    import Core
+#endif
+
+#if canImport(ErrorHandling)
+    import ErrorHandling
+#endif
+
 public func dataTaskCompletionError(completion: Subscribers.Completion<URLError>) -> URLError? {
     switch completion {
     case .finished:

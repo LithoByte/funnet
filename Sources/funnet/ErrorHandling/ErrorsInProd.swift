@@ -12,6 +12,10 @@ import Prelude
 import Slippers
 import UIKit
 
+#if canImport(Core)
+    import Core
+#endif
+
 public func prodLoadingErrorHandler(vc: UIViewController?, errorMap: [Int:String] = urlLoadingErrorCodesDict) -> (NSError?) -> Void {
     return prodLoadingErrorHandler(presenter: vc?.presentClosure(), errorMap: errorMap)
 }

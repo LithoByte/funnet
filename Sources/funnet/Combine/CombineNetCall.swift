@@ -8,6 +8,10 @@
 import Foundation
 import Combine
 
+#if canImport(Core)
+    import Core
+#endif
+
 @available(iOS 13.0, *)
 open class CombineNetCall: NetworkCall, Fireable {
     public typealias ResponderType = CombineNetworkResponder

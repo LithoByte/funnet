@@ -8,6 +8,10 @@
 import Foundation
 import ReactiveSwift
 
+#if canImport(Core)
+    import Core
+#endif
+
 open class ReactiveNetCall: NetworkCall, Fireable {
     public typealias ResponderType = ReactiveNetworkResponder
     

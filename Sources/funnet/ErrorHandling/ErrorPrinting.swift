@@ -11,6 +11,10 @@ import LithoUtils
 import Prelude
 import Slippers
 
+#if canImport(Core)
+    import Core
+#endif
+
 public let printStr: (String?) -> Void = { print($0) } -*> ifExecute
 public let printTwoStrings: (String?, String?) -> Void = { print($0! as Any, $1! as Any) }
 

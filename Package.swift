@@ -3,6 +3,10 @@
 
 import PackageDescription
 
+#if canImport(Core)
+    import Core
+#endif
+
 let package = Package(
     name: "FunNet",
     platforms: [.iOS(.v13)],
@@ -15,7 +19,7 @@ let package = Package(
             targets: ["Core"]),
         .library(
             name: "FunNet/Combine",
-            targets: ["Combine"]),
+            targets: ["FunNetCombine"]),
         .library(
             name: "FunNet/ReactiveSwift",
             targets: ["FunNetReactiveSwift"]),
@@ -38,8 +42,19 @@ let package = Package(
     targets: [
         .target(
             name: "FunNet",
-            dependencies: ["LithoOperators", .productItem(name: "LithoUtils", package: "LithoUtils/Post13", condition: nil), "Slippers", "ReactiveSwift"],
-            path: "Sources/funnet"
+            dependencies: ["LithoOperators",
+                            .productItem(name: "LithoUtils",
+                                         package: "LithoUtils/Post13",
+                                         condition: nil),
+                           "Slippers",
+                           "ReactiveSwift",
+                           .targetItem(name: "Core", condition: nil),
+                           .targetItem(name: "FunNetCombine", condition: nil),
+                           .targetItem(name: "FunNetReactiveSwift", condition: nil),
+                           .targetItem(name: "Multipart", condition: nil),
+                           .targetItem(name: "ErrorHandling", condition: nil),
+                           .targetItem(name: "ErrorHandlingCombine", condition: nil)],
+            path: nil
         ),
         .target(
             name: "Core",
@@ -47,8 +62,8 @@ let package = Package(
             path: "Sources/funnet/Core"
         ),
         .target(
-            name: "Combine",
-            dependencies: [.targetItem(name: "Core", condition: nil)],
+            name: "FunNetCombine",
+            dependencies: [.targetItem(name: "Core", condition: nil), "Slippers"],
             path: "Sources/funnet/Combine"
         ),
         .target(
@@ -58,7 +73,7 @@ let package = Package(
         ),
         .target(
             name: "Multipart",
-            dependencies: ["LithoOperators"],
+            dependencies: ["LithoOperators", .targetItem(name: "Core", condition: nil)],
             path: "Sources/funnet/Multipart"
         ),
         .target(

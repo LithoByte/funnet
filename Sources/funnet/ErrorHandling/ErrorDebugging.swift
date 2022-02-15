@@ -12,6 +12,10 @@ import Prelude
 import Slippers
 import UIKit
 
+#if canImport(Core)
+    import Core
+#endif
+
 // MARK: - Handle errors
 
 public func debugLoadingErrorHandler(vc: UIViewController?, errorMap: [Int:String] = urlLoadingErrorCodesDict) -> (NSError?) -> Void {

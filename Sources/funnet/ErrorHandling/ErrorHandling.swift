@@ -12,6 +12,10 @@ import fuikit
 import Prelude
 import Slippers
 
+#if canImport(Core)
+    import Core
+#endif
+
 //MARK: - Factories
 
 func serverErrorHandlerFactory<T: FunNetErrorData>(presenter: UIViewController?, overrideCodes: [Int: String], unwrapper: @escaping (T) -> String? = ^\T.message) -> (NSError?) -> Void {

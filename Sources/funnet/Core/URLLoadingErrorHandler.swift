@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import LithoUtils
 
 public let urlLoadingErrorCodesDict: [Int: String] = [
     -1000: "Bad URL.",
@@ -99,9 +100,9 @@ public class VerboseURLLoadingErrorHandler: NetworkErrorHandler {
     open func alert(for error: NSError) -> UIViewController {
         print(error)
         if let message = errorMessageMap[error.code] {
-            return FunNet.alert(message.title, message.message)
+            return alertController(title: message.title, message: message.message)
         } else {
-            return FunNet.alert("Error \(error.code)", "Description: \(error.debugDescription)\nInfo: \(error.userInfo)")
+            return alertController(title: "Error \(error.code)", message: "Description: \(error.debugDescription)\nInfo: \(error.userInfo)")
         }
     }
 }

@@ -7,6 +7,10 @@
 
 import Foundation
 
+#if canImport(Core)
+    import Core
+#endif
+
 public func addMultipartHeaders<T>(_ endpoint: inout T, from multipartData: MultipartFormData) where T: EndpointProtocol {
     endpoint.addHeaders(headers: [
         "Content-Type": "multipart/form-data; charset=utf-8; boundary=\"\(multipartData.boundary)\"",

@@ -29,5 +29,5 @@ public func httpResponseToFunNetErrorData<T: FunNetErrorData>(type: T.Type) -> (
 }
 
 public func dataHandler(vc: UIViewController?) -> (Data?) -> Void {
-    return (dataToString >?> ("Error" *-> alert)) >?> vc?.presentClosure()
+    return (dataToString >?> ("Error" *-> alertController(title:message:))) >?> vc?.presentClosure()
 }

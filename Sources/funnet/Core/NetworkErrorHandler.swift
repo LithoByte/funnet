@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import LithoUtils
 
 public protocol ErrorMessage {
     var title: String { get }
@@ -47,23 +48,15 @@ public class VerboseNetworkErrorHandler: NetworkErrorHandler {
     open func alert(for error: NSError) -> UIViewController {
         print(error)
         if let message = errorMessageMap[error.code] {
-            return FunNet.alert(message.title, message.message)
+            return alertController(title: message.title, message: message.message)
         } else {
-            return FunNet.alert("Error \(error.code)", "Description: \(error.debugDescription)\nInfo: \(error.userInfo)")
+            return alertController(title: "Error \(error.code)", message: "Description: \(error.debugDescription)\nInfo: \(error.userInfo)")
         }
     }
     
     open func notify(title: String, message: String) {
-        FunNet.alert(title, message).show(animated: true)
+        alertController(title: title, message: message).show(animated: true)
     }
-}
-
-public func alert(_ title: String, _ message: String) -> UIAlertController {
-    let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
-    alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: { (action) in
-        alert.dismiss(animated: true, completion: nil)
-    }))
-    return alert
 }
 
 public struct DefaultServerUnavailableErrorMessage: ErrorMessage {
