@@ -60,7 +60,7 @@ public struct FormDataEncoder {
 
 // MARK: Private
 private final class FormDataEncoderContext {
-  var keyEncoder: (String) -> String?
+  var keyEncoder: (String) -> String
   var parts = [MultipartComponent]()
   
   init(_ shouldConvertToCamelCase: Bool) {
@@ -78,10 +78,10 @@ private final class FormDataEncoderContext {
     switch codingPath.count {
     case 0: throw MultipartError.invalidFormat
     case 1:
-      name = camelToSnake(string: codingPath[0].stringValue) ?? codingPath[0].stringValue
+      name = keyEncoder(codingPath[0].stringValue)
     default:
       let nestedName = makeName(codingPath: codingPath, index: 1, name: codingPath[0].stringValue)
-      name = camelToSnake(string: nestedName) ?? nestedName
+      name = keyEncoder(nestedName)
     }
     if let i = i {
         fileName = "\(name)[\(i)]"

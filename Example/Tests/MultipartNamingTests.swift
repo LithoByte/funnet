@@ -13,15 +13,13 @@ class MultipartNamingTests: XCTestCase {
     func testCamelToSnake() {
         let string: String = "userName"
         let converted = camelToSnake(string: string)
-        print(converted ?? "nil")
-        XCTAssert(converted != nil)
-        XCTAssert(converted! == "user_name")
+        print(converted)
+        XCTAssert(converted == "user_name")
         
         let allLower: String = "name"
         let convertedLower = camelToSnake(string: allLower)
-        print(convertedLower ?? "nil")
-        XCTAssert(convertedLower != nil)
-        XCTAssert(convertedLower! == "name")
+        print(convertedLower)
+        XCTAssert(convertedLower == "name")
         
         let multCaps: String = "QRCode"
         let convertedMultCaps: String? = camelToSnake(string: multCaps)
