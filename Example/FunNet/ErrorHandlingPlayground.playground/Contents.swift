@@ -5,7 +5,6 @@ import Slippers
 import LithoOperators
 import fuikit
 import PlaygroundSupport
-import PlaygroundVCHelpers
 import Prelude
 
 NSSetUncaughtExceptionHandler { exception in

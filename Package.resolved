@@ -1,0 +1,79 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "fuikit",
+        "repositoryURL": "https://github.com/LithoByte/fuikit",
+        "state": {
+          "branch": "master",
+          "revision": "e7585671c98024f7c03a76de27bea5b99cc46e5c",
+          "version": null
+        }
+      },
+      {
+        "package": "LithoUtils/Post13",
+        "repositoryURL": "https://github.com/LithoByte/litho-utils",
+        "state": {
+          "branch": "cjc8/spm",
+          "revision": "215df1850f937498f83111fe8b374b86aac88c32",
+          "version": null
+        }
+      },
+      {
+        "package": "LithoOperators",
+        "repositoryURL": "https://github.com/LithoByte/LithoOperators.git",
+        "state": {
+          "branch": "master",
+          "revision": "518f40dd4c8e347b416bbe8faa96114f9eb09a3b",
+          "version": null
+        }
+      },
+      {
+        "package": "Nimble",
+        "repositoryURL": "https://github.com/Quick/Nimble.git",
+        "state": {
+          "branch": null,
+          "revision": "7a46a5fc86cb917f69e3daf79fcb045283d8f008",
+          "version": "8.1.2"
+        }
+      },
+      {
+        "package": "Prelude",
+        "repositoryURL": "https://github.com/ThryvInc/Prelude",
+        "state": {
+          "branch": null,
+          "revision": "f2950ab5fc6f099c3887efa686cbe086fc2cf687",
+          "version": null
+        }
+      },
+      {
+        "package": "Quick",
+        "repositoryURL": "https://github.com/Quick/Quick.git",
+        "state": {
+          "branch": null,
+          "revision": "09b3becb37cb2163919a3842a4c5fa6ec7130792",
+          "version": "2.2.1"
+        }
+      },
+      {
+        "package": "ReactiveSwift",
+        "repositoryURL": "https://github.com/Moya/ReactiveSwift.git",
+        "state": {
+          "branch": "master",
+          "revision": "abcdc22fecdef777eaf4dda5cd4b410e24aceae7",
+          "version": null
+        }
+      },
+      {
+        "package": "Slippers",
+        "repositoryURL": "https://github.com/LithoByte/slippers",
+        "state": {
+          "branch": "cjc8/spm",
+          "revision": "9c534014dfe8b066843edcf63552b08e546b8832",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
