@@ -7,10 +7,10 @@
 
 import Foundation
 import LithoOperators
-public func camelToSnake(string: String) -> String? {
+public func camelToSnake(string: String) -> String {
   let uppercases: [UInt8] = Array(0x41 ..< 0x5A)
   let lowercases: [UInt8] = Array(0x61 ..< 0x7A)
-  guard var data = string.data(using: .utf8) else { return nil }
+  guard var data = string.data(using: .utf8) else { return string }
   let underscore: UInt8 = 0x5f
   var i = 0
   while i < data.count - 1 {
@@ -33,7 +33,7 @@ public func camelToSnake(string: String) -> String? {
       i += 1
     }
   }
-  return String(bytes: data, encoding: .utf8)
+  return String(bytes: data, encoding: .utf8) ?? string
 }
 
 public func camelFromSnake(string: String) -> String? {
