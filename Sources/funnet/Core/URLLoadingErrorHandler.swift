@@ -100,9 +100,9 @@ public class VerboseURLLoadingErrorHandler: NetworkErrorHandler {
     open func alert(for error: NSError) -> UIViewController {
         print(error)
         if let message = errorMessageMap[error.code] {
-            return alertController(title: message.title, message: message.message)
+            return dismissableAlert(title: message.title, message: message.message)
         } else {
-            return alertController(title: "Error \(error.code)", message: "Description: \(error.debugDescription)\nInfo: \(error.userInfo)")
+            return dismissableAlert(title: "Error \(error.code)", message: "Description: \(error.debugDescription)\nInfo: \(error.userInfo)")
         }
     }
 }
