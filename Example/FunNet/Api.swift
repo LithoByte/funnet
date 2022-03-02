@@ -14,9 +14,10 @@ class Api {
     static let serverConfig = ServerConfiguration(host: "fake.com", apiRoute: "api/v1")
     
     static func loginCall(_ signIn: SignIn, modelHandler: @escaping (AuthResponse?) -> Void) -> FunNetCall {
-        var endpoint = dataEndpoint(with: signIn)
+        var endpoint = Endpoint()
+        endpoint.postData = try? JSONEncoder().encode(signIn)
         endpoint.path = "sessions"
-        endpoint /> setToPost
+        endpoint.httpMethod = "POST"
         return call(from: endpoint, modelHandler)
     }
     
@@ -40,35 +41,33 @@ class AuthResponse: Decodable {
 
 class Article: Codable {}
 
-public func authorize<T>(_ endpoint: inout T) where T: EndpointProtocol {
-    endpoint.addHeaders(headers: ["X-Api-Key" : ""])
+extension Endpoint {
+    mutating func authorize() {
+        self.addHeaders(headers: ["X-Api-Key" : ""])
+    }
 }
 
 public func createModelEndpoint<T>(path: String, _ model: T) -> Endpoint where T: Encodable {
-    var endpoint = dataEndpoint(with: model)
+    var endpoint = Endpoint()
+    endpoint.postData = try? JSONEncoder().encode(model)
     endpoint.path = path
-    endpoint /> (setToPost <~> authorize)
+    endpoint.httpMethod = "POST"
+    endpoint.authorize()
     return endpoint
 }
 
 public func editModelEndpoint<T>(path: String, _ model: T) -> Endpoint where T: Encodable {
-    var endpoint = dataEndpoint(with: model)
+    var endpoint = dataSetEndpoint(from: dataSetter(from: model))
     endpoint.path = path
-    endpoint /> setToPut
-    return endpoint
-}
-
-public func getModelEndpoint(path: String) -> Endpoint {
-    var endpoint = Endpoint()
-    endpoint.path = path
-    endpoint /> (addJsonHeaders <~> authorize)
+    endpoint.httpMethod = "PUT"
     return endpoint
 }
 
 public func getModelsEndpoint(path: String) -> EndpointProtocol {
     var endpoint = Endpoint()
     endpoint.path = path
-    endpoint /> (addJsonHeaders <~> authorize)
+    endpoint.authorize()
+    addJsonHeaders(&endpoint)
     return endpoint
 }
 
@@ -76,39 +75,19 @@ public func urlParamModelsEndpoint(path: String, params: [String: Any]) -> Endpo
     return getModelsEndpoint(path: "\(path)?\(dictionaryToUrlParams(dict: params))")
 }
 
-public func dataEndpoint<T>(with model: T) -> Endpoint where T: Encodable {
-    return dataSetEndpoint(from: dataSetter(from: model))
-}
-
 public func dataSetEndpoint(from dataSetter: @escaping (inout Endpoint) -> Void) -> Endpoint {
     var endpoint = Endpoint()
-    endpoint /> (addJsonHeaders <~> dataSetter)
+    dataSetter(&endpoint)
+    addJsonHeaders(&endpoint)
     return endpoint
 }
 
 public func parsingNetworkResponder<T>(_ modelHandler: @escaping (T?) -> Void) -> NetworkResponder where T: Decodable {
     var responder = NetworkResponder()
-    responder.dataHandler = dataParser(from: modelHandler)
+    responder.dataHandler = { data in
+        guard let data = data, let model = try? JSONDecoder().decode(T.self, from: data)
+        else { return }
+        modelHandler(model)
+    }
     return responder
 }
-
-public func dataParser<T>(from modelHandler: @escaping (T?) -> Void) -> (Data?) -> Void where T: Decodable {
-    return (parseDataToModel >>> modelHandler) |> skipNil
-}
-
-public func skipNil<T>(_ f: @escaping (T) -> Void) -> (T?) -> Void {
-    return { a in
-        if let unwrapped = a {
-            f(unwrapped)
-        }
-    }
-}
-
-public func parseDataToModel<T>(_ data: Data) -> T? where T: Decodable {
-    return try? JSONDecoder().decode(T.self, from: data)
-}
-
-public func identity<T>(value: T?) -> T? {
-    return value
-}
-
