@@ -38,18 +38,22 @@ open class CombineNetCall: NetworkCall, Fireable {
 @available(iOS 13.0, *)
 public class CombineNetworkResponder: NetworkResponderProtocol {
     @Published public var dataTask: URLSessionDataTask?
+    @Published public var downloadTask: URLSessionDownloadTask?
     @Published public var response: URLResponse?
     @Published public var httpResponse: HTTPURLResponse?
     @Published public var data: Data?
+    @Published public var url: URL?
     @Published public var error: NSError?
     @Published public var serverError: NSError?
     @Published public var errorResponse: URLResponse?
     @Published public var errorData: Data?
     
     public lazy var taskHandler: (URLSessionDataTask?) -> Void = { [weak self] in self?.dataTask = $0 }
+    public lazy var downloadTaskHandler: (URLSessionDownloadTask?) -> Void = { [weak self] in self?.downloadTask = $0 }
     public lazy var responseHandler: (URLResponse?) -> Void = { [weak self] in self?.response = $0 }
     public lazy var httpResponseHandler: (HTTPURLResponse) -> Void = { [weak self] in self?.httpResponse = $0 }
     public lazy var dataHandler: (Data?) -> Void = { [weak self] in self?.data = $0 }
+    public lazy var urlHandler: (URL?) -> Void = { [weak self] in self?.url = $0 }
     public lazy var errorHandler: (NSError) -> Void = { [weak self] in self?.error = $0 }
     public lazy var serverErrorHandler: (NSError) -> Void = { [weak self] in self?.serverError = $0 }
     public lazy var errorDataHandler: (Data?) -> Void = { [weak self] in self?.errorData = $0 }

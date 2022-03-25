@@ -29,7 +29,7 @@ class ResponderTests: XCTestCase {
         let response = HTTPURLResponse(url: URL(string: "https://lithobyte.co/api/v2/apps")!, statusCode: 200, httpVersion: nil, headerFields: nil)
         let data = Data()
         
-        let completion = responderToCompletion(responder: responder)
+        let completion: (Data?, URLResponse?, Error?) -> Void = responderToCompletion(responder: responder)
         completion(nil, nil, error)
         
         XCTAssert(wasErrorCalled)
@@ -58,7 +58,7 @@ class ResponderTests: XCTestCase {
         let response = HTTPURLResponse(url: URL(string: "https://lithobyte.co/api/v2/apps")!, statusCode: 200, httpVersion: nil, headerFields: nil)
         let data = Data()
         
-        let completion = responderToCompletion(responder: responder)
+        let completion: (Data?, URLResponse?, Error?) -> Void = responderToCompletion(responder: responder)
         completion(data, nil, error)
         
         XCTAssert(wasErrorCalled)
@@ -88,7 +88,7 @@ class ResponderTests: XCTestCase {
         let response = URLResponse()//HTTPURLResponse(url: URL(string: "https://lithobyte.co/api/v2/apps")!, statusCode: 200, httpVersion: nil, headerFields: nil)
         let data = Data()
         
-        let completion = responderToCompletion(responder: responder)
+        let completion: (Data?, URLResponse?, Error?) -> Void = responderToCompletion(responder: responder)
         completion(nil, response, nil)
         
         XCTAssert(!wasErrorCalled)
@@ -118,7 +118,7 @@ class ResponderTests: XCTestCase {
         let response = HTTPURLResponse(url: URL(string: "https://lithobyte.co/api/v2/apps")!, statusCode: 200, httpVersion: nil, headerFields: nil)
         let data = Data()
         
-        let completion = responderToCompletion(responder: responder)
+        let completion: (Data?, URLResponse?, Error?) -> Void = responderToCompletion(responder: responder)
         completion(nil, response, nil)
         
         XCTAssert(!wasErrorCalled)
@@ -148,7 +148,7 @@ class ResponderTests: XCTestCase {
         let response = HTTPURLResponse(url: URL(string: "https://lithobyte.co/api/v2/apps")!, statusCode: 500, httpVersion: nil, headerFields: nil)
         let data = Data()
         
-        let completion = responderToCompletion(responder: responder)
+        let completion: (Data?, URLResponse?, Error?) -> Void = responderToCompletion(responder: responder)
         completion(nil, response, nil)
         
         XCTAssert(!wasErrorCalled)
@@ -178,7 +178,7 @@ class ResponderTests: XCTestCase {
         let response = HTTPURLResponse(url: URL(string: "https://lithobyte.co/api/v2/apps")!, statusCode: 200, httpVersion: nil, headerFields: nil)
         let data = Data()
         
-        let completion = responderToCompletion(responder: responder)
+        let completion: (Data?, URLResponse?, Error?) -> Void = responderToCompletion(responder: responder)
         completion(data, response, nil)
         
         XCTAssert(!wasErrorCalled)

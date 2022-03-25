@@ -25,12 +25,25 @@ public func generateRequest(from configuration: ServerConfigurationProtocol, end
     return mutableRequest! as URLRequest
 }
 
+public func generateDownloadTask(sessionConfiguration: URLSessionConfiguration,
+                                 request: URLRequest,
+                                 responder: NetworkResponderProtocol) -> URLSessionDownloadTask? {
+    return generateDownloadTask(sessionConfiguration: sessionConfiguration, request: request, responderToCompletion(responder: responder))
+}
+
 public func generateDataTask(sessionConfiguration: URLSessionConfiguration,
                       request: URLRequest,
                       responder: NetworkResponderProtocol) -> URLSessionDataTask? {
     return generateDataTask(sessionConfiguration: sessionConfiguration,
                             request: request,
                             responderToCompletion(responder: responder))
+}
+
+public func generateDownloadTask(sessionConfiguration: URLSessionConfiguration,
+                                 request: URLRequest,
+                                 _ completion: @escaping (URL?, URLResponse?, Error?) -> Void = { _, _, _ in }) -> URLSessionDownloadTask? {
+    let session = URLSession(configuration: sessionConfiguration, delegate: nil, delegateQueue: OperationQueue.main)
+    return generateDownloadTask(session, request, completion)
 }
 
 public func generateDataTask(sessionConfiguration: URLSessionConfiguration,
@@ -44,6 +57,10 @@ public func generateDataTask(sessionConfiguration: URLSessionConfiguration,
         }
 }
 
+public func generateDownloadTask(_ session: URLSession, _ request: URLRequest, _ completion: @escaping (URL?, URLResponse?, Error?) -> Void) -> URLSessionDownloadTask? {
+    return session.downloadTask(with: request, completionHandler: completion)
+}
+
 public func generateDataTask(_ session: URLSession, _ request: URLRequest, _ completion: @escaping (Data?, URLResponse?, Error?) -> Void) -> URLSessionDataTask? {
     return session.dataTask(with: request, completionHandler: completion)
 }
@@ -55,6 +72,10 @@ public func responderToCompletion(responder: NetworkResponderProtocol) -> (Data?
                                 errorHandler: responder.errorHandler,
                                 serverErrorHandler: responder.serverErrorHandler,
                                 errorDataHandler: responder.errorDataHandler)
+}
+
+public func responderToCompletion(responder: NetworkResponderProtocol) -> (URL?, URLResponse?, Error?) -> Void {
+    return handlersToCompletion(responseHandler: responder.responseHandler, httpResponseHandler: responder.httpResponseHandler, urlHandler: responder.urlHandler, errorHandler: responder.errorHandler, serverErrorHandler: responder.serverErrorHandler)
 }
 
 public func responderToTaskPublisherReceiver(responder: NetworkResponderProtocol) -> (Data?, URLResponse?) -> Void {
@@ -90,6 +111,26 @@ public func handlersToCompletion(responseHandler: @escaping (URLResponse?) -> Vo
                 serverErrorHandler(NSError(domain: "Server", code: httpResponse.statusCode, userInfo: info))
             } else {
                 dataHandler(data)
+            }
+        }
+    }
+}
+
+public func handlersToCompletion(responseHandler: @escaping (URLResponse?) -> Void = { _ in },
+                                 httpResponseHandler: @escaping (HTTPURLResponse) -> Void = { _ in },
+                                 urlHandler: @escaping (URL?) -> Void = { _ in },
+                                 errorHandler: @escaping (NSError) -> Void = { _ in },
+                                 serverErrorHandler: @escaping (NSError) -> Void = { _ in }) -> (URL?, URLResponse?, Error?) -> Void {
+    return { (url, response, error) in
+        if let e = error as NSError? {
+            errorHandler(e)
+        } else if let httpResponse = response as? HTTPURLResponse {
+            httpResponseHandler(httpResponse)
+            if httpResponse.statusCode > 299 {
+                let info: [String: Any] = ["url" : httpResponse.url?.absoluteString as Any]
+                serverErrorHandler(NSError(domain: "Server", code: httpResponse.statusCode, userInfo: info))
+            } else {
+                urlHandler(url)
             }
         }
     }
