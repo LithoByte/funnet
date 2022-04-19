@@ -13,23 +13,23 @@ import Slippers
 import UIKit
 
 public func debugAlert(code: Int, errorMap: [Int: String]) -> UIAlertController {
-    return alertController(title: "Error: \(code)", message: errorMap[code] ?? "")
+    return dismissableAlert(title: "Error: \(code)", message: errorMap[code] ?? "")
 }
 public func prodAlert(code: Int, errorMap: [Int:String]) -> UIAlertController {
-    return alertController(title: "Something went wrong!", message: errorMap[code] ?? "")
+    return dismissableAlert(title: "Something went wrong!", message: errorMap[code] ?? "")
 }
 public func debugFunNetErrorDataAlert(code: Int?, error: FunNetErrorData?) -> UIAlertController? {
     return codeStringAlert(code: code, description: error?.message)
 }
 public func prodFunNetErrorDataAlert(error: FunNetErrorData?) -> UIAlertController? {
     if let err = error {
-        return alertController(title: "Something went wrong!", message: err.message ?? "")
+        return dismissableAlert(title: "Something went wrong!", message: err.message ?? "")
     }
     return nil
 }
 public func codeStringAlert(code: Int?, description: String?) -> UIAlertController? {
     if let code = code, let desc = description {
-        return alertController(title: "Error \(code)", message: desc)
+        return dismissableAlert(title: "Error \(code)", message: desc)
     } else {
         return nil
     }
