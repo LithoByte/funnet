@@ -15,6 +15,7 @@ public protocol EndpointProtocol {
     var timeout: TimeInterval { get set }
     var postData: Data? { get set }
     var dataStream: InputStream? { get set }
+    var isDownload: Bool { get set }
 }
 
 public struct Endpoint: EndpointProtocol {
@@ -25,6 +26,7 @@ public struct Endpoint: EndpointProtocol {
     public var timeout: TimeInterval = 60
     public var postData: Data?
     public var dataStream: InputStream?
+    public var isDownload: Bool = false
     
     public init() {}
 }
@@ -53,6 +55,14 @@ public func dataSetter<M, T>(from model: M) -> (inout T) -> Void where M: Encoda
     return { (endpoint: inout T) in
         endpoint.addModelData(model: model)
     }
+}
+
+public func setDownload<T>(_ endpoint: inout T) where T: EndpointProtocol {
+    endpoint.isDownload = true
+}
+
+public func setData<T>(_ endpoint: inout T) where T: EndpointProtocol {
+    endpoint.isDownload = false
 }
 
 public func addJsonHeaders<T>(_ endpoint: inout T) where T: EndpointProtocol {

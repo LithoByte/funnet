@@ -52,16 +52,23 @@ public func fire<T>(_ call: T) where T: NetworkCall {
 public func fire<T>(_ call: T, with responder: NetworkResponderProtocol?) where T: NetworkCall {
     let request = generateRequest(from: call.configuration, endpoint: call.endpoint)
     
-    let dataTask: URLSessionDataTask?
+    let dataTask: URLSessionTask?
     if let responder = responder {
-        dataTask = generateDataTask(sessionConfiguration: call.configuration.urlConfiguration,
-                                    request: request,
-                                    responder: responder)
+        dataTask = call.endpoint.isDownload ?
+            generateDownloadTask(sessionConfiguration: call.configuration.urlConfiguration,
+                                 request: request,
+                                 responder: responder) :
+            generateDataTask(sessionConfiguration: call.configuration.urlConfiguration,
+                             request: request,
+                             responder: responder)
     } else {
-        dataTask = generateDataTask(sessionConfiguration: call.configuration.urlConfiguration,
+        dataTask = call.endpoint.isDownload ?
+            generateDownloadTask(sessionConfiguration: call.configuration.urlConfiguration, request: request) :
+            generateDataTask(sessionConfiguration: call.configuration.urlConfiguration,
                                     request: request)
     }
     
     dataTask?.resume()
-    call.responder?.taskHandler(dataTask)
+    call.responder?.taskHandler(dataTask as? URLSessionDataTask)
+    call.responder?.downloadTaskHandler(dataTask as? URLSessionDownloadTask)
 }
