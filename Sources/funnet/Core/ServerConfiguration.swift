@@ -48,17 +48,3 @@ open class ServerConfiguration {
         return generateRequest(from: self, endpoint: endpoint)
     }
 }
-
-public extension URLComponents {
-    func url(for endpoint: Endpoint) -> URL? {
-        var copy = self
-        if !endpoint.getParams.isEmpty {
-            copy.queryItems = endpoint.getParams
-        }
-        return copy.url?.appendingPathComponent(endpoint.path)
-    }
-    
-    func request(for endpoint: Endpoint) -> URLRequest? {
-        return generateRequest(from: self, endpoint: endpoint)
-    }
-}

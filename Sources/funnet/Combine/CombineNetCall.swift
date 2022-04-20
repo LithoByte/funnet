@@ -71,19 +71,12 @@ public extension Publisher where Output == (data: Data, response: URLResponse), 
     }
 }
 
-//@available(iOS 13.0, *)
-//extension Publishers.MakeConnectable: Fireable {
-//    public func fire() {
-//        connect()
-//    }
-//}
-
-//@available(iOS 13.0, *)
-//public extension URLSession {
-//    func combineNetworkResponder(from request: URLRequest) -> CombineNetworkResponder {
-//        let responder = CombineNetworkResponder()
-//        let task = dataTask(with: request, completionHandler: responderToCompletion(responder: responder))
-//        responder.taskHandler(task)
-//        return responder
-//    }
-//}
+@available(iOS 13.0, *)
+public extension URLSession {
+    func combineNetworkResponder(from request: URLRequest) -> CombineNetworkResponder {
+        let responder = CombineNetworkResponder()
+        let task = dataTask(with: request, completionHandler: responderToCompletion(responder: responder))
+        responder.taskHandler(task)
+        return responder
+    }
+}

@@ -30,5 +30,9 @@ public struct Endpoint {
 }
 
 public func addJsonHeaders(_ endpoint: inout Endpoint) {
-    endpoint.addHeaders(headers: ["Content-Type": "application/json", "Accept": "application/json"])
+    endpoint.addHeaders(headers: jsonHeaders())
+}
+
+public func jsonHeaders() -> [String: String] {
+    ["Content-Type": "application/json", "Accept": "application/json"]
 }

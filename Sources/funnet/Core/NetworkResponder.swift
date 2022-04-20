@@ -28,3 +28,31 @@ public struct NetworkResponder: NetworkResponderProtocol {
     
     public init() {}
 }
+
+public func stub<T: Codable>(_ responder: NetworkResponderProtocol, with model: T) -> (Fireable) -> Void {
+    return { _ in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            responder.dataHandler(try? JSONEncoder().encode(model))
+        }
+    }
+}
+
+public func stubNoDelay<T: Codable>(_ responder: NetworkResponderProtocol, with model: T) -> (Fireable) -> Void {
+    return { _ in
+        responder.dataHandler(try? JSONEncoder().encode(model))
+    }
+}
+
+public func stubHTTPResponse<T: NetworkCall>(with statusCode: Int) -> (T) -> Void {
+    return { call in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            call.responder?.httpResponseHandler(HTTPURLResponse(url: call.configuration.toBaseURL().url!, statusCode: statusCode, httpVersion: nil, headerFields: nil)!)
+        }
+    }
+}
+
+public func stubHTTPResponseNoDelay<T: NetworkCall>(with statusCode: Int) -> (T) -> Void {
+    return { call in
+        call.responder?.httpResponseHandler(HTTPURLResponse(url: call.configuration.toBaseURL().url!, statusCode: statusCode, httpVersion: nil, headerFields: nil)!)
+    }
+}
