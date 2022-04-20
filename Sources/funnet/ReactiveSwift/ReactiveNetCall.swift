@@ -15,13 +15,13 @@ import ReactiveSwift
 open class ReactiveNetCall: NetworkCall, Fireable {
     public typealias ResponderType = ReactiveNetworkResponder
     
-    public var configuration: ServerConfigurationProtocol
-    public var endpoint: EndpointProtocol
+    public var configuration: ServerConfiguration
+    public var endpoint: Endpoint
     public var responder: ReactiveNetworkResponder? = nil
     
     public var firingFunc: (ReactiveNetCall) -> Void = fire(_:)
     
-    public init(configuration: ServerConfigurationProtocol, _ endpoint: EndpointProtocol, responder: ReactiveNetworkResponder? = ReactiveNetworkResponder()) {
+    public init(configuration: ServerConfiguration, _ endpoint: Endpoint, responder: ReactiveNetworkResponder? = ReactiveNetworkResponder()) {
         self.configuration = configuration
         self.endpoint = endpoint
         self.responder = responder

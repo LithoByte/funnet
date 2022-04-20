@@ -8,19 +8,16 @@
 import Foundation
 import Prelude
 
-public class FunNetCall: NetworkCall, Stubbable, Fireable {
+public class FunNetCall: NetworkCall, Fireable {
     public typealias ResponderType = NetworkResponder
     
-    public var configuration: ServerConfigurationProtocol
-    public var endpoint: EndpointProtocol
+    public var configuration: ServerConfiguration
+    public var endpoint: Endpoint
     public var responder: NetworkResponder? = nil
-    public var stubHolder: StubHolderProtocol? = nil
-    public lazy var stubCondition: (URLRequest) -> Bool
-        = defaultStubCondition(configuration: self.configuration, endpoint: self.endpoint)
     
     public var firingFunc: (FunNetCall) -> Void = fire(_:)
     
-    public init(configuration: ServerConfigurationProtocol, _ endpoint: EndpointProtocol, responder: NetworkResponder? = nil){
+    public init(configuration: ServerConfiguration, _ endpoint: Endpoint, responder: NetworkResponder? = nil){
         self.configuration = configuration
         self.endpoint = endpoint
         self.responder = responder
@@ -29,8 +26,4 @@ public class FunNetCall: NetworkCall, Stubbable, Fireable {
     public func fire() {
         firingFunc(self)
     }
-}
-
-public func fireCall(_ call: Fireable) {
-    call.fire()
 }

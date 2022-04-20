@@ -24,7 +24,7 @@ class RubyError: FunNetErrorData {
 let rubyError = RubyError("User is unauthorized.")
 let rubyErrorData = JsonProvider.encode(rubyError)!
 
-let handledHTTPResponse = HTTPURLResponse(url: URL(string: call.configuration.toBaseUrlString())!, statusCode: 401, httpVersion: nil, headerFields: nil)!
+let handledHTTPResponse = HTTPURLResponse(url: call.configuration.toBaseURL().url!, statusCode: 401, httpVersion: nil, headerFields: nil)!
 let serverError = NSError(domain: "Error", code: 401, userInfo: nil)
 let error = NSError(domain: "Error", code: -1000, userInfo: nil)
 

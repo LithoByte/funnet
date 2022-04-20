@@ -14,9 +14,10 @@ class Api {
     static let serverConfig = ServerConfiguration(host: "fake.com", apiRoute: "api/v1")
     
     static func loginCall(_ signIn: SignIn, modelHandler: @escaping (AuthResponse?) -> Void) -> FunNetCall {
-        var endpoint = dataEndpoint(with: signIn)
+        var endpoint = Endpoint()
+        addJsonHeaders(&endpoint)
         endpoint.path = "sessions"
-        endpoint /> setToPost
+        endpoint.httpMethod = "POST"
         return call(from: endpoint, modelHandler)
     }
     
@@ -25,10 +26,12 @@ class Api {
     }
     
     static func getPageOfArticlesCall(_ page: Int, _ modelHandler: @escaping ([Article]?) -> Void) -> FunNetCall {
-        return call(from: urlParamModelsEndpoint(path: "articles", params: ["page": page]), modelHandler)
+        var endpoint = getModelEndpoint(path: "articles")
+        endpoint.getParams = [URLQueryItem(name: "page", value: "\(page)")]
+        return call(from: endpoint, modelHandler)
     }
     
-    static func call<T>(from endpoint: EndpointProtocol, _ modelHandler: @escaping (T?) -> Void) -> FunNetCall where T: Decodable {
+    static func call<T>(from endpoint: Endpoint, _ modelHandler: @escaping (T?) -> Void) -> FunNetCall where T: Decodable {
         let responder = parsingNetworkResponder(modelHandler)
         return FunNetCall(configuration: serverConfig, endpoint, responder: responder)
     }
@@ -40,49 +43,43 @@ class AuthResponse: Decodable {
 
 class Article: Codable {}
 
-public func authorize<T>(_ endpoint: inout T) where T: EndpointProtocol {
+public func authorize(_ endpoint: inout Endpoint) {
     endpoint.addHeaders(headers: ["X-Api-Key" : ""])
 }
 
 public func createModelEndpoint<T>(path: String, _ model: T) -> Endpoint where T: Encodable {
-    var endpoint = dataEndpoint(with: model)
+    var endpoint = Endpoint()
     endpoint.path = path
-    endpoint /> (setToPost <~> authorize)
+    endpoint.httpMethod = "POST"
+    endpoint.postData = try? JSONEncoder().encode(model)
+    addJsonHeaders(&endpoint)
+    authorize(&endpoint)
     return endpoint
 }
 
 public func editModelEndpoint<T>(path: String, _ model: T) -> Endpoint where T: Encodable {
-    var endpoint = dataEndpoint(with: model)
+    var endpoint = Endpoint()
     endpoint.path = path
-    endpoint /> setToPut
+    endpoint.httpMethod = "PUT"
+    endpoint.postData = try? JSONEncoder().encode(model)
+    addJsonHeaders(&endpoint)
+    authorize(&endpoint)
     return endpoint
 }
 
 public func getModelEndpoint(path: String) -> Endpoint {
     var endpoint = Endpoint()
     endpoint.path = path
-    endpoint /> (addJsonHeaders <~> authorize)
+    addJsonHeaders(&endpoint)
+    authorize(&endpoint)
     return endpoint
 }
 
-public func getModelsEndpoint(path: String) -> EndpointProtocol {
+public func getModelsEndpoint(path: String) -> Endpoint {
     var endpoint = Endpoint()
     endpoint.path = path
-    endpoint /> (addJsonHeaders <~> authorize)
-    return endpoint
-}
-
-public func urlParamModelsEndpoint(path: String, params: [String: Any]) -> EndpointProtocol {
-    return getModelsEndpoint(path: "\(path)?\(dictionaryToUrlParams(dict: params))")
-}
-
-public func dataEndpoint<T>(with model: T) -> Endpoint where T: Encodable {
-    return dataSetEndpoint(from: dataSetter(from: model))
-}
-
-public func dataSetEndpoint(from dataSetter: @escaping (inout Endpoint) -> Void) -> Endpoint {
-    var endpoint = Endpoint()
-    endpoint /> (addJsonHeaders <~> dataSetter)
+    addJsonHeaders(&endpoint)
+    authorize(&endpoint)
     return endpoint
 }
 
@@ -93,22 +90,10 @@ public func parsingNetworkResponder<T>(_ modelHandler: @escaping (T?) -> Void) -
 }
 
 public func dataParser<T>(from modelHandler: @escaping (T?) -> Void) -> (Data?) -> Void where T: Decodable {
-    return (parseDataToModel >>> modelHandler) |> skipNil
-}
-
-public func skipNil<T>(_ f: @escaping (T) -> Void) -> (T?) -> Void {
-    return { a in
-        if let unwrapped = a {
-            f(unwrapped)
-        }
-    }
+    return ~>(parseDataToModel >>> modelHandler)
 }
 
 public func parseDataToModel<T>(_ data: Data) -> T? where T: Decodable {
     return try? JSONDecoder().decode(T.self, from: data)
-}
-
-public func identity<T>(value: T?) -> T? {
-    return value
 }
 

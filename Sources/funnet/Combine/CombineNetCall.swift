@@ -16,14 +16,14 @@ import Combine
 open class CombineNetCall: NetworkCall, Fireable {
     public typealias ResponderType = CombineNetworkResponder
     
-    public var configuration: ServerConfigurationProtocol
-    public var endpoint: EndpointProtocol
+    public var configuration: ServerConfiguration
+    public var endpoint: Endpoint
     public var responder: CombineNetworkResponder? = nil
     public var publisher: CombineNetworkResponder
     
     public var firingFunc: (CombineNetCall) -> Void = fire(_:)
     
-    public init(configuration: ServerConfigurationProtocol, _ endpoint: EndpointProtocol, responder: CombineNetworkResponder? = CombineNetworkResponder()) {
+    public init(configuration: ServerConfiguration, _ endpoint: Endpoint, responder: CombineNetworkResponder? = CombineNetworkResponder()) {
         self.configuration = configuration
         self.endpoint = endpoint
         self.publisher = responder ?? CombineNetworkResponder()
@@ -56,3 +56,34 @@ public class CombineNetworkResponder: NetworkResponderProtocol {
     
     public init() {}
 }
+
+@available(iOS 13.0, *)
+public extension Publisher {
+    func asConnectable() -> Publishers.MakeConnectable<Self> {
+        return .init(upstream: self)
+    }
+}
+
+@available(iOS 13.0, *)
+public extension Publisher where Output == (data: Data, response: URLResponse), Failure == URLError {
+    func serverErrorPublisher() -> Publishers.Map<Self, NSError?> {
+        return self.map(responseToServerError())
+    }
+}
+
+//@available(iOS 13.0, *)
+//extension Publishers.MakeConnectable: Fireable {
+//    public func fire() {
+//        connect()
+//    }
+//}
+
+//@available(iOS 13.0, *)
+//public extension URLSession {
+//    func combineNetworkResponder(from request: URLRequest) -> CombineNetworkResponder {
+//        let responder = CombineNetworkResponder()
+//        let task = dataTask(with: request, completionHandler: responderToCompletion(responder: responder))
+//        responder.taskHandler(task)
+//        return responder
+//    }
+//}

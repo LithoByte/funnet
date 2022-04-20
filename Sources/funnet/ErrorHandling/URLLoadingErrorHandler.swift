@@ -9,6 +9,18 @@ import Foundation
 import UIKit
 import LithoUtils
 
+public protocol ErrorMessage {
+    var title: String { get }
+    var message: String { get }
+    var forCode: Int { get }
+}
+
+public struct SimpleErrorMessage: ErrorMessage {
+    public var title: String
+    public var message: String
+    public var forCode: Int
+}
+
 public let urlLoadingErrorCodesDict: [Int: String] = [
     -1000: "Bad URL.",
     -1001: "Request timed out.",
@@ -81,28 +93,4 @@ public func urlLoadingErrorMessages() -> [ErrorMessage] {
         errorMessages.append(SimpleErrorMessage(title: "Error", message: message, forCode: code))
     }
     return errorMessages
-}
-
-public class VerboseURLLoadingErrorHandler: NetworkErrorHandler {
-    var errorMessages: [ErrorMessage] = urlLoadingErrorMessages()
-    var errorMessageMap: [Int: ErrorMessage] {
-        get {
-            var map = [Int: ErrorMessage]()
-            for message in errorMessages {
-                map[message.forCode] = message
-            }
-            return map
-        }
-    }
-    
-    public init() {}
-    
-    open func alert(for error: NSError) -> UIViewController {
-        print(error)
-        if let message = errorMessageMap[error.code] {
-            return dismissableAlert(title: message.title, message: message.message)
-        } else {
-            return dismissableAlert(title: "Error \(error.code)", message: "Description: \(error.debugDescription)\nInfo: \(error.userInfo)")
-        }
-    }
 }
