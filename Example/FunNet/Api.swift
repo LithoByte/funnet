@@ -13,7 +13,7 @@ import LithoOperators
 class Api {
     static let serverConfig = ServerConfiguration(host: "fake.com", apiRoute: "api/v1")
     
-    static func loginCall(_ signIn: SignIn, modelHandler: @escaping (AuthResponse?) -> Void) -> FunNetCall {
+    static func loginCall(_ signIn: SignIn, modelHandler: @escaping (AuthResponse?) -> Void) -> NetworkCall {
         var endpoint = Endpoint()
         addJsonHeaders(&endpoint)
         endpoint.path = "sessions"
@@ -21,19 +21,19 @@ class Api {
         return call(from: endpoint, modelHandler)
     }
     
-    static func createArticleCall(_ article: Article, modelHandler: @escaping (Article?) -> Void) -> FunNetCall {
+    static func createArticleCall(_ article: Article, modelHandler: @escaping (Article?) -> Void) -> NetworkCall {
         return call(from: createModelEndpoint(path: "articles", article), modelHandler)
     }
     
-    static func getPageOfArticlesCall(_ page: Int, _ modelHandler: @escaping ([Article]?) -> Void) -> FunNetCall {
+    static func getPageOfArticlesCall(_ page: Int, _ modelHandler: @escaping ([Article]?) -> Void) -> NetworkCall {
         var endpoint = getModelEndpoint(path: "articles")
         endpoint.getParams = [URLQueryItem(name: "page", value: "\(page)")]
         return call(from: endpoint, modelHandler)
     }
     
-    static func call<T>(from endpoint: Endpoint, _ modelHandler: @escaping (T?) -> Void) -> FunNetCall where T: Decodable {
+    static func call<T>(from endpoint: Endpoint, _ modelHandler: @escaping (T?) -> Void) -> NetworkCall where T: Decodable {
         let responder = parsingNetworkResponder(modelHandler)
-        return FunNetCall(configuration: serverConfig, endpoint, responder: responder)
+        return NetworkCall(configuration: serverConfig, endpoint: endpoint, responder: responder)
     }
 }
 
@@ -84,7 +84,7 @@ public func getModelsEndpoint(path: String) -> Endpoint {
 }
 
 public func parsingNetworkResponder<T>(_ modelHandler: @escaping (T?) -> Void) -> NetworkResponder where T: Decodable {
-    var responder = NetworkResponder()
+    let responder = NetworkResponder()
     responder.dataHandler = dataParser(from: modelHandler)
     return responder
 }

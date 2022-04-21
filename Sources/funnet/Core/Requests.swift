@@ -34,7 +34,7 @@ public func generateRequest(from components: URLComponents, endpoint: Endpoint) 
 
 public func generateDataTask(sessionConfiguration: URLSessionConfiguration,
                              request: URLRequest,
-                             responder: NetworkResponderProtocol) -> URLSessionDataTask? {
+                             responder: NetworkResponder) -> URLSessionDataTask? {
     return generateDataTask(sessionConfiguration: sessionConfiguration,
                             request: request,
                             responderToCompletion(responder: responder))
@@ -55,7 +55,7 @@ public func generateDataTask(_ session: URLSession, _ request: URLRequest, _ com
     return session.dataTask(with: request, completionHandler: completion)
 }
 
-public func responderToCompletion(responder: NetworkResponderProtocol) -> (Data?, URLResponse?, Error?) -> Void {
+public func responderToCompletion(responder: NetworkResponder) -> (Data?, URLResponse?, Error?) -> Void {
     return handlersToCompletion(responseHandler: responder.responseHandler,
                                 httpResponseHandler: responder.httpResponseHandler,
                                 dataHandler: responder.dataHandler,
@@ -64,7 +64,7 @@ public func responderToCompletion(responder: NetworkResponderProtocol) -> (Data?
                                 errorDataHandler: responder.errorDataHandler)
 }
 
-public func responderToTaskPublisherReceiver(responder: NetworkResponderProtocol) -> (Data?, URLResponse?) -> Void {
+public func responderToTaskPublisherReceiver(responder: NetworkResponder) -> (Data?, URLResponse?) -> Void {
     return handlersToTaskPublisherBlock(responseHandler: responder.responseHandler,
                                 httpResponseHandler: responder.httpResponseHandler,
                                 dataHandler: responder.dataHandler,

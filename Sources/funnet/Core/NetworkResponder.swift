@@ -7,17 +7,7 @@
 
 import Foundation
 
-public protocol NetworkResponderProtocol {
-    var taskHandler: (URLSessionDataTask?) -> Void { get set }
-    var responseHandler: (URLResponse?) -> Void { get set }
-    var httpResponseHandler: (HTTPURLResponse) -> Void { get set }
-    var dataHandler: (Data?) -> Void { get set }
-    var errorHandler: (NSError) -> Void { get set }
-    var serverErrorHandler: (NSError) -> Void { get set }
-    var errorDataHandler: (Data?) -> Void { get set }
-}
-
-public struct NetworkResponder: NetworkResponderProtocol {
+public class NetworkResponder {
     public var taskHandler: (URLSessionDataTask?) -> Void = { _ in }
     public var responseHandler: (URLResponse?) -> Void = { _ in }
     public var httpResponseHandler: (HTTPURLResponse) -> Void = { _ in }
@@ -29,7 +19,7 @@ public struct NetworkResponder: NetworkResponderProtocol {
     public init() {}
 }
 
-public func stub<T: Codable>(_ responder: NetworkResponderProtocol, with model: T) -> (Fireable) -> Void {
+public func stub<T: Codable>(_ responder: NetworkResponder, with model: T) -> (Fireable) -> Void {
     return { _ in
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             responder.dataHandler(try? JSONEncoder().encode(model))
@@ -37,7 +27,7 @@ public func stub<T: Codable>(_ responder: NetworkResponderProtocol, with model: 
     }
 }
 
-public func stubNoDelay<T: Codable>(_ responder: NetworkResponderProtocol, with model: T) -> (Fireable) -> Void {
+public func stubNoDelay<T: Codable>(_ responder: NetworkResponder, with model: T) -> (Fireable) -> Void {
     return { _ in
         responder.dataHandler(try? JSONEncoder().encode(model))
     }
@@ -46,13 +36,13 @@ public func stubNoDelay<T: Codable>(_ responder: NetworkResponderProtocol, with 
 public func stubHTTPResponse<T: NetworkCall>(with statusCode: Int) -> (T) -> Void {
     return { call in
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            call.responder?.httpResponseHandler(HTTPURLResponse(url: call.configuration.toBaseURL().url!, statusCode: statusCode, httpVersion: nil, headerFields: nil)!)
+            call.responder.httpResponseHandler(HTTPURLResponse(url: call.baseUrl.url!, statusCode: statusCode, httpVersion: nil, headerFields: nil)!)
         }
     }
 }
 
 public func stubHTTPResponseNoDelay<T: NetworkCall>(with statusCode: Int) -> (T) -> Void {
     return { call in
-        call.responder?.httpResponseHandler(HTTPURLResponse(url: call.configuration.toBaseURL().url!, statusCode: statusCode, httpVersion: nil, headerFields: nil)!)
+        call.responder.httpResponseHandler(HTTPURLResponse(url: call.baseUrl.url!, statusCode: statusCode, httpVersion: nil, headerFields: nil)!)
     }
 }

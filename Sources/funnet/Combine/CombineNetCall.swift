@@ -14,20 +14,23 @@ import Combine
 
 @available(iOS 13.0, *)
 open class CombineNetCall: NetworkCall, Fireable {
-    public typealias ResponderType = CombineNetworkResponder
-    
-    public var configuration: ServerConfiguration
-    public var endpoint: Endpoint
-    public var responder: CombineNetworkResponder? = nil
     public var publisher: CombineNetworkResponder
     
     public var firingFunc: (CombineNetCall) -> Void = fire(_:)
     
-    public init(configuration: ServerConfiguration, _ endpoint: Endpoint, responder: CombineNetworkResponder? = CombineNetworkResponder()) {
-        self.configuration = configuration
-        self.endpoint = endpoint
-        self.publisher = responder ?? CombineNetworkResponder()
-        self.responder = responder
+    public init(configuration: ServerConfiguration, _ endpoint: Endpoint, responder: CombineNetworkResponder = CombineNetworkResponder()) {
+        publisher = responder
+        super.init(configuration: configuration, endpoint: endpoint, responder: responder)
+    }
+    
+    public init(session: URLSession, baseUrlComponents: URLComponents, endpoint: Endpoint, responder: CombineNetworkResponder = CombineNetworkResponder()) {
+        publisher = responder
+        super.init(session: session, baseUrlComponents: baseUrlComponents, endpoint: endpoint, responder: responder)
+    }
+    
+    public init(sessionConfig: URLSessionConfiguration, baseUrlComponents: URLComponents, endpoint: Endpoint, responder: CombineNetworkResponder = CombineNetworkResponder()) {
+        publisher = responder
+        super.init(sessionConfig: sessionConfig, baseUrlComponents: baseUrlComponents, endpoint: endpoint, responder: responder)
     }
     
     open func fire() {
@@ -36,7 +39,7 @@ open class CombineNetCall: NetworkCall, Fireable {
 }
 
 @available(iOS 13.0, *)
-public class CombineNetworkResponder: NetworkResponderProtocol {
+public class CombineNetworkResponder: NetworkResponder {
     @Published public var dataTask: URLSessionDataTask?
     @Published public var response: URLResponse?
     @Published public var httpResponse: HTTPURLResponse?
@@ -46,15 +49,16 @@ public class CombineNetworkResponder: NetworkResponderProtocol {
     @Published public var errorResponse: URLResponse?
     @Published public var errorData: Data?
     
-    public lazy var taskHandler: (URLSessionDataTask?) -> Void = { [weak self] in self?.dataTask = $0 }
-    public lazy var responseHandler: (URLResponse?) -> Void = { [weak self] in self?.response = $0 }
-    public lazy var httpResponseHandler: (HTTPURLResponse) -> Void = { [weak self] in self?.httpResponse = $0 }
-    public lazy var dataHandler: (Data?) -> Void = { [weak self] in self?.data = $0 }
-    public lazy var errorHandler: (NSError) -> Void = { [weak self] in self?.error = $0 }
-    public lazy var serverErrorHandler: (NSError) -> Void = { [weak self] in self?.serverError = $0 }
-    public lazy var errorDataHandler: (Data?) -> Void = { [weak self] in self?.errorData = $0 }
-    
-    public init() {}
+    public override init() {
+        super.init()
+        self.taskHandler = { [weak self] in self?.dataTask = $0 }
+        self.responseHandler = { [weak self] in self?.response = $0 }
+        self.httpResponseHandler = { [weak self] in self?.httpResponse = $0 }
+        self.dataHandler = { [weak self] in self?.data = $0 }
+        self.errorHandler = { [weak self] in self?.error = $0 }
+        self.serverErrorHandler = { [weak self] in self?.serverError = $0 }
+        self.errorDataHandler = { [weak self] in self?.errorData = $0 }
+    }
 }
 
 @available(iOS 13.0, *)

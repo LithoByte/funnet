@@ -29,7 +29,6 @@ sessionConfig.httpShouldSetCookies = false
 sessionConfig.httpCookieAcceptPolicy = .never
 let appSession = URLSession(configuration: sessionConfig, delegate: nil, delegateQueue: .main)
 
-
 func configureVersionRequest(_ request: inout URLRequest) {
     request.httpMethod = "GET"
     request.addHeaders(jsonHeaders())
