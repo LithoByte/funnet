@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import Prelude
 @testable import FunNet
 
 class ResponderTests: XCTestCase {
@@ -39,6 +40,7 @@ class ResponderTests: XCTestCase {
         XCTAssert(!wasServerErrorCalled)
         XCTAssert(!wasDataSuccessCalled)
     }
+    
     func testErrorData() {
         var wasErrorCalled = false
         var wasErrorDataCalled = false
@@ -127,6 +129,32 @@ class ResponderTests: XCTestCase {
         XCTAssert(wasHttpResponseCalled)
         XCTAssert(!wasServerErrorCalled)
         XCTAssert(wasDataSuccessCalled)
+    }
+    
+    func testStubHttpResponse() {
+        var wasErrorCalled = false
+        var wasErrorDataCalled = false
+        var wasResponseCalled = false
+        var wasHttpResponseCalled = false
+        var wasServerErrorCalled = false
+        var wasDataSuccessCalled = false
+        var responder = NetworkResponder()
+        responder.errorHandler = { _ in wasErrorCalled = true }
+        responder.errorDataHandler = { _ in wasErrorDataCalled = true }
+        responder.responseHandler = { _ in wasResponseCalled = true }
+        responder.httpResponseHandler = { _ in wasHttpResponseCalled = true }
+        responder.serverErrorHandler = { _ in wasServerErrorCalled = true }
+        responder.dataHandler = { _ in wasDataSuccessCalled = true }
+        let call = NetworkCall(configuration: ServerConfiguration(host: "api.lithobyte.co", apiRoute: nil), endpoint: Endpoint(), responder: responder)
+        
+        call |> stubHTTPResponse(withStatusCode: 201)
+        
+        XCTAssert(!wasErrorCalled)
+        XCTAssert(!wasErrorDataCalled)
+        XCTAssert(!wasResponseCalled)
+        XCTAssert(wasHttpResponseCalled)
+        XCTAssert(!wasServerErrorCalled)
+        XCTAssert(!wasDataSuccessCalled)
     }
     
     func testServerError() {

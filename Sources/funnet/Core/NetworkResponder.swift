@@ -19,29 +19,29 @@ public class NetworkResponder {
     public init() {}
 }
 
-public func stub<T: Codable>(_ responder: NetworkResponder, with model: T) -> (Fireable) -> Void {
+public func stubWithDelay<T: Codable>(_ responder: NetworkResponder, with model: T, delay: Double = 1.0) -> (Fireable) -> Void {
     return { _ in
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             responder.dataHandler(try? JSONEncoder().encode(model))
         }
     }
 }
 
-public func stubNoDelay<T: Codable>(_ responder: NetworkResponder, with model: T) -> (Fireable) -> Void {
+public func stub<T: Codable>(_ responder: NetworkResponder, with model: T) -> (Fireable) -> Void {
     return { _ in
         responder.dataHandler(try? JSONEncoder().encode(model))
     }
 }
 
-public func stubHTTPResponse<T: NetworkCall>(with statusCode: Int) -> (T) -> Void {
+public func stubHTTPResponseWithDelay<T: NetworkCall>(withStatusCode statusCode: Int, delay: Double = 1.0) -> (T) -> Void {
     return { call in
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             call.responder.httpResponseHandler(HTTPURLResponse(url: call.baseUrl.url!, statusCode: statusCode, httpVersion: nil, headerFields: nil)!)
         }
     }
 }
 
-public func stubHTTPResponseNoDelay<T: NetworkCall>(with statusCode: Int) -> (T) -> Void {
+public func stubHTTPResponse<T: NetworkCall>(withStatusCode statusCode: Int) -> (T) -> Void {
     return { call in
         call.responder.httpResponseHandler(HTTPURLResponse(url: call.baseUrl.url!, statusCode: statusCode, httpVersion: nil, headerFields: nil)!)
     }

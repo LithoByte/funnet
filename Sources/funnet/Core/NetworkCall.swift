@@ -15,11 +15,13 @@ enum Sessionizer {
     case session(URLSession)
 }
 
-open class NetworkCall {
+open class NetworkCall: Fireable {
     var sessionizer: Sessionizer
     public var baseUrl: URLComponents
     public var endpoint: Endpoint
     public var responder: NetworkResponder
+    
+    public var firingFunc: (NetworkCall) -> Void = fire(_:)
     
     public init(configuration: ServerConfiguration, endpoint: Endpoint, responder: NetworkResponder = NetworkResponder()) {
         self.baseUrl = configuration.toBaseURL()
@@ -40,6 +42,10 @@ open class NetworkCall {
         self.sessionizer = .config(sessionConfig)
         self.endpoint = endpoint
         self.responder = responder
+    }
+    
+    open func fire() {
+        firingFunc(self)
     }
 }
 

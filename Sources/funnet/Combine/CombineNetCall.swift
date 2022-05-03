@@ -7,16 +7,21 @@
 
 import Foundation
 import Combine
-
+import LithoOperators
 #if canImport(Core)
     import Core
 #endif
 
 @available(iOS 13.0, *)
-open class CombineNetCall: NetworkCall, Fireable {
-    public var publisher: CombineNetworkResponder
-    
-    public var firingFunc: (CombineNetCall) -> Void = fire(_:)
+open class CombineNetCall: NetworkCall {
+    @Published public var isInProgress: Bool = false
+    public var publisher: CombineNetworkResponder {
+        didSet {
+            publisher.responseHandler <>= { [weak self] _ in self?.isInProgress = false }
+            publisher.dataHandler <>= { [weak self] _ in self?.isInProgress = false }
+            publisher.errorHandler <>= { [weak self] _ in self?.isInProgress = false }
+        }
+    }
     
     public init(configuration: ServerConfiguration, _ endpoint: Endpoint, responder: CombineNetworkResponder = CombineNetworkResponder()) {
         publisher = responder
@@ -33,7 +38,8 @@ open class CombineNetCall: NetworkCall, Fireable {
         super.init(sessionConfig: sessionConfig, baseUrlComponents: baseUrlComponents, endpoint: endpoint, responder: responder)
     }
     
-    open func fire() {
+    open override func fire() {
+        isInProgress = true
         firingFunc(self)
     }
 }

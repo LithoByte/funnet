@@ -12,10 +12,8 @@ import ReactiveSwift
     import Core
 #endif
 
-open class ReactiveNetCall: NetworkCall, Fireable {
+open class ReactiveNetCall: NetworkCall {
     public var reactiveResponder: ReactiveNetworkResponder
-    
-    public var firingFunc: (ReactiveNetCall) -> Void = fire(_:)
     
     public init(configuration: ServerConfiguration, _ endpoint: Endpoint, responder: ReactiveNetworkResponder = ReactiveNetworkResponder()) {
         reactiveResponder = responder
@@ -30,10 +28,6 @@ open class ReactiveNetCall: NetworkCall, Fireable {
     public init(sessionConfig: URLSessionConfiguration, baseUrlComponents: URLComponents, endpoint: Endpoint, responder: ReactiveNetworkResponder = ReactiveNetworkResponder()) {
         reactiveResponder = responder
         super.init(sessionConfig: sessionConfig, baseUrlComponents: baseUrlComponents, endpoint: endpoint, responder: responder)
-    }
-    
-    open func fire() {
-        firingFunc(self)
     }
 }
 

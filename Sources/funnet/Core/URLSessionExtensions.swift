@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import LithoOperators
 
 extension URLSessionDataTask: Fireable {
     public func fire() {
@@ -15,6 +16,11 @@ extension URLSessionDataTask: Fireable {
 }
 
 public extension URLRequest {
+    var method: HttpMethod? {
+        get { httpMethod ?> HttpMethod.init(rawValue:) }
+        set { httpMethod = newValue?.rawValue }
+    }
+    
     mutating func configure(from endpoint: Endpoint) {
         for key in endpoint.httpHeaders.keys {
             self.addValue(endpoint.httpHeaders[key]!, forHTTPHeaderField: key)

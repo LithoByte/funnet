@@ -20,7 +20,7 @@ class ErrorHandlingTests: XCTestCase {
     override func setUp() {
         let call = CombineNetCall(configuration: ServerConfiguration(host: "http", apiRoute: ""), Endpoint())
         let handledHTTPResponse = HTTPURLResponse(url: call.baseUrl.url!, statusCode: 401, httpVersion: nil, headerFields: nil)!
-        call.firingFunc = { call in
+        call.firingFunc = ~>{ (call: CombineNetCall) in
             call.publisher.error = error
             call.publisher.serverError = serverError
             call.publisher.httpResponse = handledHTTPResponse

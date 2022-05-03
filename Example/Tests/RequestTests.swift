@@ -40,7 +40,7 @@ class RequestTests: XCTestCase {
         let serverConfig = ServerConfiguration(shouldStub: true, scheme: "http", host: "api.lithobyte.co", apiRoute: "api/v1", urlConfiguration: URLSessionConfiguration.default)
         var endpoint = Endpoint()
         endpoint.path = "apps"
-        endpoint.httpMethod = "GET"
+        setToGET(&endpoint)
         
         let request = generateRequest(from: serverConfig, endpoint: endpoint)
         
@@ -51,7 +51,7 @@ class RequestTests: XCTestCase {
         let serverConfig = ServerConfiguration(shouldStub: true, scheme: "http", host: "api.lithobyte.co", apiRoute: "api/v1", urlConfiguration: URLSessionConfiguration.default)
         var endpoint = Endpoint()
         endpoint.path = "apps"
-        endpoint.httpMethod = "POST"
+        setToPOST(&endpoint)
         
         let request = generateRequest(from: serverConfig, endpoint: endpoint)
         
@@ -62,7 +62,7 @@ class RequestTests: XCTestCase {
         let serverConfig = ServerConfiguration(shouldStub: true, scheme: "http", host: "api.lithobyte.co", apiRoute: "api/v1", urlConfiguration: URLSessionConfiguration.default)
         var endpoint = Endpoint()
         endpoint.path = "apps"
-        endpoint.httpMethod = "PUT"
+        setToPUT(&endpoint)
         
         let request = generateRequest(from: serverConfig, endpoint: endpoint)
         
@@ -73,7 +73,7 @@ class RequestTests: XCTestCase {
         let serverConfig = ServerConfiguration(shouldStub: true, scheme: "http", host: "api.lithobyte.co", apiRoute: "api/v1", urlConfiguration: URLSessionConfiguration.default)
         var endpoint = Endpoint()
         endpoint.path = "apps"
-        endpoint.httpMethod = "PATCH"
+        setToPATCH(&endpoint)
         
         let request = generateRequest(from: serverConfig, endpoint: endpoint)
         
@@ -84,7 +84,7 @@ class RequestTests: XCTestCase {
         let serverConfig = ServerConfiguration(shouldStub: true, scheme: "http", host: "api.lithobyte.co", apiRoute: "api/v1", urlConfiguration: URLSessionConfiguration.default)
         var endpoint = Endpoint()
         endpoint.path = "apps"
-        endpoint.httpMethod = "DELETE"
+        setToDELETE(&endpoint)
         
         let request = generateRequest(from: serverConfig, endpoint: endpoint)
         
