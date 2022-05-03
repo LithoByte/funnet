@@ -46,3 +46,19 @@ public func stubHTTPResponse<T: NetworkCall>(withStatusCode statusCode: Int) -> 
         call.responder.httpResponseHandler(HTTPURLResponse(url: call.baseUrl.url!, statusCode: statusCode, httpVersion: nil, headerFields: nil)!)
     }
 }
+
+public func stubWithDelay<C: NetworkCall, T: Codable>(_ call: C, with model: T, delay: Double = 1.0) {
+    call.firingFunc = stubWithDelay(call.responder, with: model, delay: delay)
+}
+
+public func stub<C: NetworkCall, T: Codable>(_ call: C, with model: T) {
+    call.firingFunc = stub(call.responder, with: model)
+}
+
+public func stubHTTPResponseWithDelay<C: NetworkCall>(_ call: C, withStatusCode statusCode: Int, delay: Double = 1.0) {
+    call.firingFunc = stubHTTPResponseWithDelay(withStatusCode: statusCode, delay: delay)
+}
+
+public func stubHTTPResponse<C: NetworkCall>(_ call: C, withStatusCode statusCode: Int) {
+    call.firingFunc = stubHTTPResponse(withStatusCode: statusCode)
+}
