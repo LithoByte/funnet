@@ -8,7 +8,13 @@ import PlaygroundSupport
  
  To do so, this example makes use of some lightweight extensions on those Foundation classes that make it easier to construct urls (`url(for: String, getParams: [URLQueryItem])`), set json headers (`addHeaders` paired with `jsonHeaders()`), separate call creation from firing (`asConnectable` which is the same as `makeConnectable` but allows non-`Never`error types), and generating server errors for handling.
  
- However, due to constraints from `dataTaskPublisher`, stubbing is not nearly as si,ple, and firing a call a second time requires resubscribing all listeners to new but identical publishers.
+ This mostly vanilla approach has these advantages:
+ 
+ 1. It's easy to switch between different hosts and API versions while keeping all the endpoints the same
+ 2. The logic for setting up a network call and firing it is separate, so entirely different classes can handle those two responsibilities.
+ 3. Response handling is atomized (through `asConnectable` and `serverErrorPublisher`) so it's easy to have different classes handle different aspects of a server response, eg error handling or json parsing
+ 
+ However, due to constraints from `dataTaskPublisher`, stubbing is not nearly as simple, and firing a call a second time requires resubscribing all listeners to new but identical publishers. 
  */
 
 PlaygroundPage.current.needsIndefiniteExecution = true
@@ -24,6 +30,8 @@ var cancellables = Set<AnyCancellable>()
 
 let prodServer = URLComponents(string: "https://trill-api-staging.herokuapp.com/api/v1")
 
+let currentServer = prodServer
+
 let sessionConfig = URLSessionConfiguration.default
 sessionConfig.httpShouldSetCookies = false
 sessionConfig.httpCookieAcceptPolicy = .never
@@ -34,7 +42,7 @@ func configureVersionRequest(_ request: inout URLRequest) {
     request.addHeaders(jsonHeaders())
 }
 
-if let url = prodServer?.url(for: "version") {
+if let url = currentServer?.url(for: "version") {
     var request = URLRequest(url: url)
     configureVersionRequest(&request)
     

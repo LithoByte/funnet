@@ -15,17 +15,12 @@ import LithoOperators
 @available(iOS 13.0, *)
 open class CombineNetCall: NetworkCall {
     @Published public var isInProgress: Bool = false
-    public var publisher: CombineNetworkResponder {
-        didSet {
-            publisher.responseHandler <>= { [weak self] _ in self?.isInProgress = false }
-            publisher.dataHandler <>= { [weak self] _ in self?.isInProgress = false }
-            publisher.errorHandler <>= { [weak self] _ in self?.isInProgress = false }
-        }
-    }
+    public var publisher: CombineNetworkResponder
     
     public init(configuration: ServerConfiguration, _ endpoint: Endpoint, responder: CombineNetworkResponder = CombineNetworkResponder()) {
         publisher = responder
         super.init(configuration: configuration, endpoint: endpoint, responder: responder)
+        setupProgressPublisher()
     }
     
     public init(session: URLSession, baseUrlComponents: URLComponents, endpoint: Endpoint, responder: CombineNetworkResponder = CombineNetworkResponder()) {
@@ -41,6 +36,23 @@ open class CombineNetCall: NetworkCall {
     open override func fire() {
         isInProgress = true
         firingFunc(self)
+    }
+    
+    open func setIsInProgressBlock(to newValue: Bool) -> () -> Void {
+        return { [weak self] in
+            if self?.isInProgress != newValue {
+                self?.isInProgress = newValue
+            }
+        }
+    }
+    
+    open func setupProgressPublisher() {
+        publisher.responseHandler <>= ignoreArg(setIsInProgressBlock(to: false))
+        publisher.httpResponseHandler <>= ignoreArg(setIsInProgressBlock(to: false))
+        publisher.dataHandler <>= ignoreArg(setIsInProgressBlock(to: false))
+        publisher.errorHandler <>= ignoreArg(setIsInProgressBlock(to: false))
+        publisher.serverErrorHandler <>= ignoreArg(setIsInProgressBlock(to: false))
+        publisher.errorDataHandler <>= ignoreArg(setIsInProgressBlock(to: false))
     }
 }
 

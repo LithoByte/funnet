@@ -18,7 +18,7 @@ class ResponderTests: XCTestCase {
         var wasHttpResponseCalled = false
         var wasServerErrorCalled = false
         var wasDataSuccessCalled = false
-        var responder = NetworkResponder()
+        let responder = NetworkResponder()
         responder.errorHandler = { _ in wasErrorCalled = true }
         responder.errorDataHandler = { _ in wasErrorDataCalled = true }
         responder.responseHandler = { _ in wasResponseCalled = true }
@@ -27,8 +27,6 @@ class ResponderTests: XCTestCase {
         responder.dataHandler = { _ in wasDataSuccessCalled = true }
         
         let error = NSError(domain: "test", code: -1, userInfo: nil)
-        let response = HTTPURLResponse(url: URL(string: "https://lithobyte.co/api/v2/apps")!, statusCode: 200, httpVersion: nil, headerFields: nil)
-        let data = Data()
         
         let completion = responderToCompletion(responder: responder)
         completion(nil, nil, error)
@@ -48,7 +46,7 @@ class ResponderTests: XCTestCase {
         var wasHttpResponseCalled = false
         var wasServerErrorCalled = false
         var wasDataSuccessCalled = false
-        var responder = NetworkResponder()
+        let responder = NetworkResponder()
         responder.errorHandler = { _ in wasErrorCalled = true }
         responder.errorDataHandler = { _ in wasErrorDataCalled = true }
         responder.responseHandler = { _ in wasResponseCalled = true }
@@ -57,7 +55,6 @@ class ResponderTests: XCTestCase {
         responder.dataHandler = { _ in wasDataSuccessCalled = true }
         
         let error = NSError(domain: "test", code: -1, userInfo: nil)
-        let response = HTTPURLResponse(url: URL(string: "https://lithobyte.co/api/v2/apps")!, statusCode: 200, httpVersion: nil, headerFields: nil)
         let data = Data()
         
         let completion = responderToCompletion(responder: responder)
@@ -78,7 +75,7 @@ class ResponderTests: XCTestCase {
         var wasHttpResponseCalled = false
         var wasServerErrorCalled = false
         var wasDataSuccessCalled = false
-        var responder = NetworkResponder()
+        let responder = NetworkResponder()
         responder.errorHandler = { _ in wasErrorCalled = true }
         responder.errorDataHandler = { _ in wasErrorDataCalled = true }
         responder.responseHandler = { _ in wasResponseCalled = true }
@@ -86,9 +83,7 @@ class ResponderTests: XCTestCase {
         responder.serverErrorHandler = { _ in wasServerErrorCalled = true }
         responder.dataHandler = { _ in wasDataSuccessCalled = true }
         
-        let error = NSError(domain: "test", code: -1, userInfo: nil)
         let response = URLResponse()//HTTPURLResponse(url: URL(string: "https://lithobyte.co/api/v2/apps")!, statusCode: 200, httpVersion: nil, headerFields: nil)
-        let data = Data()
         
         let completion = responderToCompletion(responder: responder)
         completion(nil, response, nil)
@@ -108,7 +103,7 @@ class ResponderTests: XCTestCase {
         var wasHttpResponseCalled = false
         var wasServerErrorCalled = false
         var wasDataSuccessCalled = false
-        var responder = NetworkResponder()
+        let responder = NetworkResponder()
         responder.errorHandler = { _ in wasErrorCalled = true }
         responder.errorDataHandler = { _ in wasErrorDataCalled = true }
         responder.responseHandler = { _ in wasResponseCalled = true }
@@ -116,9 +111,7 @@ class ResponderTests: XCTestCase {
         responder.serverErrorHandler = { _ in wasServerErrorCalled = true }
         responder.dataHandler = { _ in wasDataSuccessCalled = true }
         
-        let error = NSError(domain: "test", code: -1, userInfo: nil)
         let response = HTTPURLResponse(url: URL(string: "https://lithobyte.co/api/v2/apps")!, statusCode: 200, httpVersion: nil, headerFields: nil)
-        let data = Data()
         
         let completion = responderToCompletion(responder: responder)
         completion(nil, response, nil)
@@ -138,7 +131,7 @@ class ResponderTests: XCTestCase {
         var wasHttpResponseCalled = false
         var wasServerErrorCalled = false
         var wasDataSuccessCalled = false
-        var responder = NetworkResponder()
+        let responder = NetworkResponder()
         responder.errorHandler = { _ in wasErrorCalled = true }
         responder.errorDataHandler = { _ in wasErrorDataCalled = true }
         responder.responseHandler = { _ in wasResponseCalled = true }
@@ -164,7 +157,7 @@ class ResponderTests: XCTestCase {
         var wasHttpResponseCalled = false
         var wasServerErrorCalled = false
         var wasDataSuccessCalled = false
-        var responder = NetworkResponder()
+        let responder = NetworkResponder()
         responder.errorHandler = { _ in wasErrorCalled = true }
         responder.errorDataHandler = { _ in wasErrorDataCalled = true }
         responder.responseHandler = { _ in wasResponseCalled = true }
@@ -172,9 +165,7 @@ class ResponderTests: XCTestCase {
         responder.serverErrorHandler = { _ in wasServerErrorCalled = true }
         responder.dataHandler = { _ in wasDataSuccessCalled = true }
         
-        let error = NSError(domain: "test", code: -1, userInfo: nil)
         let response = HTTPURLResponse(url: URL(string: "https://lithobyte.co/api/v2/apps")!, statusCode: 500, httpVersion: nil, headerFields: nil)
-        let data = Data()
         
         let completion = responderToCompletion(responder: responder)
         completion(nil, response, nil)
@@ -194,7 +185,7 @@ class ResponderTests: XCTestCase {
         var wasHttpResponseCalled = false
         var wasServerErrorCalled = false
         var wasDataSuccessCalled = false
-        var responder = NetworkResponder()
+        let responder = NetworkResponder()
         responder.errorHandler = { _ in wasErrorCalled = true }
         responder.errorDataHandler = { _ in wasErrorDataCalled = true }
         responder.responseHandler = { _ in wasResponseCalled = true }
@@ -202,7 +193,6 @@ class ResponderTests: XCTestCase {
         responder.serverErrorHandler = { _ in wasServerErrorCalled = true }
         responder.dataHandler = { _ in wasDataSuccessCalled = true }
         
-        let error = NSError(domain: "test", code: -1, userInfo: nil)
         let response = HTTPURLResponse(url: URL(string: "https://lithobyte.co/api/v2/apps")!, statusCode: 200, httpVersion: nil, headerFields: nil)
         let data = Data()
         

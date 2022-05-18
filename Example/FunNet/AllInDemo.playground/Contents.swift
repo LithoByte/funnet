@@ -26,6 +26,8 @@ var cancellables = Set<AnyCancellable>()
 
 let prodServerConfig = ServerConfiguration(host: "trill-api-staging.herokuapp.com", apiRoute: "api/v1")
 
+let currentServer = prodServerConfig
+
 func versionEndpoint() -> Endpoint {
     var endpoint = Endpoint()
     endpoint.path = "version"
@@ -34,7 +36,7 @@ func versionEndpoint() -> Endpoint {
     return endpoint
 }
 
-let call = CombineNetCall(configuration: prodServerConfig, versionEndpoint())
+let call = CombineNetCall(configuration: currentServer, versionEndpoint())
 
 call.publisher.$serverError.sink(receiveValue: doNothing).store(in: &cancellables)
 call.publisher.$error.sink(receiveValue: doNothing).store(in: &cancellables)

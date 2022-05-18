@@ -25,6 +25,8 @@ var cancellables = Set<AnyCancellable>()
 
 let prodServer = URLComponents(string: "https://trill-api-staging.herokuapp.com/api/v1")
 
+let currentServer = prodServer
+
 let sessionConfig = URLSessionConfiguration.default
 sessionConfig.httpShouldSetCookies = false
 sessionConfig.httpCookieAcceptPolicy = .never
@@ -35,7 +37,7 @@ func configureVersionRequest(_ request: inout URLRequest) {
     request.addHeaders(jsonHeaders())
 }
 
-if let url = prodServer?.url(for: "version") {
+if let url = currentServer?.url(for: "version") {
     var request = URLRequest(url: url)
     configureVersionRequest(&request)
     
