@@ -11,7 +11,7 @@ import Foundation
     import Core
 #endif
 
-public func addMultipartHeaders<T>(_ endpoint: inout T, from multipartData: MultipartFormData) where T: EndpointProtocol {
+public func addMultipartHeaders(_ endpoint: inout Endpoint, from multipartData: MultipartFormData) {
     endpoint.addHeaders(headers: [
         "Content-Type": "multipart/form-data; charset=utf-8; boundary=\"\(multipartData.boundary)\"",
         "Content-Length": "\(multipartData.countContentLength())",
@@ -19,7 +19,7 @@ public func addMultipartHeaders<T>(_ endpoint: inout T, from multipartData: Mult
     ])
 }
 
-public extension EndpointProtocol {
+public extension Endpoint {
     mutating func addModelStream<E: Encodable>(model: E, encoder: FormDataEncoder = FormDataEncoder()) {
         guard let formData = try? encoder.encode(model) else { return }
         self.dataStream = formData.makeInputStream()

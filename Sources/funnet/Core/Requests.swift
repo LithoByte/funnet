@@ -9,33 +9,40 @@ import Foundation
 import Prelude
 import LithoOperators
 
-public func generateRequest(from configuration: ServerConfigurationProtocol, endpoint: EndpointProtocol) -> URLRequest {
-    let configure = (endpoint.httpMethod *-> applyHttpMethod)
-        <> (endpoint.httpHeaders *-> applyHeaders)
-        <> (endpoint.postData *-> applyBody)
-        <> (endpoint.dataStream *-> applyStream)
-        <> (endpoint.timeout *-> applyTimeout)
-        <> (ignoreArg(configuration.shouldUseCookies *> applyCookiePolicy))
-    
-    let mutableRequest = configuration.urlString(for: endpoint) |>
-        (URL.init(string:) >?> NSMutableURLRequest.init(url:))
-    if let request = mutableRequest {
-        configure(request)
+public func generateRequest(from configuration: ServerConfiguration, endpoint: Endpoint) -> URLRequest? {
+    if !configuration.shouldUseCookies {
+        HTTPCookieStorage.shared.cookies?.forEach(HTTPCookieStorage.shared.deleteCookie)
     }
-    return mutableRequest! as URLRequest
+    
+    var mutableRequest: URLRequest?
+    if let url = configuration.url(for: endpoint) {
+        mutableRequest = URLRequest.init(url: url)
+        mutableRequest?.configure(from: endpoint)
+    }
+    
+    return mutableRequest
+}
+
+public func generateRequest(from components: URLComponents, endpoint: Endpoint) -> URLRequest? {
+    var mutableRequest: URLRequest?
+    if let url = components.url(for: endpoint) {
+        mutableRequest = URLRequest.init(url: url)
+        mutableRequest?.configure(from: endpoint)
+    }
+    return mutableRequest
 }
 
 public func generateDataTask(sessionConfiguration: URLSessionConfiguration,
-                      request: URLRequest,
-                      responder: NetworkResponderProtocol) -> URLSessionDataTask? {
+                             request: URLRequest,
+                             responder: NetworkResponder) -> URLSessionDataTask? {
     return generateDataTask(sessionConfiguration: sessionConfiguration,
                             request: request,
                             responderToCompletion(responder: responder))
 }
 
 public func generateDataTask(sessionConfiguration: URLSessionConfiguration,
-                      request: URLRequest,
-                      _ completion: @escaping (Data?, URLResponse?, Error?) -> Void = { _, _, _ in })
+                             request: URLRequest,
+                             _ completion: @escaping (Data?, URLResponse?, Error?) -> Void = { _, _, _ in })
     -> URLSessionDataTask? {
         let session = URLSession(configuration: sessionConfiguration, delegate: nil, delegateQueue: OperationQueue.main)
         return generateDataTask(session, request) { (data, response, error) in
@@ -48,7 +55,7 @@ public func generateDataTask(_ session: URLSession, _ request: URLRequest, _ com
     return session.dataTask(with: request, completionHandler: completion)
 }
 
-public func responderToCompletion(responder: NetworkResponderProtocol) -> (Data?, URLResponse?, Error?) -> Void {
+public func responderToCompletion(responder: NetworkResponder) -> (Data?, URLResponse?, Error?) -> Void {
     return handlersToCompletion(responseHandler: responder.responseHandler,
                                 httpResponseHandler: responder.httpResponseHandler,
                                 dataHandler: responder.dataHandler,
@@ -57,7 +64,7 @@ public func responderToCompletion(responder: NetworkResponderProtocol) -> (Data?
                                 errorDataHandler: responder.errorDataHandler)
 }
 
-public func responderToTaskPublisherReceiver(responder: NetworkResponderProtocol) -> (Data?, URLResponse?) -> Void {
+public func responderToTaskPublisherReceiver(responder: NetworkResponder) -> (Data?, URLResponse?) -> Void {
     return handlersToTaskPublisherBlock(responseHandler: responder.responseHandler,
                                 httpResponseHandler: responder.httpResponseHandler,
                                 dataHandler: responder.dataHandler,
@@ -96,10 +103,10 @@ public func handlersToCompletion(responseHandler: @escaping (URLResponse?) -> Vo
 }
 
 public func handlersToTaskPublisherBlock(responseHandler: @escaping (URLResponse?) -> Void = { _ in },
-                                 httpResponseHandler: @escaping (HTTPURLResponse) -> Void = { _ in },
-                                 dataHandler: @escaping (Data?) -> Void = { _ in },
-                                 serverErrorHandler: @escaping (NSError) -> Void = { _ in },
-                                 errorDataHandler: @escaping (Data?) -> Void = { _ in })
+                                         httpResponseHandler: @escaping (HTTPURLResponse) -> Void = { _ in },
+                                         dataHandler: @escaping (Data?) -> Void = { _ in },
+                                         serverErrorHandler: @escaping (NSError) -> Void = { _ in },
+                                         errorDataHandler: @escaping (Data?) -> Void = { _ in })
     -> (Data?, URLResponse?) -> Void {
     return { (data, response) in
         responseHandler(response)
@@ -131,34 +138,4 @@ public func responseToServerError() -> (Data?, URLResponse?) -> NSError? {
         }
         return error
     }
-}
-
-public func applyHttpMethod(method: String = "GET", request: NSMutableURLRequest) -> Void {
-    request.httpMethod = method
-}
-
-public func applyHeaders(_ httpHeaders: [String: String] = [:], request: NSMutableURLRequest) {
-    for key in httpHeaders.keys {
-        request.addValue(httpHeaders[key]!, forHTTPHeaderField: key)
-    }
-}
-
-public func applyCookiePolicy(_ shouldApplyCookies: Bool) {
-    if !shouldApplyCookies {
-        HTTPCookieStorage.shared.cookies?.forEach(HTTPCookieStorage.shared.deleteCookie)
-    }
-}
-
-public func applyBody(_ postData: Data?, request: NSMutableURLRequest) {
-    request.httpBody = postData
-}
-
-public func applyStream(_ stream: InputStream?, request: NSMutableURLRequest) {
-    if let stream = stream {
-        request.httpBodyStream = stream
-    }
-}
-
-public func applyTimeout(interval: TimeInterval, request: NSMutableURLRequest) {
-    request.timeoutInterval = interval
 }

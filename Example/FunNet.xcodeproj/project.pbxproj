@@ -12,6 +12,7 @@
 		496378A325B895B50020E60B /* MultipartNamingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496378A225B895B50020E60B /* MultipartNamingTests.swift */; };
 		4964636F220E65010060D199 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4964636E220E65010060D199 /* Api.swift */; };
 		49646371220F5D350060D199 /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49646370220F5D350060D199 /* SignIn.swift */; };
+		496A20BB2820B5C4008887AA /* CombineNetCallTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496A20BA2820B5C3008887AA /* CombineNetCallTests.swift */; };
 		49CEE0A6242390AA00F5E124 /* ServerConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CEE0A5242390AA00F5E124 /* ServerConfigurationTests.swift */; };
 		49DFCD792565810A000AD926 /* MultipartTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DFCD782565810A000AD926 /* MultipartTests.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
@@ -37,15 +38,19 @@
 
 /* Begin PBXFileReference section */
 		3FBA774A6951E3E68E49E63A /* Pods_FunNet_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FunNet_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		491872C42810665E004FB3B0 /* MixAndMatchDemo.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MixAndMatchDemo.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		493008C1242B9F8300241C1A /* RequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestTests.swift; sourceTree = "<group>"; };
 		493008C3242BA7C300241C1A /* ResponderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponderTests.swift; sourceTree = "<group>"; };
 		496378A225B895B50020E60B /* MultipartNamingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipartNamingTests.swift; sourceTree = "<group>"; };
 		4964636E220E65010060D199 /* Api.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
 		49646370220F5D350060D199 /* SignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
+		496A20BA2820B5C3008887AA /* CombineNetCallTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineNetCallTests.swift; sourceTree = "<group>"; };
 		496A8D2D26E90843000A36EC /* Gemfile */ = {isa = PBXFileReference; lastKnownFileType = text; name = Gemfile; path = ../Gemfile; sourceTree = "<group>"; };
+		49ACDADB280F17A90001E047 /* MinimalDemo.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MinimalDemo.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		49BB05D3261772E200224111 /* config.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; name = config.yml; path = ../.circleci/config.yml; sourceTree = "<group>"; };
 		49CEE0A5242390AA00F5E124 /* ServerConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfigurationTests.swift; sourceTree = "<group>"; };
 		49DFCD782565810A000AD926 /* MultipartTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipartTests.swift; sourceTree = "<group>"; };
+		49DFE6FE28103FE3009EC27F /* AllInDemo.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = AllInDemo.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		49F148E7C9CD39D05B7952FA /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* FunNet_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FunNet_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -124,6 +129,9 @@
 		607FACD21AFB9204008FA782 /* Example for FunNet */ = {
 			isa = PBXGroup;
 			children = (
+				491872C42810665E004FB3B0 /* MixAndMatchDemo.playground */,
+				49DFE6FE28103FE3009EC27F /* AllInDemo.playground */,
+				49ACDADB280F17A90001E047 /* MinimalDemo.playground */,
 				649BDB77267AC5130087BCC7 /* ErrorHandlingPlayground.playground */,
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				4964636E220E65010060D199 /* Api.swift */,
@@ -149,6 +157,7 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				496A20BA2820B5C3008887AA /* CombineNetCallTests.swift */,
 				49DFCD782565810A000AD926 /* MultipartTests.swift */,
 				496378A225B895B50020E60B /* MultipartNamingTests.swift */,
 				49CEE0A5242390AA00F5E124 /* ServerConfigurationTests.swift */,
@@ -388,6 +397,7 @@
 				49DFCD792565810A000AD926 /* MultipartTests.swift in Sources */,
 				49CEE0A6242390AA00F5E124 /* ServerConfigurationTests.swift in Sources */,
 				496378A325B895B50020E60B /* MultipartNamingTests.swift in Sources */,
+				496A20BB2820B5C4008887AA /* CombineNetCallTests.swift in Sources */,
 				493008C2242B9F8300241C1A /* RequestTests.swift in Sources */,
 				493008C4242BA7C300241C1A /* ResponderTests.swift in Sources */,
 				643C3BA726843E880021E065 /* ErrorHandlingTests.swift in Sources */,

@@ -6,18 +6,10 @@
 //
 //
 
-import UIKit
+import LithoOperators
+import Foundation
 
-public protocol ServerConfigurationProtocol {
-    var shouldStub: Bool { get }
-    var shouldUseCookies: Bool { get }
-    var scheme: String { get }
-    var host: String { get }
-    var apiBaseRoute: String? { get }
-    var urlConfiguration: URLSessionConfiguration { get set }
-}
-
-open class ServerConfiguration: ServerConfigurationProtocol {
+open class ServerConfiguration {
     public let shouldStub: Bool
     public let shouldUseCookies: Bool
     public let scheme: String
@@ -33,66 +25,26 @@ open class ServerConfiguration: ServerConfigurationProtocol {
         self.apiBaseRoute = apiRoute
         self.urlConfiguration = urlConfiguration
     }
-}
-
-public extension ServerConfigurationProtocol {
-    func toBaseUrlString() -> String {
-        let baseUrlString = "\(scheme)://\(host)"
-        if var apiRoute = apiBaseRoute {
-            if apiRoute.starts(with: "/") {
-                apiRoute = String(apiRoute.suffix(from: apiRoute.firstIndex(where: { $0 != "/" })!))
+    
+    public func toBaseURL() -> URLComponents {
+        var urlComponents = URLComponents()
+        urlComponents.scheme = scheme
+        urlComponents.host = host
+        if let baseRoute = apiBaseRoute {
+            if baseRoute.starts(with: "/") {
+                urlComponents.path = baseRoute
+            } else {
+                urlComponents.path = "/\(baseRoute)"
             }
-            if apiRoute.suffix(1) == "/" {
-                apiRoute = String(apiRoute.prefix(apiRoute.count - 1))
-            }
-            return "\(baseUrlString)/\(apiRoute)/"
-        } else {
-            return "\(baseUrlString)/"
         }
+        return urlComponents
     }
     
-    func urlString(for endpoint: EndpointProtocol) -> String {
-        return urlString(for: endpoint.path, getParams: endpoint.getParams)
+    public func url(for endpoint: Endpoint) -> URL? {
+        return toBaseURL().url(for: endpoint)
     }
     
-    func urlString(for endpointString: String, getParams: [String: Any]) -> String {
-        var endpointString = endpointString
-        if endpointString.starts(with: "/") {
-            endpointString = String(endpointString.suffix(from: endpointString.firstIndex(where: { $0 != "/" })!))
-        }
-        if getParams.keys.count > 0 {
-            return toBaseUrlString() + endpointString + "?\(dictionaryToUrlParams(dict: getParams))"
-        }
-        return toBaseUrlString() + endpointString
+    public func request(for endpoint: Endpoint) -> URLRequest? {
+        return generateRequest(from: self, endpoint: endpoint)
     }
-}
-
-public func dictionaryToUrlParams(dict: [String: Any]) -> String {
-    var params = [String]()
-    for key in dict.keys {
-        if let value: Any = dict[key] {
-            var valueString = "\(String(describing: value))".addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
-            if let valueArray = value as? [AnyObject] {
-                valueString = valueArray.map { "\($0)" }.joined(separator: ",")
-            }
-            let param = "\(key)=\(valueString)"
-            params.append(param)
-        }
-    }
-    return params.joined(separator: "&")
-}
-
-public func dictionaryToUrlUnencodedParams(dict: [String: Any]) -> String {
-    var params = [String]()
-    for key in dict.keys {
-        if let value: Any = dict[key] {
-            var valueString = "\(String(describing: value))"
-            if let valueArray = value as? [AnyObject] {
-                valueString = valueArray.map { "\($0)" }.joined(separator: ",")
-            }
-            let param = "\(key)=\(valueString)"
-            params.append(param)
-        }
-    }
-    return params.joined(separator: "&")
 }

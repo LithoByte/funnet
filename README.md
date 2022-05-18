@@ -5,6 +5,20 @@
 [![License](https://img.shields.io/cocoapods/l/FunNet.svg?style=flat)](https://cocoapods.org/pods/FunNet)
 [![Platform](https://img.shields.io/cocoapods/p/FunNet.svg?style=flat)](https://cocoapods.org/pods/FunNet)
 
+## Why FunNet?
+
+There are 5 reasons why: 
+### 1. It's easy to switch between different hosts and API versions while keeping all the endpoints the same. 
+That means switching between local, staging, and prod has never been easier.
+### 2. The logic for setting up a network call and firing it is separate. 
+Entirely different classes can handle those two responsibilities. This is a vast improvement for SRP, and greatly simplifies logic throughout your app.
+### 3. It's very simple to mock server responses – and equally simple to switch back to live responses. 
+That means you can easily develop based on a server contract, and then remove one line of code to switch to the live server (on a per endpoint basis so it doesn't affect other in-process endpoints).
+### 4. Response handling is atomized so it's easy to have different classes handle different aspects of a server response, eg error handling or json parsing.
+Does your error handling code need to live in the same class as the happy path code? Does your activity indicator view need to know what the type of data the call returns? Probably not. Separate those concerns simply and easily, without further abstraction.
+### 5. Making the same call again, or after a minor change, is as easy as calling `fire` again, and all subscribers will have access the new response.
+Many other libraries, and indeed, URLSession itself, require you to create a whole new object in order to fire the same call again. That means any subscribers need to be re-subscribed to the results of the call all over again, each time. Not so with FunNet – just call `fire` on your network call!
+
 ## Contents
 
 - [Networking](#networking)

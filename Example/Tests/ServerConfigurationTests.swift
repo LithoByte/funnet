@@ -20,38 +20,53 @@ class ServerConfigurationTests: XCTestCase {
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
+    
+    func testBaseUrl() {
+        let config = ServerConfiguration(host: "test.lithobyte.co", apiRoute: "/api/v1")
+        
+        let url = config.toBaseURL().url?.absoluteString
+        
+        XCTAssertEqual(url, "https://test.lithobyte.co/api/v1")
+    }
 
     func testSlashPrependedPathParsesCorrectly() {
-        let config = ServerConfiguration(host: "test.lithobyte.co", apiRoute: "api/v1")
+        let config = ServerConfiguration(host: "test.lithobyte.co", apiRoute: "/api/v1")
+        var endpoint = Endpoint()
+        endpoint.path = "/path"
         
-        let url = config.urlString(for: "/path", getParams: [:])
+        let url = config.url(for: endpoint)?.absoluteString
         XCTAssertEqual(url, "https://test.lithobyte.co/api/v1/path")
     }
 
     func testSlashPrependedApiRouteParsesCorrectly() {
         let config = ServerConfiguration(host: "test.lithobyte.co", apiRoute: "/api/v1")
         
-        let url = config.toBaseUrlString()
-        XCTAssertEqual(url, "https://test.lithobyte.co/api/v1/")
+        let url = config.toBaseURL().url?.absoluteString
+        XCTAssertEqual(url, "https://test.lithobyte.co/api/v1")
     }
 
     func testSlashAppendedApiRouteParsesCorrectly() {
         let config = ServerConfiguration(host: "test.lithobyte.co", apiRoute: "api/v1/")
         
-        let url = config.toBaseUrlString()
+        let url = config.toBaseURL().url?.absoluteString
+        XCTAssertEqual(url, "https://test.lithobyte.co/api/v1/")
+    }
+    
+    func testMinimalSlashesApiRouteParsesCorrectly() {
+        let config = ServerConfiguration(host: "test.lithobyte.co", apiRoute: "api/v1/")
+        
+        let url = config.toBaseURL().url?.absoluteString
         XCTAssertEqual(url, "https://test.lithobyte.co/api/v1/")
     }
     
     func testEncodedGetParameters() {
         let config = ServerConfiguration(host: "test.lithobyte.co", apiRoute: "api/v1")
+        var endpoint = Endpoint()
+        endpoint.path = "/search"
+        endpoint.getParams = [URLQueryItem(name: "query", value: "true love"), URLQueryItem(name: "page", value: "1")]
         
-        let url = config.urlString(for: "search", getParams: ["query": "true love", "page": 1])
+        let url = config.url(for: endpoint)?.absoluteString
         XCTAssert(url == "https://test.lithobyte.co/api/v1/search?query=true%20love&page=1" || url == "https://test.lithobyte.co/api/v1/search?page=1&query=true%20love")
-    }
-    
-    func testPreviouslyEncodedGetParameters() {
-        let url = dictionaryToUrlUnencodedParams(dict: ["page": 1, "key": "api%20key"])
-        XCTAssert(url == "key=api%20key&page=1" || url == "page=1&key=api%20key")
     }
     
     func testNoCookiePolicy() {
@@ -75,7 +90,7 @@ class ServerConfigurationTests: XCTestCase {
         XCTAssertNotNil(cookieStorage.cookies?.count)
         XCTAssertEqual(cookieStorage.cookies!.count, 1)
         
-        config.shouldUseCookies |> applyCookiePolicy
+        generateRequest(from: config, endpoint: Endpoint())
         
         XCTAssert(cookieStorage.cookies?.count == nil || cookieStorage.cookies!.count == 0)
     }
@@ -100,7 +115,8 @@ class ServerConfigurationTests: XCTestCase {
         }
         XCTAssertNotNil(cookieStorage.cookies?.count)
         XCTAssertEqual(cookieStorage.cookies!.count, 1)
-        config.shouldUseCookies |> applyCookiePolicy
+        
+        generateRequest(from: config, endpoint: Endpoint())
         
         XCTAssert(cookieStorage.cookies?.count != nil && cookieStorage.cookies!.count != 0)
     }

@@ -23,22 +23,7 @@ class RequestTests: XCTestCase {
         
         let request = generateRequest(from: serverConfig, endpoint: endpoint)
         
-        XCTAssertEqual(request.url?.absoluteString, "http://api.lithobyte.co/api.v2/apps")
-    }
-    
-    func testData() {
-        let serverConfig = ServerConfiguration(shouldStub: true, scheme: "http", host: "api.lithobyte.co", apiRoute: "api.v2", urlConfiguration: URLSessionConfiguration.default)
-        var endpoint = Endpoint()
-        endpoint.path = "apps"
-        
-        let accountInfo = AccountInfo(firstName: "elliot", lastName: "schrock")
-        
-        endpoint.addModelData(model: accountInfo)
-        
-        let request = generateRequest(from: serverConfig, endpoint: endpoint)
-        
-        XCTAssertNotNil(request.httpBody)
-        XCTAssertEqual(request.httpBody, try! JSONEncoder().encode(accountInfo))
+        XCTAssertEqual(request?.url?.absoluteString, "http://api.lithobyte.co/api.v2/apps")
     }
     
     func testGet() {
@@ -48,62 +33,62 @@ class RequestTests: XCTestCase {
         
         let request = generateRequest(from: serverConfig, endpoint: endpoint)
         
-        XCTAssertEqual(request.httpMethod, "GET")
+        XCTAssertEqual(request?.httpMethod, "GET")
     }
     
     func testSetGet() {
         let serverConfig = ServerConfiguration(shouldStub: true, scheme: "http", host: "api.lithobyte.co", apiRoute: "api/v1", urlConfiguration: URLSessionConfiguration.default)
         var endpoint = Endpoint()
         endpoint.path = "apps"
-        endpoint /> setToGET
+        setToGET(&endpoint)
         
         let request = generateRequest(from: serverConfig, endpoint: endpoint)
         
-        XCTAssertEqual(request.httpMethod, "GET")
+        XCTAssertEqual(request?.httpMethod, "GET")
     }
 
     func testPost() {
         let serverConfig = ServerConfiguration(shouldStub: true, scheme: "http", host: "api.lithobyte.co", apiRoute: "api/v1", urlConfiguration: URLSessionConfiguration.default)
         var endpoint = Endpoint()
         endpoint.path = "apps"
-        endpoint /> setToPost
+        setToPOST(&endpoint)
         
         let request = generateRequest(from: serverConfig, endpoint: endpoint)
         
-        XCTAssertEqual(request.httpMethod, "POST")
+        XCTAssertEqual(request?.httpMethod, "POST")
     }
 
     func testPut() {
         let serverConfig = ServerConfiguration(shouldStub: true, scheme: "http", host: "api.lithobyte.co", apiRoute: "api/v1", urlConfiguration: URLSessionConfiguration.default)
         var endpoint = Endpoint()
         endpoint.path = "apps"
-        endpoint /> setToPut
+        setToPUT(&endpoint)
         
         let request = generateRequest(from: serverConfig, endpoint: endpoint)
         
-        XCTAssertEqual(request.httpMethod, "PUT")
+        XCTAssertEqual(request?.httpMethod, "PUT")
     }
 
     func testPatch() {
         let serverConfig = ServerConfiguration(shouldStub: true, scheme: "http", host: "api.lithobyte.co", apiRoute: "api/v1", urlConfiguration: URLSessionConfiguration.default)
         var endpoint = Endpoint()
         endpoint.path = "apps"
-        endpoint /> setToPatch
+        setToPATCH(&endpoint)
         
         let request = generateRequest(from: serverConfig, endpoint: endpoint)
         
-        XCTAssertEqual(request.httpMethod, "PATCH")
+        XCTAssertEqual(request?.httpMethod, "PATCH")
     }
 
     func testDelete() {
         let serverConfig = ServerConfiguration(shouldStub: true, scheme: "http", host: "api.lithobyte.co", apiRoute: "api/v1", urlConfiguration: URLSessionConfiguration.default)
         var endpoint = Endpoint()
         endpoint.path = "apps"
-        endpoint /> setToDelete
+        setToDELETE(&endpoint)
         
         let request = generateRequest(from: serverConfig, endpoint: endpoint)
         
-        XCTAssertEqual(request.httpMethod, "DELETE")
+        XCTAssertEqual(request?.httpMethod, "DELETE")
     }
     
     func testHeaders() {
@@ -115,7 +100,7 @@ class RequestTests: XCTestCase {
         
         let request = generateRequest(from: serverConfig, endpoint: endpoint)
         
-        XCTAssertEqual(request.allHTTPHeaderFields, headers)
+        XCTAssertEqual(request?.allHTTPHeaderFields, headers)
     }
     
     func testTimeout() {
@@ -126,6 +111,6 @@ class RequestTests: XCTestCase {
         
         let request = generateRequest(from: serverConfig, endpoint: endpoint)
         
-        XCTAssertEqual(request.timeoutInterval, endpoint.timeout)
+        XCTAssertEqual(request?.timeoutInterval, endpoint.timeout)
     }
 }

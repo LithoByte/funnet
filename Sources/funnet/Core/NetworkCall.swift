@@ -9,59 +9,62 @@ import Foundation
 import Prelude
 import LithoOperators
 
-public protocol NetworkCall: class {
-    associatedtype ResponderType: NetworkResponderProtocol
+// Intentionally not public
+enum Sessionizer {
+    case config(URLSessionConfiguration)
+    case session(URLSession)
+}
+
+open class NetworkCall: Fireable {
+    var sessionizer: Sessionizer
+    public var baseUrl: URLComponents
+    public var endpoint: Endpoint
+    public var responder: NetworkResponder
     
-    var configuration: ServerConfigurationProtocol { get set }
-    var endpoint: EndpointProtocol { get set }
-    var responder: ResponderType? { get set }
-}
-
-public protocol Fireable {
-    func fire()
-}
-
-public func callFirer(_ call: Fireable) {
-    call.fire()
-}
-
-public func fire<T>(_ call: T) where T: NetworkCall {
-    fire(call, with: call.responder)
-}
-
-//public func fireStubbable<T>(_ call: T) where T: NetworkCall & Stubbable {
-//    var removeStub: (URLResponse?) -> Void = { _ in }
-//    if let stubHolder = call.stubHolder, call.configuration.shouldStub {
-//        var stubbable = call
-//        let stubDesc = stub(condition: stubbable.stubCondition, response: stubHolder.stubResponseBlock())
-//        removeStub = { _ in OHHTTPStubs.removeStub(stubDesc) }
-//    }
-//    
-//    var networkResponder: NetworkResponderProtocol
-//    if var responder = call.responder {
-//        responder.responseHandler = (removeStub <> responder.responseHandler)
-//        networkResponder = responder
-//    } else {
-//        networkResponder = NetworkResponder()
-//        networkResponder.responseHandler = removeStub
-//    }
-//    
-//    fire(call, with: networkResponder)
-//}
-
-public func fire<T>(_ call: T, with responder: NetworkResponderProtocol?) where T: NetworkCall {
-    let request = generateRequest(from: call.configuration, endpoint: call.endpoint)
+    public var firingFunc: (NetworkCall) -> Void = fire(_:)
     
-    let dataTask: URLSessionDataTask?
-    if let responder = responder {
-        dataTask = generateDataTask(sessionConfiguration: call.configuration.urlConfiguration,
-                                    request: request,
-                                    responder: responder)
-    } else {
-        dataTask = generateDataTask(sessionConfiguration: call.configuration.urlConfiguration,
-                                    request: request)
+    public init(configuration: ServerConfiguration, endpoint: Endpoint, responder: NetworkResponder = NetworkResponder()) {
+        self.baseUrl = configuration.toBaseURL()
+        self.sessionizer = .config(configuration.urlConfiguration)
+        self.endpoint = endpoint
+        self.responder = responder
     }
     
-    dataTask?.resume()
-    call.responder?.taskHandler(dataTask)
+    public init(session: URLSession, baseUrlComponents: URLComponents, endpoint: Endpoint, responder: NetworkResponder = NetworkResponder()) {
+        self.baseUrl = baseUrlComponents
+        self.sessionizer = .session(session)
+        self.endpoint = endpoint
+        self.responder = responder
+    }
+    
+    public init(sessionConfig: URLSessionConfiguration, baseUrlComponents: URLComponents, endpoint: Endpoint, responder: NetworkResponder = NetworkResponder()) {
+        self.baseUrl = baseUrlComponents
+        self.sessionizer = .config(sessionConfig)
+        self.endpoint = endpoint
+        self.responder = responder
+    }
+    
+    open func fire() {
+        firingFunc(self)
+    }
+}
+
+public func fire(_ call: NetworkCall) {
+    let request = generateRequest(from: call.baseUrl, endpoint: call.endpoint)
+    
+    if let request = request {
+        let dataTask: URLSessionDataTask?
+        switch call.sessionizer {
+        case .config(let sessionConfig):
+            dataTask = generateDataTask(sessionConfiguration: sessionConfig,
+                                        request: request,
+                                        responder: call.responder)
+        case .session(let session):
+            dataTask = generateDataTask(session,
+                                        request,
+                                        responderToCompletion(responder: call.responder))
+        }
+        dataTask?.resume()
+        call.responder.taskHandler(dataTask)
+    }
 }
