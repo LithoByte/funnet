@@ -27,7 +27,9 @@ public extension URLRequest {
         }
         self.httpMethod = endpoint.httpMethod
         self.httpBody = endpoint.postData
-        self.httpBodyStream = endpoint.dataStream
+        if let stream = endpoint.dataStream {
+            self.httpBodyStream = stream
+        }
         self.timeoutInterval = endpoint.timeout
     }
     

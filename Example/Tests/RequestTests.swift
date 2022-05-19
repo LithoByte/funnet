@@ -103,6 +103,30 @@ class RequestTests: XCTestCase {
         XCTAssertEqual(request?.allHTTPHeaderFields, headers)
     }
     
+    func testBody() {
+        let serverConfig = ServerConfiguration(shouldStub: true, scheme: "http", host: "api.lithobyte.co", apiRoute: "api/v1", urlConfiguration: URLSessionConfiguration.default)
+        var endpoint = Endpoint()
+        endpoint.path = "apps"
+        setToPOST(&endpoint)
+        endpoint.postData = "{}".data(using: .utf8)
+        
+        let request = generateRequest(from: serverConfig, endpoint: endpoint)
+        
+        XCTAssertEqual(request?.httpBody, "{}".data(using: .utf8))
+    }
+    
+    func testBodyStream() {
+        let serverConfig = ServerConfiguration(shouldStub: true, scheme: "http", host: "api.lithobyte.co", apiRoute: "api/v1", urlConfiguration: URLSessionConfiguration.default)
+        var endpoint = Endpoint()
+        endpoint.path = "apps"
+        setToPOST(&endpoint)
+        endpoint.dataStream = InputStream(data: "{}".data(using: .utf8)!)
+        
+        let request = generateRequest(from: serverConfig, endpoint: endpoint)
+        
+        XCTAssertNotNil(request?.httpBodyStream)
+    }
+    
     func testTimeout() {
         let serverConfig = ServerConfiguration(shouldStub: true, scheme: "http", host: "api.lithobyte.co", apiRoute: "api/v1", urlConfiguration: URLSessionConfiguration.default)
         var endpoint = Endpoint()
