@@ -21,6 +21,7 @@ open class NetworkCall: Fireable {
     public var endpoint: Endpoint
     public var responder: NetworkResponder
     
+    public var reset: (NetworkCall) -> Void = { _ in }
     public var firingFunc: (NetworkCall) -> Void = fire(_:)
     
     public init(configuration: ServerConfiguration, endpoint: Endpoint, responder: NetworkResponder = NetworkResponder()) {
@@ -44,7 +45,12 @@ open class NetworkCall: Fireable {
         self.responder = responder
     }
     
-    open func fire() {
+    @objc open func fire() {
+        firingFunc(self)
+    }
+    
+    @objc open func resetAndFire() {
+        reset(self)
         firingFunc(self)
     }
 }

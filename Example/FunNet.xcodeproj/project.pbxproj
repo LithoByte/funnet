@@ -13,6 +13,8 @@
 		4964636F220E65010060D199 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4964636E220E65010060D199 /* Api.swift */; };
 		49646371220F5D350060D199 /* SignIn.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49646370220F5D350060D199 /* SignIn.swift */; };
 		496A20BB2820B5C4008887AA /* CombineNetCallTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496A20BA2820B5C3008887AA /* CombineNetCallTests.swift */; };
+		49B369A228568D4E008FF527 /* ListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B369A128568D4E008FF527 /* ListTests.swift */; };
+		49B369A8285699CF008FF527 /* RefreshTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49B369A7285699CF008FF527 /* RefreshTests.swift */; };
 		49CEE0A6242390AA00F5E124 /* ServerConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49CEE0A5242390AA00F5E124 /* ServerConfigurationTests.swift */; };
 		49DFCD792565810A000AD926 /* MultipartTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DFCD782565810A000AD926 /* MultipartTests.swift */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
@@ -47,6 +49,8 @@
 		496A20BA2820B5C3008887AA /* CombineNetCallTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineNetCallTests.swift; sourceTree = "<group>"; };
 		496A8D2D26E90843000A36EC /* Gemfile */ = {isa = PBXFileReference; lastKnownFileType = text; name = Gemfile; path = ../Gemfile; sourceTree = "<group>"; };
 		49ACDADB280F17A90001E047 /* MinimalDemo.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MinimalDemo.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		49B369A128568D4E008FF527 /* ListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTests.swift; sourceTree = "<group>"; };
+		49B369A7285699CF008FF527 /* RefreshTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTests.swift; sourceTree = "<group>"; };
 		49BB05D3261772E200224111 /* config.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; name = config.yml; path = ../.circleci/config.yml; sourceTree = "<group>"; };
 		49CEE0A5242390AA00F5E124 /* ServerConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerConfigurationTests.swift; sourceTree = "<group>"; };
 		49DFCD782565810A000AD926 /* MultipartTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipartTests.swift; sourceTree = "<group>"; };
@@ -158,9 +162,11 @@
 			isa = PBXGroup;
 			children = (
 				496A20BA2820B5C3008887AA /* CombineNetCallTests.swift */,
+				49B369A128568D4E008FF527 /* ListTests.swift */,
 				49DFCD782565810A000AD926 /* MultipartTests.swift */,
 				496378A225B895B50020E60B /* MultipartNamingTests.swift */,
 				49CEE0A5242390AA00F5E124 /* ServerConfigurationTests.swift */,
+				49B369A7285699CF008FF527 /* RefreshTests.swift */,
 				493008C1242B9F8300241C1A /* RequestTests.swift */,
 				493008C3242BA7C300241C1A /* ResponderTests.swift */,
 				643C3BA626843E880021E065 /* ErrorHandlingTests.swift */,
@@ -395,10 +401,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				49DFCD792565810A000AD926 /* MultipartTests.swift in Sources */,
+				49B369A228568D4E008FF527 /* ListTests.swift in Sources */,
 				49CEE0A6242390AA00F5E124 /* ServerConfigurationTests.swift in Sources */,
 				496378A325B895B50020E60B /* MultipartNamingTests.swift in Sources */,
 				496A20BB2820B5C4008887AA /* CombineNetCallTests.swift in Sources */,
 				493008C2242B9F8300241C1A /* RequestTests.swift in Sources */,
+				49B369A8285699CF008FF527 /* RefreshTests.swift in Sources */,
 				493008C4242BA7C300241C1A /* ResponderTests.swift in Sources */,
 				643C3BA726843E880021E065 /* ErrorHandlingTests.swift in Sources */,
 			);
