@@ -62,3 +62,11 @@ public func stubHTTPResponseWithDelay<C: NetworkCall>(_ call: C, withStatusCode 
 public func stubHTTPResponse<C: NetworkCall>(_ call: C, withStatusCode statusCode: Int) {
     call.firingFunc = stubHTTPResponse(withStatusCode: statusCode)
 }
+
+public func printJson(_ data: Data?) {
+    if let data = data,
+        let json = try? JSONSerialization.jsonObject(with: data, options: .mutableContainers),
+       let jsonData = try? JSONSerialization.data(withJSONObject: json, options: .prettyPrinted) {
+        print(String(decoding: jsonData, as: UTF8.self))
+    }
+}
