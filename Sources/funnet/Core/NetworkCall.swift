@@ -9,6 +9,18 @@ import Foundation
 import Prelude
 import LithoOperators
 
+/**
+ Only three levels of request logging:
+ - on production, you shouldn't log anything, so, none;
+ - when you're debugging, you need everything;
+ - sometimes you just need the sequence, so just the url and HTTP method;
+ - and sometimes you want to try it from the command line, so, curl.
+ To log server responses, use the responder and your standard print statements
+ */
+public enum FunNetRequestLogLevel {
+    case none, debug, methodAndUrl, curl
+}
+
 // Intentionally not public
 enum Sessionizer {
     case config(URLSessionConfiguration)
@@ -21,6 +33,9 @@ open class NetworkCall: Fireable {
     public var endpoint: Endpoint
     public var responder: NetworkResponder
     
+    public var requestLogLevel: FunNetRequestLogLevel = .none
+    
+    public var reset: (NetworkCall) -> Void = { _ in }
     public var firingFunc: (NetworkCall) -> Void = fire(_:)
     
     public init(configuration: ServerConfiguration, endpoint: Endpoint, responder: NetworkResponder = NetworkResponder()) {
@@ -44,13 +59,18 @@ open class NetworkCall: Fireable {
         self.responder = responder
     }
     
-    open func fire() {
+    @objc open func fire() {
+        firingFunc(self)
+    }
+    
+    @objc open func resetAndFire() {
+        reset(self)
         firingFunc(self)
     }
 }
 
 public func fire(_ call: NetworkCall) {
-    let request = generateRequest(from: call.baseUrl, endpoint: call.endpoint)
+    let request = generateRequest(from: call.baseUrl, endpoint: call.endpoint, logLevel: call.requestLogLevel)
     
     if let request = request {
         let dataTask: URLSessionDataTask?

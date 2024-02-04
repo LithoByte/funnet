@@ -23,11 +23,22 @@ public func generateRequest(from configuration: ServerConfiguration, endpoint: E
     return mutableRequest
 }
 
-public func generateRequest(from components: URLComponents, endpoint: Endpoint) -> URLRequest? {
+public func generateRequest(from components: URLComponents, endpoint: Endpoint, logLevel: FunNetRequestLogLevel = .none) -> URLRequest? {
     var mutableRequest: URLRequest?
     if let url = components.url(for: endpoint) {
         mutableRequest = URLRequest.init(url: url)
         mutableRequest?.configure(from: endpoint)
+    }
+    switch logLevel {
+    case .debug:
+        print(mutableRequest)
+        print("JSON body:")
+        printJson(mutableRequest?.httpBody)
+    case .methodAndUrl:
+        print("\(mutableRequest?.httpMethod) \(mutableRequest?.url?.absoluteString)")
+    case .curl:
+        print(mutableRequest?.cURL())
+    default: break
     }
     return mutableRequest
 }
@@ -137,5 +148,31 @@ public func responseToServerError() -> (Data?, URLResponse?) -> NSError? {
             }
         }
         return error
+    }
+}
+
+extension URLRequest {
+    public func cURL(pretty: Bool = false) -> String {
+        let newLine = pretty ? "\\\n" : ""
+        let method = (pretty ? "--request " : "-X ") + "\(self.httpMethod ?? "GET") \(newLine)"
+        let url: String = (pretty ? "--url " : "") + "\'\(self.url?.absoluteString ?? "")\' \(newLine)"
+        
+        var cURL = "curl "
+        var header = ""
+        var data: String = ""
+        
+        if let httpHeaders = self.allHTTPHeaderFields, httpHeaders.keys.count > 0 {
+            for (key,value) in httpHeaders {
+                header += (pretty ? "--header " : "-H ") + "\'\(key): \(value)\' \(newLine)"
+            }
+        }
+        
+        if let bodyData = self.httpBody, let bodyString = String(data: bodyData, encoding: .utf8),  !bodyString.isEmpty {
+            data = "--data '\(bodyString)'"
+        }
+        
+        cURL += method + url + header + data
+        
+        return cURL
     }
 }

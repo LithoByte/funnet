@@ -9,7 +9,6 @@ import Foundation
 import LithoOperators
 import LithoUtils
 import Prelude
-import Slippers
 import UIKit
 
 public func debugAlert(code: Int, errorMap: [Int: String]) -> UIAlertController {
