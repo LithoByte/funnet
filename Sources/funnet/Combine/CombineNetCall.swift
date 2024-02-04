@@ -56,6 +56,27 @@ open class CombineNetCall: NetworkCall {
     }
 }
 
+public extension CombineNetCall {
+    func managePagedModels<Root, T>(on root: Root,
+                                    atKeyPath arrayKeyPath: WritableKeyPath<Root, [T]?>,
+                                    firstPageValue: Int = 1,
+                                    _ pageKey: String = "page",
+                                    parser: @escaping (Data) -> [T]?) -> AnyCancellable {
+        return publisher.$data
+            .compactMap { $0 }
+            .compactMap(parser)
+            .sink { [weak self] models in
+                var copy = root
+                if var allModels = root[keyPath: arrayKeyPath],
+                   let updatedModels = self?.pagedModelsPipeline(firstPageValue: firstPageValue, pageKey)(allModels, models) {
+                    copy[keyPath: arrayKeyPath] = updatedModels
+                } else {
+                    copy[keyPath: arrayKeyPath] = models
+                }
+            }
+    }
+}
+
 @available(iOS 13.0, *)
 public class CombineNetworkResponder: NetworkResponder {
     @Published public var dataTask: URLSessionDataTask?

@@ -16,7 +16,7 @@ let package = Package(
             targets: ["FunNet"]),
         .library(
             name: "FunNet/Core",
-            targets: ["Core"]),
+            targets: ["FunNetCore"]),
         .library(
             name: "FunNet/Combine",
             targets: ["FunNetCombine"]),
@@ -25,7 +25,7 @@ let package = Package(
             targets: ["FunNetReactiveSwift"]),
         .library(
             name: "FunNet/Multipart",
-            targets: ["Multipart"]),
+            targets: ["FunNetMultipart"]),
         .library(
             name: "FunNet/ErrorHandling",
             targets: ["ErrorHandling"]),
@@ -48,32 +48,32 @@ let package = Package(
                                          condition: nil),
                            "Slippers",
                            "ReactiveSwift",
-                           .targetItem(name: "Core", condition: nil),
+                           .targetItem(name: "FunNetCore", condition: nil),
                            .targetItem(name: "FunNetCombine", condition: nil),
                            .targetItem(name: "FunNetReactiveSwift", condition: nil),
-                           .targetItem(name: "Multipart", condition: nil),
+                           .targetItem(name: "FunNetMultipart", condition: nil),
                            .targetItem(name: "ErrorHandling", condition: nil),
                            .targetItem(name: "ErrorHandlingCombine", condition: nil)],
             path: nil
         ),
         .target(
-            name: "Core",
+            name: "FunNetCore",
             dependencies: ["LithoOperators", "Slippers"],
             path: "Sources/funnet/Core"
         ),
         .target(
             name: "FunNetCombine",
-            dependencies: [.targetItem(name: "Core", condition: nil), "Slippers"],
+            dependencies: [.targetItem(name: "FunNetCore", condition: nil), "Slippers"],
             path: "Sources/funnet/Combine"
         ),
         .target(
             name: "FunNetReactiveSwift",
-            dependencies: [.targetItem(name: "Core", condition: nil), "ReactiveSwift"],
+            dependencies: [.targetItem(name: "FunNetCore", condition: nil), "ReactiveSwift"],
             path: "Sources/funnet/ReactiveSwift"
         ),
         .target(
-            name: "Multipart",
-            dependencies: ["LithoOperators", .targetItem(name: "Core", condition: nil)],
+            name: "FunNetMultipart",
+            dependencies: ["LithoOperators", .targetItem(name: "FunNetCore", condition: nil)],
             path: "Sources/funnet/Multipart"
         ),
         .target(

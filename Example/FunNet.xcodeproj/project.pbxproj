@@ -49,6 +49,7 @@
 		49646370220F5D350060D199 /* SignIn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignIn.swift; sourceTree = "<group>"; };
 		496A20BA2820B5C3008887AA /* CombineNetCallTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CombineNetCallTests.swift; sourceTree = "<group>"; };
 		496A8D2D26E90843000A36EC /* Gemfile */ = {isa = PBXFileReference; lastKnownFileType = text; name = Gemfile; path = ../Gemfile; sourceTree = "<group>"; };
+		496FE3572B641DCD006A4F7B /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Package.swift; path = ../Package.swift; sourceTree = "<group>"; };
 		49ACDADB280F17A90001E047 /* MinimalDemo.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MinimalDemo.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		49B369A128568D4E008FF527 /* ListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTests.swift; sourceTree = "<group>"; };
 		49B369A7285699CF008FF527 /* RefreshTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTests.swift; sourceTree = "<group>"; };
@@ -112,6 +113,7 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
+				496FE3572B641DCD006A4F7B /* Package.swift */,
 				496A8D2D26E90843000A36EC /* Gemfile */,
 				49BB05D3261772E200224111 /* config.yml */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,

@@ -200,11 +200,21 @@ extension PngImage: MultipartConvertible, Codable {
     }
 }
 
-public final class JpgImage: UIImage { var quality: CGFloat = 1.0 }
+public final class JpgImage {
+    public var data: Data?
+    
+    public init(quality: CGFloat = 1.0, image: UIImage) {
+        self.data = image.jpegData(compressionQuality: quality)
+    }
+    
+    public init(data: Data?) {
+        self.data = data
+    }
+}
 extension JpgImage: MultipartConvertible, Codable {
     public var multipart: ((String, String?, String?) -> MultipartComponent) {
         return { [unowned self] name, fileName, contentType in
-            MultipartComponent(data: self.jpegData(compressionQuality: self.quality) ?? Data(), name: name, fileName: fileName ?? "\(name).jpg", contentType: "image/jpeg")
+            MultipartComponent(data: self.data ?? Data(), name: name, fileName: fileName ?? "\(name).jpg", contentType: "image/jpeg")
         }
     }
     
@@ -216,10 +226,8 @@ extension JpgImage: MultipartConvertible, Codable {
 
 extension UIImage {
     public func jpgImage(ofQuality quality: CGFloat = 1.0) -> JpgImage? {
-        if let cgImage = cgImage {
-            let jpg = JpgImage(cgImage: cgImage)
-            jpg.quality = quality
-            return jpg
+        if let _ = cgImage {
+            return JpgImage(quality: quality, image: self)
         }
         return nil
     }
