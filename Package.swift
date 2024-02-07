@@ -18,12 +18,6 @@ let package = Package(
             name: "FunNet/Core",
             targets: ["FunNetCore"]),
         .library(
-            name: "FunNet/Combine",
-            targets: ["FunNetCombine"]),
-        .library(
-            name: "FunNet/ReactiveSwift",
-            targets: ["FunNetReactiveSwift"]),
-        .library(
             name: "FunNet/Multipart",
             targets: ["FunNetMultipart"]),
         .library(
@@ -36,8 +30,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/LithoByte/LithoOperators.git", .branch("master")),
         .package(name: "Slippers", url: "https://github.com/LithoByte/slippers", .branch("cjc8/spm")),
-        .package(name: "LithoUtils/Post13", url: "https://github.com/LithoByte/litho-utils", .branch("cjc8/spm")),
-        .package(url: "https://github.com/Moya/ReactiveSwift.git", .branch("master"))
+        .package(name: "LithoUtils/Post13", url: "https://github.com/LithoByte/litho-utils", .branch("cjc8/spm"))
     ],
     targets: [
         .target(
@@ -47,10 +40,7 @@ let package = Package(
                                          package: "LithoUtils/Post13",
                                          condition: nil),
                            "Slippers",
-                           "ReactiveSwift",
                            .targetItem(name: "FunNetCore", condition: nil),
-                           .targetItem(name: "FunNetCombine", condition: nil),
-                           .targetItem(name: "FunNetReactiveSwift", condition: nil),
                            .targetItem(name: "FunNetMultipart", condition: nil),
                            .targetItem(name: "ErrorHandling", condition: nil),
                            .targetItem(name: "ErrorHandlingCombine", condition: nil)],
@@ -60,16 +50,6 @@ let package = Package(
             name: "FunNetCore",
             dependencies: ["LithoOperators", "Slippers"],
             path: "Sources/funnet/Core"
-        ),
-        .target(
-            name: "FunNetCombine",
-            dependencies: [.targetItem(name: "FunNetCore", condition: nil), "Slippers"],
-            path: "Sources/funnet/Combine"
-        ),
-        .target(
-            name: "FunNetReactiveSwift",
-            dependencies: [.targetItem(name: "FunNetCore", condition: nil), "ReactiveSwift"],
-            path: "Sources/funnet/ReactiveSwift"
         ),
         .target(
             name: "FunNetMultipart",

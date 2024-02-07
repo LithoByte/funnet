@@ -34,21 +34,6 @@ TODO: Add long description of the pod here.
     sp.dependency 'Slippers/Core'
   end
   
-  s.subspec 'Combine' do |sp|
-    sp.source_files = 'Sources/funnet/Combine/**/*.swift'
-    sp.ios.deployment_target = '13.0'
-    
-    sp.dependency 'FunNet/Core'
-    sp.framework = 'Combine'
-  end
-  
-  s.subspec 'ReactiveSwift' do |sp|
-    sp.source_files = 'Sources/funnet/ReactiveSwift/**/*'
-    
-    sp.dependency 'FunNet/Core'
-    sp.dependency 'ReactiveSwift'
-  end
-  
   s.subspec 'Multipart' do |sp|
     sp.source_files = 'Sources/funnet/Multipart/**/*.swift'
     sp.dependency 'LithoOperators'

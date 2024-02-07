@@ -2,10 +2,11 @@
 //  CombineNetCall.swift
 //  FunNet
 //
-//  Created by Elliot Schrock on 12/5/19.
+//  Created by Elliot Schrock on 2/4/24.
 //
 
 import Foundation
+import UIKit
 import Combine
 import LithoOperators
 #if canImport(Core)
@@ -47,12 +48,12 @@ open class CombineNetCall: NetworkCall {
     }
     
     open func setupProgressPublisher() {
-        publisher.responseHandler <>= ignoreArg(setIsInProgressBlock(to: false))
-        publisher.httpResponseHandler <>= ignoreArg(setIsInProgressBlock(to: false))
-        publisher.dataHandler <>= ignoreArg(setIsInProgressBlock(to: false))
-        publisher.errorHandler <>= ignoreArg(setIsInProgressBlock(to: false))
-        publisher.serverErrorHandler <>= ignoreArg(setIsInProgressBlock(to: false))
-        publisher.errorDataHandler <>= ignoreArg(setIsInProgressBlock(to: false))
+        publisher.responseHandler <>= { [weak self] _ in self?.setIsInProgressBlock(to: false)() }
+        publisher.httpResponseHandler <>= { [weak self] _ in self?.setIsInProgressBlock(to: false)() }
+        publisher.dataHandler <>= { [weak self] _ in self?.setIsInProgressBlock(to: false)() }
+        publisher.errorHandler <>= { [weak self] _ in self?.setIsInProgressBlock(to: false)() }
+        publisher.serverErrorHandler <>= { [weak self] _ in self?.setIsInProgressBlock(to: false)() }
+        publisher.errorDataHandler <>= { [weak self] _ in self?.setIsInProgressBlock(to: false)() }
     }
 }
 
@@ -121,5 +122,21 @@ public extension URLSession {
         let task = dataTask(with: request, completionHandler: responderToCompletion(responder: responder))
         responder.taskHandler(task)
         return responder
+    }
+}
+
+public extension CombineNetCall {
+    func refresh(from tableView: UITableView, _ cancelBag: inout Set<AnyCancellable>) {
+        let refresher = UIRefreshControl()
+        refresher.addTarget(self, action: #selector(self.resetAndFire), for: .valueChanged)
+        $isInProgress.sink { $0 ? refresher.beginRefreshing() : refresher.endRefreshing() }.store(in: &cancelBag)
+        tableView.refreshControl = refresher
+    }
+    
+    func refresh(from collectionView: UICollectionView, _ cancelBag: inout Set<AnyCancellable>) {
+        let refresher = UIRefreshControl()
+        refresher.addTarget(self, action: #selector(self.resetAndFire), for: .valueChanged)
+        $isInProgress.sink { $0 ? refresher.beginRefreshing() : refresher.endRefreshing() }.store(in: &cancelBag)
+        collectionView.refreshControl = refresher
     }
 }
