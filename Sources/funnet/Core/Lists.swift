@@ -65,40 +65,18 @@ public extension NetworkCall {
     }
     
     func nextPage(pageKey: String = "page", perPage: Int = 20, countKey: String = "count", firstPage: Int = 1) {
-        if let oldPage = currentPage(pageKey) {
-            let pageParam = URLQueryItem(name: pageKey, value: "\(oldPage + 1)")
-            endpoint.getParams = endpoint.getParams.filter(^\.name >>> isEqualTo(pageKey) >>> (!))
-            endpoint.addGetParams(params: [pageParam])
-        } else {
-            let pageParam = URLQueryItem(name: pageKey, value: "\(firstPage)")
-            let countParam = URLQueryItem(name: countKey, value: "\(perPage)")
-            endpoint.addGetParams(params: [pageParam, countParam])
-        }
+        endpoint.incrementPageParams(pageKey: pageKey, perPage: perPage, countKey: countKey, firstPage: firstPage)
         reset = { call in
-            let pageParam = URLQueryItem(name: pageKey, value: "\(firstPage)")
-            call.endpoint.getParams = call.endpoint.getParams.filter(^\.name >>> isEqualTo(pageKey) >>> (!))
-            call.endpoint.addGetParams(params: [pageParam])
+            let resetEndpoint = defaultResetEndpoint(pageKey: pageKey, perPage: perPage, countKey: countKey, firstPage: firstPage)
+            resetEndpoint(&call.endpoint)
         }
         fire()
-    }
-    
-    func currentPageFunction(_ keyName: String = "page") -> () -> Int? {
-        return { [weak self] in self?.currentPage(keyName) }
-    }
-    
-    func currentPage(_ keyName: String = "page") -> Int? {
-        endpoint.getParams.filter(^\.name >>> isEqualTo(keyName)).compactMap(\.value).compactMap(Int.init).first
-    }
-    
-    func shouldAppendNewModels(firstPageValue: Int = 1, _ pageKey: String = "page") -> Bool {
-        let current = self.currentPage(pageKey)
-        return !(current == nil || current == firstPageValue)
     }
     
     func pagedModelsPipeline<T>(firstPageValue: Int = 1, _ pageKey: String = "page") -> ([T], [T]) -> [T] {
         return { [weak self] oldModels, newModels in
             var updatedModels = [T]()
-            if let shouldAppend = self?.shouldAppendNewModels(firstPageValue: firstPageValue, pageKey), shouldAppend {
+            if let isFirstPage = self?.endpoint.isFirstPage(firstPageValue: firstPageValue, pageKey), !isFirstPage {
                 updatedModels = oldModels
             }
             updatedModels.append(contentsOf: newModels)
@@ -116,5 +94,36 @@ public extension NetworkCall {
                 copy[keyPath: arrayKeyPath] = models
             }
         }
+    }
+}
+
+public extension Endpoint {
+    mutating func incrementPageParams(pageKey: String = "page", perPage: Int = 20, countKey: String = "count", firstPage: Int = 1) {
+        if let oldPage = currentPage(pageKey) {
+            let pageParam = URLQueryItem(name: pageKey, value: "\(oldPage + 1)")
+            getParams = getParams.filter(^\.name >>> isEqualTo(pageKey) >>> (!))
+            addGetParams(params: [pageParam])
+        } else {
+            let pageParam = URLQueryItem(name: pageKey, value: "\(firstPage)")
+            let countParam = URLQueryItem(name: countKey, value: "\(perPage)")
+            addGetParams(params: [pageParam, countParam])
+        }
+    }
+    
+    func currentPage(_ keyName: String = "page") -> Int? {
+        getParams.filter(^\.name >>> isEqualTo(keyName)).compactMap(\.value).compactMap(Int.init).first
+    }
+    
+    func isFirstPage(firstPageValue: Int = 1, _ pageKey: String = "page") -> Bool {
+        let current = currentPage(pageKey)
+        return !(current == nil || current == firstPageValue)
+    }
+}
+
+public func defaultResetEndpoint(pageKey: String = "page", perPage: Int = 20, countKey: String = "count", firstPage: Int = 1) -> (inout Endpoint) -> Void {
+    return {
+        let pageParam = URLQueryItem(name: pageKey, value: "\(firstPage)")
+        $0.getParams = $0.getParams.filter(^\.name >>> isEqualTo(pageKey) >>> (!))
+        $0.addGetParams(params: [pageParam])
     }
 }
