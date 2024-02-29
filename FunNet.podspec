@@ -34,6 +34,11 @@ TODO: Add long description of the pod here.
     sp.dependency 'Slippers/Core'
   end
   
+  s.subspec 'TCA' do |sp|
+    sp.source_files = 'Sources/funnet/TCA/**/*.swift'
+    sp.dependency 'FunNet/Core'
+  end
+  
   s.subspec 'Multipart' do |sp|
     sp.source_files = 'Sources/funnet/Multipart/**/*.swift'
     sp.dependency 'LithoOperators'

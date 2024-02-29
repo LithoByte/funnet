@@ -18,6 +18,9 @@ let package = Package(
             name: "FunNet/Core",
             targets: ["FunNetCore"]),
         .library(
+            name: "FunNet/TCA",
+            targets: ["FunNetTCA"]),
+        .library(
             name: "FunNet/Multipart",
             targets: ["FunNetMultipart"]),
         .library(
@@ -28,6 +31,7 @@ let package = Package(
             targets: ["ErrorHandlingCombine"])
     ],
     dependencies: [
+        .package(name: "TCA", url: "https://github.com/pointfreeco/swift-composable-architecture", .branch("observation-beta")),
         .package(url: "https://github.com/LithoByte/LithoOperators.git", .branch("master")),
         .package(name: "Slippers", url: "https://github.com/LithoByte/slippers", .branch("cjc8/spm")),
         .package(name: "LithoUtils/Post13", url: "https://github.com/LithoByte/litho-utils", .branch("cjc8/spm"))
@@ -50,6 +54,11 @@ let package = Package(
             name: "FunNetCore",
             dependencies: ["LithoOperators", "Slippers"],
             path: "Sources/funnet/Core"
+        ),
+        .target(
+            name: "FunNetTCA",
+            dependencies: [.targetItem(name: "FunNetCore", condition: nil), ],
+            path: "Sources/funnet/TCA"
         ),
         .target(
             name: "FunNetMultipart",

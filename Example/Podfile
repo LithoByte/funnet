@@ -1,6 +1,26 @@
 use_frameworks!
 platform :ios, '13.0'
 
+plugin "cocoapods-swift-packager",
+  packages: [
+    {
+      repositoryURL: "https://github.com/pointfreeco/swift-composable-architecture",
+      requirement: {
+        kind: "exactVersion",
+        version: "1.5.0"
+      },
+      products: [
+        { name: "ComposableArchitecture" }
+      ]
+    },
+  ],
+  local_packages: [],
+  pod_dependencies: {
+    FunNet: [
+      "ComposableArchitecture"
+    ]
+  }
+
 target 'FunNet_Example' do
   pod 'FunNet', :path => '../'
   pod 'LithoOperators', :git => 'https://github.com/LithoByte/LithoOperators'
