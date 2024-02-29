@@ -6,7 +6,9 @@
 //
 
 import Foundation
-import FunNet
+#if canImport(FunNetTCA)
+import FunNetCore
+#endif
 import ComposableArchitecture
 
 public struct NetCaller: Equatable {
@@ -25,7 +27,7 @@ public struct PagingMeta {
 
 @Reducer
 public struct NetCallReducer {
-    @Dependency(\.continuousClock) public static var clock
+    @Dependency(\.mainQueue) public static var mainQueue
     
     @ObservableState
     public struct State: Equatable {
@@ -44,6 +46,17 @@ public struct NetCallReducer {
         
         public var reset: ((inout Endpoint) -> Void)?
         public var firingFunc: (NetCaller) -> @Sendable (Send<NetCallReducer.Action>) async throws -> Void = NetCallReducer.fireFunction(_:)
+        
+        public init(session: URLSession, baseUrl: URLComponents, endpoint: Endpoint, logLevel: FunNetRequestLogLevel = .none, isInProgress: Bool = false, pagingInfo: PagingMeta? = nil, reset: ((inout Endpoint) -> Void)? = nil, firingFunc: @escaping (NetCaller) -> @Sendable (Send<NetCallReducer.Action>) async throws -> Void = NetCallReducer.fireFunction(_:)) {
+            self.session = session
+            self.baseUrl = baseUrl
+            self.endpoint = endpoint
+            self.logLevel = logLevel
+            self.isInProgress = isInProgress
+            self.pagingInfo = pagingInfo
+            self.reset = reset
+            self.firingFunc = firingFunc
+        }
         
         public func toNetCaller() -> NetCaller {
             return NetCaller(session: session, baseUrl: baseUrl, endpoint: endpoint, logLevel: logLevel)
@@ -81,6 +94,8 @@ public struct NetCallReducer {
             case error(Error)
         }
     }
+    
+    public init() {}
     
     public var body: some Reducer<State, Action> {
         Reduce { state, action in
@@ -148,7 +163,7 @@ public extension NetCallReducer {
             return { send in
                 if let _ = generateRequest(from: call.baseUrl, endpoint: call.endpoint, logLevel: call.logLevel) {
                     if let delayMillis {
-                        try await Self.clock.sleep(for: .milliseconds(delayMillis))
+                        try await Self.mainQueue.sleep(for: .milliseconds(delayMillis))
                     }
                     
                     if let httpResponse = response as? HTTPURLResponse {

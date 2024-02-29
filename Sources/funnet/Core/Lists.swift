@@ -76,7 +76,7 @@ public extension NetworkCall {
     func pagedModelsPipeline<T>(firstPageValue: Int = 1, _ pageKey: String = "page") -> ([T], [T]) -> [T] {
         return { [weak self] oldModels, newModels in
             var updatedModels = [T]()
-            if let isFirstPage = self?.endpoint.isFirstPage(firstPageValue: firstPageValue, pageKey), !isFirstPage {
+            if let isNotFirstPage = self?.endpoint.isNotFirstPage(firstPageValue: firstPageValue, pageKey), isNotFirstPage {
                 updatedModels = oldModels
             }
             updatedModels.append(contentsOf: newModels)
@@ -114,7 +114,7 @@ public extension Endpoint {
         getParams.filter(^\.name >>> isEqualTo(keyName)).compactMap(\.value).compactMap(Int.init).first
     }
     
-    func isFirstPage(firstPageValue: Int = 1, _ pageKey: String = "page") -> Bool {
+    func isNotFirstPage(firstPageValue: Int = 1, _ pageKey: String = "page") -> Bool {
         let current = currentPage(pageKey)
         return !(current == nil || current == firstPageValue)
     }
