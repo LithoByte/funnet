@@ -10,7 +10,7 @@ import LithoOperators
 import Prelude
 
 public func defaultShouldLoadNextPage(_ pageSize: Int = 20, _ pageTrigger: Int = 5, _ numberOfRows: Int, _ current: Int) -> Bool {
-    return numberOfRows - current == pageTrigger && numberOfRows % pageSize == 0
+    return numberOfRows - current == pageTrigger && numberOfRows.isMultiple(of: pageSize)
 }
 
 public extension NetworkCall {

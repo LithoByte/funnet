@@ -23,6 +23,13 @@ public struct PagingMeta {
     public var pageCountKey: String = "count"
     public var firstPage: Int = 1
     public var perPage: Int = 20
+    
+    public init(pageKey: String = "page", pageCountKey: String = "count", firstPage: Int = 1, perPage: Int = 20) {
+        self.pageKey = pageKey
+        self.pageCountKey = pageCountKey
+        self.firstPage = firstPage
+        self.perPage = perPage
+    }
 }
 
 @Reducer
