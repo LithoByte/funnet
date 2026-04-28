@@ -39,6 +39,14 @@ TODO: Add long description of the pod here.
     sp.dependency 'FunNet/Core'
   end
   
+  s.subspec 'Combine' do |sp|
+    sp.source_files = 'Sources/funnet/Combine/**/*.swift'
+    sp.ios.deployment_target = '13.0'
+    
+    sp.dependency 'FunNet/Core'
+    sp.framework = 'Combine'
+  end
+  
   s.subspec 'Multipart' do |sp|
     sp.source_files = 'Sources/funnet/Multipart/**/*.swift'
     sp.dependency 'LithoOperators'
