@@ -80,23 +80,23 @@ public struct NetCallReducer {
         public enum Delegate: Sendable, Equatable {
             public static func == (lhs: NetCallReducer.Action.Delegate, rhs: NetCallReducer.Action.Delegate) -> Bool {
                 switch lhs {
-                case .responseData(let ldata):
-                    switch rhs {
-                    case .responseData(let rdata):
-                        return ldata == rdata
-                    case .error(_):
-                        return false
+                case .httpResponse(let lhttp):
+                    if case .httpResponse(let rhttp) = rhs {
+                        return lhttp.statusCode == rhttp.statusCode && lhttp.url == rhttp.url
                     }
+                    return false
+                case .responseData(let ldata):
+                    if case .responseData(let rdata) = rhs { return ldata == rdata }
+                    return false
                 case .error(let lerror):
-                    switch rhs {
-                    case .responseData(_):
-                        return false
-                    case .error(let rerror):
+                    if case .error(let rerror) = rhs {
                         return lerror.localizedDescription == rerror.localizedDescription
                     }
+                    return false
                 }
             }
-            
+
+            case httpResponse(HTTPURLResponse)
             case responseData(Data)
             case error(Error)
         }
@@ -125,6 +125,8 @@ public struct NetCallReducer {
                 }
                 state.isInProgress = true
                 return .run(operation: state.firingFunc(state.toNetCaller()))
+            case .delegate(.httpResponse):
+                return .none
             case .delegate(_):
                 state.isInProgress = false
                 return .none
@@ -142,17 +144,18 @@ public extension NetCallReducer {
                     let (data, response) = try await call.session.data(for: request)
                     
                     if let httpResponse = response as? HTTPURLResponse {
+                        await send(.delegate(.httpResponse(httpResponse)))
                         if httpResponse.statusCode > 299 {
                             var info: [String: Any] = ["url" : httpResponse.url?.absoluteString as Any]
-                            
+
                             if let stringData = String(data: data, encoding: .utf8) {
                                 info["data"] = stringData
                             }
-                            
+
                             await send(.delegate(.error(NSError(domain: "Server", code: httpResponse.statusCode, userInfo: info))))
                         }
                     }
-                    
+
                     await send(.delegate(.responseData(data)))
                 } catch let error {
                     await send(.delegate(.error(error)))
@@ -174,13 +177,14 @@ public extension NetCallReducer {
                     }
                     
                     if let httpResponse = response as? HTTPURLResponse {
+                        await send(.delegate(.httpResponse(httpResponse)))
                         if httpResponse.statusCode > 299 {
                             var info: [String: Any] = ["url" : httpResponse.url?.absoluteString as Any]
-                            
+
                             if let data, let stringData = String(data: data, encoding: .utf8) {
                                 info["data"] = stringData
                             }
-                            
+
                             await send(.delegate(.error(NSError(domain: "Server", code: httpResponse.statusCode, userInfo: info))))
                         }
                     }
