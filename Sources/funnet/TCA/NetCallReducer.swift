@@ -82,7 +82,9 @@ public struct NetCallReducer {
                 switch lhs {
                 case .httpResponse(let lhttp):
                     if case .httpResponse(let rhttp) = rhs {
-                        return lhttp.statusCode == rhttp.statusCode && lhttp.url == rhttp.url
+                        return lhttp.statusCode == rhttp.statusCode
+                            && lhttp.url == rhttp.url
+                            && (lhttp.allHeaderFields as? [String: String]) == (rhttp.allHeaderFields as? [String: String])
                     }
                     return false
                 case .responseData(let ldata):
