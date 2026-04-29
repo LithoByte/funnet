@@ -3,7 +3,7 @@ import ComposableArchitecture
 import FunNetCore
 
 struct ServerRowView: View {
-    @Bindable var store: StoreOf<ServerItemReducer>
+    let store: StoreOf<ServerItemReducer>
 
     var body: some View {
         HStack {
