@@ -1,0 +1,15 @@
+import Foundation
+import ComposableArchitecture
+import FunNetCore
+
+@Reducer
+struct ServerItemReducer {
+    @ObservableState
+    struct State {
+        var server: ServerConfiguration
+    }
+    enum Action: Equatable {}
+    var body: some Reducer<State, Action> {
+        Reduce { _, _ in .none }
+    }
+}
