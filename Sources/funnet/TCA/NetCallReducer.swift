@@ -16,6 +16,12 @@ public struct NetCaller: Equatable {
     public var baseUrl: URLComponents
     public var endpoint: Endpoint
     public var logLevel: FunNetRequestLogLevel = .none
+
+    public static func == (lhs: NetCaller, rhs: NetCaller) -> Bool {
+        lhs.baseUrl == rhs.baseUrl
+            && lhs.endpoint == rhs.endpoint
+            && lhs.logLevel == rhs.logLevel
+    }
 }
 
 public struct PagingMeta {
