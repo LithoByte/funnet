@@ -5,7 +5,7 @@ import FunNetCore
 @Reducer
 struct ServerDetailReducer {
     @ObservableState
-    struct State {
+    struct State: Equatable {
         var server: ServerConfiguration
     }
     enum Action: Equatable {}
