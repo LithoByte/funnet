@@ -65,7 +65,8 @@ final class EndpointListReducerTests: XCTestCase {
 
     func testEditorDidSaveCreateAppendsAndPersists() async {
         var saved: [Endpoint] = []
-        let state = EndpointListReducer.State(server: server)
+        var state = EndpointListReducer.State(server: server)
+        state.editor = EditEndpointReducer.State(mode: .create, endpoint: Endpoint(), server: server)
         let store = TestStore(initialState: state) {
             EndpointListReducer()
         } withDependencies: {
@@ -85,6 +86,7 @@ final class EndpointListReducerTests: XCTestCase {
 
         var state = EndpointListReducer.State(server: server)
         state.allEndpoints = [original]
+        state.editor = EditEndpointReducer.State(mode: .edit(originalId: originalId), endpoint: original, server: server)
 
         let store = TestStore(initialState: state) {
             EndpointListReducer()

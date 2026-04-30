@@ -83,15 +83,12 @@ struct EndpointListReducer {
                 state.editor = nil
                 return .none
 
-            case .editor(.presented(let childAction)):
-                guard state.editor != nil else { return .none }
-                let effects = EditEndpointReducer().reduce(into: &state.editor!, action: childAction)
-                return effects.map { .editor(.presented($0)) }
-
-            case .editor(.dismiss):
-                state.editor = nil
+            case .editor:
                 return .none
             }
+        }
+        .ifLet(\.$editor, action: \.editor) {
+            EditEndpointReducer()
         }
     }
 }
