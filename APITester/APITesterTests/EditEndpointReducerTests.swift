@@ -43,7 +43,23 @@ final class EditEndpointReducerTests: XCTestCase {
         await store.receive(.delegate(.didSaveEdit(originalId: originalId, edited)))
     }
 
-    func testSaveDuplicateDelegatesCreate() async {
+    func testSaveDuplicateDelegatesCreateWhenChanged() async {
+        var source = Endpoint(); source.path = "users"
+        var state = makeState(mode: .duplicate, endpoint: source)
+        state.pathField = "users"
+        state.endpoint.httpMethod = "POST"
+
+        var expected = source
+        expected.httpMethod = "POST"
+
+        let store = TestStore(initialState: state) {
+            EditEndpointReducer()
+        }
+        await store.send(.saveTapped)
+        await store.receive(.delegate(.didSaveCreate(expected)))
+    }
+
+    func testSaveDuplicateNoOpWhenUnchanged() async {
         var source = Endpoint(); source.path = "users"
         var state = makeState(mode: .duplicate, endpoint: source)
         state.pathField = "users"
@@ -52,7 +68,6 @@ final class EditEndpointReducerTests: XCTestCase {
             EditEndpointReducer()
         }
         await store.send(.saveTapped)
-        await store.receive(.delegate(.didSaveCreate(source)))
     }
 
     func testSaveNoOpWhenUnchanged() async {
@@ -136,6 +151,7 @@ final class EditEndpointReducerTests: XCTestCase {
                                                                   key: "X-K",
                                                                   value: "V"))))) {
             $0.endpoint.httpHeaders["X-K"] = "V"
+            $0.headerEdit = nil
         }
     }
 
@@ -149,6 +165,7 @@ final class EditEndpointReducerTests: XCTestCase {
         }
         await store.send(.headerEdit(.presented(.delegate(.delete(key: "X-K"))))) {
             $0.endpoint.httpHeaders.removeValue(forKey: "X-K")
+            $0.headerEdit = nil
         }
     }
 

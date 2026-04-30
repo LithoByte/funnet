@@ -24,6 +24,14 @@ struct EditEndpointReducer {
 
         var canFire: Bool { !endpoint.path.isEmpty || !pathField.isEmpty }
 
+        var canSave: Bool {
+            let parsed = parsePathField(pathField)
+            var candidate = endpoint
+            candidate.path = parsed.path
+            candidate.getParams = parsed.getParams
+            return candidate != original
+        }
+
         init(mode: Mode, endpoint: Endpoint, server: ServerConfiguration) {
             self.mode = mode
             self.endpoint = endpoint
@@ -104,18 +112,15 @@ struct EditEndpointReducer {
 
         case .saveTapped:
             let parsed = parsePathField(state.pathField)
+            var candidate = state.endpoint
+            candidate.path = parsed.path
+            candidate.getParams = parsed.getParams
+            guard candidate != state.original else { return .none }
+            state.endpoint = candidate
             switch state.mode {
             case .create, .duplicate:
-                state.endpoint.path = parsed.path
-                state.endpoint.getParams = parsed.getParams
-                let endpoint = state.endpoint
-                return .send(.delegate(.didSaveCreate(endpoint)))
+                return .send(.delegate(.didSaveCreate(candidate)))
             case .edit(let originalId):
-                var candidate = state.endpoint
-                candidate.path = parsed.path
-                candidate.getParams = parsed.getParams
-                guard candidate != state.original else { return .none }
-                state.endpoint = candidate
                 return .send(.delegate(.didSaveEdit(originalId: originalId, candidate)))
             }
 
@@ -156,11 +161,14 @@ struct EditEndpointReducer {
                 state.endpoint.httpHeaders.removeValue(forKey: originalKey)
             }
             state.endpoint.httpHeaders[key] = value
+            state.headerEdit = nil
             return .none
         case .delete(let key):
             state.endpoint.httpHeaders.removeValue(forKey: key)
+            state.headerEdit = nil
             return .none
         case .cancel:
+            state.headerEdit = nil
             return .none
         }
     }
