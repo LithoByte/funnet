@@ -2,6 +2,12 @@ import Foundation
 import ComposableArchitecture
 import FunNetCore
 
+enum EndpointRowAction: Equatable {
+    case tapped
+    case duplicateTapped
+    case deleteTapped
+}
+
 @Reducer
 struct EndpointListReducer {
     @Dependency(\.endpointStore) var endpointStore
@@ -25,7 +31,7 @@ struct EndpointListReducer {
         case binding(BindingAction<State>)
         case addNewTapped
         case didChangeScenePhase
-        case endpoint(Endpoint.ID, EndpointItemReducer.Action)
+        case endpoint(Endpoint.ID, EndpointRowAction)
         case editor(PresentationAction<EditEndpointReducer.Action>)
     }
 
