@@ -1,11 +1,16 @@
 import Foundation
+import SwiftUI
 import ComposableArchitecture
 import FunNetCore
+
+private let coffeeURL = URL(string: "https://buymeacoffee.com/schrockblock")!
 
 @Reducer
 struct ServerListReducer {
     @Dependency(\.serverStore) var serverStore
     @Dependency(\.endpointStore) var endpointStore
+    @Dependency(\.coffeeTipClient) var coffeeTipClient
+    @Dependency(\.openURLClient) var openURLClient
 
     @ObservableState
     struct State: Equatable {
@@ -13,6 +18,8 @@ struct ServerListReducer {
         var localFilter: String = ""
         @Presents var editor: EditServerReducer.State?
         @Presents var detail: ServerDetailReducer.State?
+        @Presents var coffeeAlert: AlertState<Action.CoffeeAlert>?
+        var hasTipped: Bool = false
 
         var displayedServers: IdentifiedArrayOf<ServerConfiguration> {
             guard !localFilter.isEmpty else { return allServers }
@@ -29,6 +36,10 @@ struct ServerListReducer {
         case server(ServerConfiguration.ID, ServerItemReducer.Action)
         case editor(PresentationAction<EditServerReducer.Action>)
         case detail(PresentationAction<ServerDetailReducer.Action>)
+        case coffeeTapped
+        case coffeeAlert(PresentationAction<CoffeeAlert>)
+
+        enum CoffeeAlert: Equatable { case confirm }
     }
 
     var body: some Reducer<State, Action> {
@@ -40,6 +51,7 @@ struct ServerListReducer {
 
             case .didChangeScenePhase:
                 state.allServers = IdentifiedArray(uniqueElements: serverStore.load())
+                state.hasTipped = coffeeTipClient.hasTipped()
                 return .none
 
             case .addNewTapped:
@@ -88,6 +100,17 @@ struct ServerListReducer {
                 state.allServers.append(server)
                 serverStore.save(Array(state.allServers))
                 state.editor = nil
+                let count = coffeeTipClient.incrementSuccessCount()
+                if !state.hasTipped && count >= 2 && (count - 2) % 7 == 0 {
+                    state.coffeeAlert = AlertState {
+                        TextState("Buy me a coffee?")
+                    } actions: {
+                        ButtonState(role: .cancel) { TextState("Cancel") }
+                        ButtonState(action: .confirm) { TextState("Open") }
+                    } message: {
+                        TextState("Open Buy Me a Coffee in Safari? You'll be taken outside the app.")
+                    }
+                }
                 return .none
 
             case .editor(.presented(.delegate(.didSaveEdit(let originalId, let server)))):
@@ -111,6 +134,27 @@ struct ServerListReducer {
 
             case .detail:
                 return .none
+
+            case .coffeeTapped:
+                state.coffeeAlert = AlertState {
+                    TextState("Buy me a coffee?")
+                } actions: {
+                    ButtonState(role: .cancel) { TextState("Cancel") }
+                    ButtonState(action: .confirm) { TextState("Open") }
+                } message: {
+                    TextState("Open Buy Me a Coffee in Safari? You'll be taken outside the app.")
+                }
+                return .none
+
+            case .coffeeAlert(.presented(.confirm)):
+                coffeeTipClient.markTipped()
+                state.hasTipped = true
+                return .run { [openURLClient] _ in
+                    await openURLClient.open(coffeeURL)
+                }
+
+            case .coffeeAlert:
+                return .none
             }
         }
         .ifLet(\.$editor, action: \.editor) {
@@ -119,5 +163,6 @@ struct ServerListReducer {
         .ifLet(\.$detail, action: \.detail) {
             ServerDetailReducer()
         }
+        .ifLet(\.$coffeeAlert, action: \.coffeeAlert)
     }
 }

@@ -51,6 +51,23 @@ struct ServerListView: View {
                     Button { store.send(.addNewTapped) } label: { Image(systemName: "plus") }
                 }
             }
+            .safeAreaInset(edge: .bottom) {
+                if CoffeeTipClient.isEnabled && !store.hasTipped {
+                    Button {
+                        store.send(.coffeeTapped)
+                    } label: {
+                        Text("I hate ads and paywalls, so this app is free. Please tip if it's helpful by clicking here!")
+                            .font(.footnote)
+                            .multilineTextAlignment(.center)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
+                    .controlSize(.large)
+                    .padding(.horizontal)
+                    .padding(.bottom, 8)
+                }
+            }
+            .alert($store.scope(state: \.coffeeAlert, action: \.coffeeAlert))
             .navigationDestination(item: $store.scope(state: \.detail, action: \.detail)) { detailStore in
                 ServerDetailView(store: detailStore)
             }
