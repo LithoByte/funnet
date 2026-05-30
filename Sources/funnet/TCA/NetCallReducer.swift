@@ -104,6 +104,10 @@ public struct NetCallReducer {
                 }
             }
 
+            /// Fired before `.responseData` and (when applicable) before `.error` whenever the
+            /// task produced an `HTTPURLResponse`. Lets consumers render status code + headers
+            /// before the body arrives. NOT fired on pure network failures (no response, just an
+            /// `Error`) — in that case only `.error` is sent.
             case httpResponse(HTTPURLResponse)
             case responseData(Data)
             case error(Error)
