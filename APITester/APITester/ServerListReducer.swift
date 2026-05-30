@@ -5,6 +5,13 @@ import FunNetCore
 
 private let coffeeURL = URL(string: "https://buymeacoffee.com/schrockblock")!
 
+enum ServerRowAction: Equatable {
+    case tapped
+    case duplicateTapped
+    case editTapped
+    case deleteTapped
+}
+
 @Reducer
 struct ServerListReducer {
     @Dependency(\.serverStore) var serverStore
@@ -33,7 +40,7 @@ struct ServerListReducer {
         case binding(BindingAction<State>)
         case addNewTapped
         case didChangeScenePhase
-        case server(ServerConfiguration.ID, ServerItemReducer.Action)
+        case server(ServerConfiguration.ID, ServerRowAction)
         case editor(PresentationAction<EditServerReducer.Action>)
         case detail(PresentationAction<ServerDetailReducer.Action>)
         case coffeeTapped
