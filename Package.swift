@@ -18,11 +18,8 @@ let package = Package(
             name: "FunNet/Core",
             targets: ["FunNetCore"]),
         .library(
-            name: "FunNet/Combine",
-            targets: ["FunNetCombine"]),
-        .library(
-            name: "FunNet/ReactiveSwift",
-            targets: ["FunNetReactiveSwift"]),
+            name: "FunNet/TCA",
+            targets: ["FunNetTCA"]),
         .library(
             name: "FunNet/Multipart",
             targets: ["FunNetMultipart"]),
@@ -34,10 +31,10 @@ let package = Package(
             targets: ["ErrorHandlingCombine"])
     ],
     dependencies: [
+        .package(name: "swift-composable-architecture", url: "https://github.com/pointfreeco/swift-composable-architecture", .branch("observation-beta")),
         .package(url: "https://github.com/LithoByte/LithoOperators.git", .branch("master")),
         .package(name: "Slippers", url: "https://github.com/LithoByte/slippers", .branch("cjc8/spm")),
-        .package(name: "LithoUtils/Post13", url: "https://github.com/LithoByte/litho-utils", .branch("cjc8/spm")),
-        .package(url: "https://github.com/Moya/ReactiveSwift.git", .branch("master"))
+        .package(name: "LithoUtils/Post13", url: "https://github.com/LithoByte/litho-utils", .branch("cjc8/spm"))
     ],
     targets: [
         .target(
@@ -47,10 +44,7 @@ let package = Package(
                                          package: "LithoUtils/Post13",
                                          condition: nil),
                            "Slippers",
-                           "ReactiveSwift",
                            .targetItem(name: "FunNetCore", condition: nil),
-                           .targetItem(name: "FunNetCombine", condition: nil),
-                           .targetItem(name: "FunNetReactiveSwift", condition: nil),
                            .targetItem(name: "FunNetMultipart", condition: nil),
                            .targetItem(name: "ErrorHandling", condition: nil),
                            .targetItem(name: "ErrorHandlingCombine", condition: nil)],
@@ -62,14 +56,9 @@ let package = Package(
             path: "Sources/funnet/Core"
         ),
         .target(
-            name: "FunNetCombine",
-            dependencies: [.targetItem(name: "FunNetCore", condition: nil), "Slippers"],
-            path: "Sources/funnet/Combine"
-        ),
-        .target(
-            name: "FunNetReactiveSwift",
-            dependencies: [.targetItem(name: "FunNetCore", condition: nil), "ReactiveSwift"],
-            path: "Sources/funnet/ReactiveSwift"
+            name: "FunNetTCA",
+            dependencies: [.product(name: "ComposableArchitecture", package: "swift-composable-architecture"), .targetItem(name: "FunNetCore", condition: nil)],
+            path: "Sources/funnet/TCA"
         ),
         .target(
             name: "FunNetMultipart",

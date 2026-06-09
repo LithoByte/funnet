@@ -7,7 +7,7 @@
 
 import UIKit
 
-public struct Endpoint {
+public struct Endpoint: Equatable {
     public var httpMethod: String = "GET"
     public var httpHeaders: [String: String] = [:]
     public var path: String = ""

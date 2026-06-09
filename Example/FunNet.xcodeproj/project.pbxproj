@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		492441A22B9121F0002C53C2 /* NetCallTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492441A12B9121F0002C53C2 /* NetCallTests.swift */; };
 		493008C2242B9F8300241C1A /* RequestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493008C1242B9F8300241C1A /* RequestTests.swift */; };
 		493008C4242BA7C300241C1A /* ResponderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493008C3242BA7C300241C1A /* ResponderTests.swift */; };
 		496378A325B895B50020E60B /* MultipartNamingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 496378A225B895B50020E60B /* MultipartNamingTests.swift */; };
@@ -42,6 +43,7 @@
 /* Begin PBXFileReference section */
 		3FBA774A6951E3E68E49E63A /* Pods_FunNet_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_FunNet_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		491872C42810665E004FB3B0 /* MixAndMatchDemo.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = MixAndMatchDemo.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		492441A12B9121F0002C53C2 /* NetCallTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetCallTests.swift; sourceTree = "<group>"; };
 		493008C1242B9F8300241C1A /* RequestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestTests.swift; sourceTree = "<group>"; };
 		493008C3242BA7C300241C1A /* ResponderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponderTests.swift; sourceTree = "<group>"; };
 		496378A225B895B50020E60B /* MultipartNamingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipartNamingTests.swift; sourceTree = "<group>"; };
@@ -176,6 +178,7 @@
 				643C3BA626843E880021E065 /* ErrorHandlingTests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
 				49B369A92857F67E008FF527 /* CurlTests.swift */,
+				492441A12B9121F0002C53C2 /* NetCallTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -367,7 +370,6 @@
 				"${BUILT_PRODUCTS_DIR}/LithoUtils/LithoUtils.framework",
 				"${BUILT_PRODUCTS_DIR}/PlaygroundVCHelpers/PlaygroundVCHelpers.framework",
 				"${BUILT_PRODUCTS_DIR}/Prelude/Prelude.framework",
-				"${BUILT_PRODUCTS_DIR}/ReactiveSwift/ReactiveSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Slippers/Slippers.framework",
 				"${BUILT_PRODUCTS_DIR}/fuikit/fuikit.framework",
 			);
@@ -378,7 +380,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/LithoUtils.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PlaygroundVCHelpers.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Prelude.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactiveSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Slippers.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/fuikit.framework",
 			);
@@ -412,6 +413,7 @@
 				496A20BB2820B5C4008887AA /* CombineNetCallTests.swift in Sources */,
 				493008C2242B9F8300241C1A /* RequestTests.swift in Sources */,
 				49B369A8285699CF008FF527 /* RefreshTests.swift in Sources */,
+				492441A22B9121F0002C53C2 /* NetCallTests.swift in Sources */,
 				49B369AA2857F67E008FF527 /* CurlTests.swift in Sources */,
 				493008C4242BA7C300241C1A /* ResponderTests.swift in Sources */,
 				643C3BA726843E880021E065 /* ErrorHandlingTests.swift in Sources */,

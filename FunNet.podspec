@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'FunNet'
-  s.version          = '0.1.1'
+  s.version          = '0.2.0'
   s.summary          = 'FunNet provides a foundation for reusable functional networking in Swift.'
   s.swift_versions   = ['4.2', '5.0', '5.1', '5.2', '5.3']
 
@@ -34,19 +34,17 @@ TODO: Add long description of the pod here.
     sp.dependency 'Slippers/Core'
   end
   
+  s.subspec 'TCA' do |sp|
+    sp.source_files = 'Sources/funnet/TCA/**/*.swift'
+    sp.dependency 'FunNet/Core'
+  end
+  
   s.subspec 'Combine' do |sp|
     sp.source_files = 'Sources/funnet/Combine/**/*.swift'
     sp.ios.deployment_target = '13.0'
     
     sp.dependency 'FunNet/Core'
     sp.framework = 'Combine'
-  end
-  
-  s.subspec 'ReactiveSwift' do |sp|
-    sp.source_files = 'Sources/funnet/ReactiveSwift/**/*'
-    
-    sp.dependency 'FunNet/Core'
-    sp.dependency 'ReactiveSwift'
   end
   
   s.subspec 'Multipart' do |sp|

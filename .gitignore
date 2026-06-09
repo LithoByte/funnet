@@ -3,6 +3,7 @@
 
 # Xcode
 build/
+.build/
 *.pbxuser
 !default.pbxuser
 *.mode1v3
@@ -35,3 +36,6 @@ Carthage/Build
 # `pod install` in .travis.yml
 #
 Pods/
+
+# Local docs / notes (not for distribution)
+docs/

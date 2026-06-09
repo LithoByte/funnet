@@ -1,15 +1,11 @@
 PODS:
   - fuikit/Core (0.1.5)
   - FunNet (0.1.1):
-    - FunNet/Combine (= 0.1.1)
     - FunNet/Core (= 0.1.1)
     - FunNet/ErrorHandling (= 0.1.1)
     - FunNet/ErrorHandlingCombine (= 0.1.1)
     - FunNet/Multipart (= 0.1.1)
-    - FunNet/ReactiveSwift (= 0.1.1)
-    - LithoOperators
-  - FunNet/Combine (0.1.1):
-    - FunNet/Core
+    - FunNet/TCA (= 0.1.1)
     - LithoOperators
   - FunNet/Core (0.1.1):
     - LithoOperators
@@ -26,10 +22,9 @@ PODS:
     - Slippers/Core
   - FunNet/Multipart (0.1.1):
     - LithoOperators
-  - FunNet/ReactiveSwift (0.1.1):
+  - FunNet/TCA (0.1.1):
     - FunNet/Core
     - LithoOperators
-    - ReactiveSwift
   - LithoOperators (0.1.4):
     - Prelude
   - LithoUtils/Core (0.1.0):
@@ -37,7 +32,6 @@ PODS:
     - LithoOperators
   - PlaygroundVCHelpers (0.0.2)
   - Prelude (3.0.0)
-  - ReactiveSwift (7.0.0)
   - Slippers/Core (0.1.1)
 
 DEPENDENCIES:
@@ -51,7 +45,6 @@ SPEC REPOS:
   trunk:
     - fuikit
     - Prelude
-    - ReactiveSwift
 
 EXTERNAL SOURCES:
   FunNet:
@@ -81,14 +74,13 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   fuikit: 976080e1c04037e01d14541135a104cb208d8c0d
-  FunNet: e4a1051ef3b822eeb55f8e24426b169e4d35ed87
+  FunNet: 915f42cb0ba04f48c506c4462ee23a09e1421925
   LithoOperators: 8fc0c6a49e34a8d1ca01b777844f58e36c062d9f
   LithoUtils: 672d313a7fede3968e22f082b293cbc01ebcb7f0
   PlaygroundVCHelpers: c7cc8994d2851ebd1590217101b4c6888d1c9cc8
   Prelude: fe4cc0fd961d34edf48fe6b04d05c863449efb0a
-  ReactiveSwift: 48c4b9d3b497e8dd20b10300bb1a28ff93550f13
   Slippers: 5a3c6f24a556a59a091e2cb60e588472827be87c
 
-PODFILE CHECKSUM: 6437f7f3e785b3ea541afc1ff22ed64e3f344999
+PODFILE CHECKSUM: 123ca19c424f92577a360e7863638dc7652da84c
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3
