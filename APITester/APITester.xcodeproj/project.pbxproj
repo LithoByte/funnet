@@ -221,7 +221,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				49D9F12E2FA1760100EC32F9 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
-				49D9F1952FA1B42400EC32F9 /* XCLocalSwiftPackageReference "funnet" */,
+				49D9F1952FA1B42400EC32F9 /* XCLocalSwiftPackageReference "../" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 49D9F1052FA175CB00EC32F9 /* Products */;
@@ -607,6 +607,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		49D9F1952FA1B42400EC32F9 /* XCLocalSwiftPackageReference "../" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		49D9F12E2FA1760100EC32F9 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -615,10 +622,6 @@
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.25.5;
 			};
-		};
-		49D9F1952FA1B42400EC32F9 /* XCLocalSwiftPackageReference "funnet" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = "../";
 		};
 /* End XCRemoteSwiftPackageReference section */
 
@@ -646,12 +649,12 @@
 		};
 		49D9F1962FA1B42400EC32F9 /* FunNet/Core */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 49D9F1952FA1B42400EC32F9 /* XCLocalSwiftPackageReference "funnet" */;
+			package = 49D9F1952FA1B42400EC32F9 /* XCLocalSwiftPackageReference "../" */;
 			productName = FunNet/Core;
 		};
 		49D9F1982FA1B42400EC32F9 /* FunNet/TCA */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 49D9F1952FA1B42400EC32F9 /* XCLocalSwiftPackageReference "funnet" */;
+			package = 49D9F1952FA1B42400EC32F9 /* XCLocalSwiftPackageReference "../" */;
 			productName = FunNet/TCA;
 		};
 /* End XCSwiftPackageProductDependency section */
